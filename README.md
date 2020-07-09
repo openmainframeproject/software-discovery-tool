@@ -1,3 +1,5 @@
+![](https://github.com/openmainframeproject/artwork/raw/master/projects/softwarediscoverytool/softwarediscoverytool-color.svg)
+
 # Software Discovery Tool
   
 ![License](https://img.shields.io/github/license/openmainframeproject/software-discovery-tool)
