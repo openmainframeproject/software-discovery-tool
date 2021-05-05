@@ -1,7 +1,7 @@
 import urllib.request, urllib.error, urllib.parse
 import logging
 
-PDS_BASE = '/opt/PDS/'
+PDS_BASE = '/opt/software-discovery-tool'
 DATA_FILE_LOCATION = '%s/distro_data' % PDS_BASE
 LOG_FILE_LOCATION = '%s/log/pds.log' % PDS_BASE
 MIN_DATA_FILE_SIZE = 50000
