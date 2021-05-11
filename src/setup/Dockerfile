@@ -1,21 +1,21 @@
-################# Dockerfile for PDS v1.4 #####################
+################# Dockerfile for software-discovery-tool #####################
 #
-# This Dockerfile builds a basic installation of PDS version 1.4.
+# This Dockerfile builds a basic installation of software-discovery-tool.
 #
 #
 # To build this image, from the directory containing this Dockerfile
 # (assuming that the file is named Dockerfile):
 # docker build -t <image_name> .
 #
-# To Start PDS use the following command.
+# To Start software-discovery-tool use the following command.
 # docker run --name <container_name> -p <port_number>:80 -d <image_name>
 #
 # Test in the browser by using the following url:
 # http://<hostname>:<port_number>/
-# http://<hostname>:<port_number>/pds
+# http://<hostname>:<port_number>/software-discovery-tool
 #
 # Or by running the provided unit-tests:
-# cd /opt/PDS/src/tests
+# cd /opt/software-discovery-tool/src/tests
 # pytest 
 ########################################################################################
 
@@ -57,25 +57,25 @@ RUN echo $PATH
 ENV PATH=/usr/local/bin:$PATH
 RUN sh -c "echo 'export PATH=/usr/local/bin:$PATH' > /etc/profile.d/alternate_install_path.sh"
 
-# Clone PDS from git
+# Clone software-discovery-tool from git
 RUN  cd /opt/ \
-&& git clone https://github.com/linux-on-ibm-z/PDS.git \
-&& cd PDS \
+&& git clone https://github.com/openmainframeproject/software-discovery-tool.git \
+&& cd software-discovery-tool \
 
 
 # Set Environmental Variables
-&&  sh -c "echo 'export PYTHONPATH=/opt/PDS/src/classes:/opt/PDS/src/config:$PYTHONPATH' > /etc/profile.d/pds.sh" \
+&&  sh -c "echo 'export PYTHONPATH=/opt/software-discovery-tool/src/classes:/opt/software-discovery-tool/src/config:$PYTHONPATH' > /etc/profile.d/software-discovery-tool.sh" \
 
-# Copy the apache configuration file from /opt/PDS/src/config/pds.conf into respective apache configuration folder as below
-&&  cp -f /opt/PDS/src/config/pds.conf /etc/apache2/sites-enabled/pds.conf \
+# Copy the apache configuration file from /opt/software-discovery-tool/src/config/pds.conf into respective apache configuration folder as below
+&&  cp -f /opt/software-discovery-tool/src/config/pds.conf /etc/apache2/sites-enabled/pds.conf \
 &&  mv /etc/apache2/sites-enabled/000-default.conf /etc/apache2/sites-enabled/z-000-default.conf \
 
 #Create new user and group for apache
 && useradd apache \
 
 
-#Set appropriate folder and file permission on /opt/PDS/ folder for apache
-&& chown -R apache:apache /opt/PDS/ \
+#Set appropriate folder and file permission on /opt/software-discovery-tool/ folder for apache
+&& chown -R apache:apache /opt/software-discovery-tool/ \
 
 # Clean up cache , source data and un-used packages
 
