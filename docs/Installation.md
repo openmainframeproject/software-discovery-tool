@@ -1,4 +1,4 @@
-# Steps for setting up PDS application on server
+# Steps for setting up software-discovery-tool application on server
 
 The instructions provided below specify the steps for SLES 11 SP4/12/12 SP1/12 SP2 and Ubuntu 16.04/17.04/17.10:
 
@@ -33,46 +33,46 @@ _**NOTE:**_
 ###  Step 2: Checkout the source code, into /opt/ folder
 
         cd /opt/
-        sudo git clone https://github.com/linux-on-ibm-z/PDS.git
-        cd PDS
+        sudo git clone https://github.com/openmainframeproject/software-discovery-tool.git
+        cd software-discovery-tool
 
-Note: In case PDS code is already checked out, do the following for latest updates
+Note: In case software-discovery-tool code is already checked out, do the following for latest updates
 
-        cd /opt/PDS
+        cd /opt/software-discovery-tool
         sudo git pull origin master
 
 ###  Step 3: Set Environment variables
 
-        sudo sh -c "echo 'export PYTHONPATH=/opt/PDS/src/classes:/opt/PDS/src/config:$PYTHONPATH' > /etc/profile.d/pds.sh"
+        sudo sh -c "echo 'export PYTHONPATH=/opt/software-discovery-tool/src/classes:/opt/software-discovery-tool/src/config:$PYTHONPATH' > /etc/profile.d/software-discovery-tool.sh"
 
-### Step 4: Install and configure PDS
+### Step 4: Install and configure software-discovery-tool
 
 * SLES (11 SP4, 12):
 
-    #### Copy the init.d script to start/stop/restart PDS application
+    #### Copy the init.d script to start/stop/restart software-discovery-tool application
 
-        sudo chmod 755 -R /opt/PDS/src/setup
-        cd /opt/PDS/src/setup
+        sudo chmod 755 -R /opt/software-discovery-tool/src/setup
+        cd /opt/software-discovery-tool/src/setup
         sudo ./create_initid_script.sh
 
-    #### Enable pds service
+    #### Enable software-discovery-tool service
 
-        sudo systemctl reload pds
+        sudo systemctl reload software-discovery-tool
 
     #### Start the Flask server as below
 
-        sudo service pds start
+        sudo service software-discovery-tool start
 
 * SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (16.04, 17.04, 17.10):
 
-    #### Copy the apache configuration file from `/opt/PDS/src/config/pds.conf` into respective apache configuration folder as below
+    #### Copy the apache configuration file from `/opt/software-discovery-tool/src/config/pds.conf` into respective apache configuration folder as below
     * SLES (12 SP1, 12 SP2, 12 SP3):
 
-            sudo cp -f /opt/PDS/src/config/pds.conf /etc/apache2/conf.d/pds.conf
+            sudo cp -f /opt/software-discovery-tool/src/config/pds.conf /etc/apache2/conf.d/pds.conf
 
     * For Ubuntu (16.04, 17.04, 17.10):
 
-            sudo cp -f /opt/PDS/src/config/pds.conf /etc/apache2/sites-enabled/pds.conf
+            sudo cp -f /opt/software-discovery-tool/src/config/pds.conf /etc/apache2/sites-enabled/pds.conf
             sudo mv /etc/apache2/sites-enabled/000-default.conf /etc/apache2/sites-enabled/z-000-default.conf
 
     #### Create new user and group for apache
@@ -84,21 +84,21 @@ Note: In case PDS code is already checked out, do the following for latest updat
 
         sudo a2enmod mod_access_compat
 
-    #### Set appropriate folder and file permission on /opt/PDS/ folder for apache
+    #### Set appropriate folder and file permission on /opt/software-discovery-tool/ folder for apache
 
-        sudo chown -R apache:apache /opt/PDS/
+        sudo chown -R apache:apache /opt/software-discovery-tool/
 
 
     #### Start/Restart Apache service
 
         sudo apachectl restart
 
-###  Step 5: Verify that the PDS server is up and running
+###  Step 5: Verify that the software-discovery-tool server is up and running
 
-```http://server_ip_or_fully_qualified_domain_name:port_number/pds``` <br />
+```http://server_ip_or_fully_qualified_domain_name:port_number/software-discovery-tool``` <br />
 
 (Alternatively, you can check with unittesting) <br />
-```cd PDS/src/tests``` <br />
+```cd software-discovery-tool/src/tests``` <br />
 ```pytest```
 
 _**NOTE:**_ 
@@ -107,13 +107,13 @@ _**NOTE:**_
 * For SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (16.04, 17.04, 17.10)  by default the port_number will be 80
 
 ###  Step 6: (Optional) Custom configuration
-Following configuration settings can be managed in `/opt/PDS/src/config/config.py`:
+Following configuration settings can be managed in `/opt/software-discovery-tool/src/config/config.py`:
 
-        <PDS_BASE> - Base location where PDS is Installed/Cloned. Defaults to `/opt/PDS/`
+        <software-discovery-tool_BASE> - Base location where software-discovery-tool is Installed/Cloned. Defaults to `/opt/software-discovery-tool/`
 
         <DATA_FILE_LOCATION> - Location of folder containing all distribution specific JSON data
         
-        <LOG_FILE_LOCATION> - Location of folder containing PDS logs
+        <LOG_FILE_LOCATION> - Location of folder containing software-discovery-tool logs
         
         <enable_proxy_authentication> - Flag enabling/disabling proxy based network access
         
@@ -127,9 +127,9 @@ Following configuration settings can be managed in `/opt/PDS/src/config/config.p
         
         <DEBUG_LEVEL> - Set Debug levels for the application to log
         
-        <server_host> - IP/fully qualified domain name of server where PDS application will be deployed
+        <server_host> - IP/fully qualified domain name of server where software-discovery-tool application will be deployed
         
-        <server_port> - PDS port on which application will be accessible to end users
+        <server_port> - software-discovery-tool port on which application will be accessible to end users
 
         <SUPPORTED_DISTROS> - Mapping of all the supported distros, new distros added need to be mapped here.
 
@@ -152,5 +152,5 @@ In case any of the parameters are updated, the server has to be restarted:
 
     #### Start the Flask server as below
 
-        sudo service pds start
+        sudo service software-discovery-tool start
 
