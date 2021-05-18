@@ -6,7 +6,7 @@ _**General Notes:**_
 
  * _A directory `/<DATA_FILE_LOCATION>/` defined in Step 6 of [Installation](Installation.md) document._
 
- * _A directory `/<TOOL_BASE>/` defined in Step 6 of [Installation](Installation.md) document._
+ * _A directory `/<PDS_BASE>/` defined in Step 6 of [Installation](Installation.md) document._
 
 ### Step 1. Create a JSON file with package data
 
@@ -58,7 +58,7 @@ The Content of the distribution data JSON file has to be in the following format
 }]
 ```
 
-### Step 2. Update the SUPPORTED_DISTROS variable in configuration file `/<TOOL_BASE>/src/config/config.py`
+### Step 2. Update the SUPPORTED_DISTROS variable in configuration file `/<PDS_BASE>/src/config/config.py`
 Software Discovery application requires a mapping between each JSON file and relevant Distro Version.  This is done using SUPPORTED_DISTROS object in config file.
 SUPPORTED_DISTROS is a dictionary object having the "Distro Name" as the keys.  And each distro name has another dictionary having "Distro Version" has its key and "JSON file as its value"
 
