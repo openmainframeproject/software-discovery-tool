@@ -1,10 +1,10 @@
  
              International Business machines, Inc.
   Software Grant and Corporate Contributor License Agreement ("Agreement")
-         https://github.com/openmainframeproject/software-discovery-tool/tree/master/docs
+         https://github.com/linux-on-ibm-z/PDS/tree/master/docs
 
 
-Thank you for your interest in Open Mainframe Project’s Software Discovery Tool project. In order to clarify the intellectual property license granted with Contributions from any person or entity, IBM must have a Contributor License Agreement (CLA) on file that has been signed by each Contributor, indicating agreement to the license terms
+Thank you for your interest in IBM’s PDS  project (“Package Distribution Search"). In order to clarify the intellectual property license granted with Contributions from any person or entity, IBM must have a Contributor License Agreement (CLA) on file that has been signed by each Contributor, indicating agreement to the license terms
 below. This license is for your protection as a Contributor as well
 as the protection of IBM and its users; it does not change your rights to use your own Contributions for any other purpose.
 
