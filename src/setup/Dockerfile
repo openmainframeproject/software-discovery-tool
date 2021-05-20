@@ -20,7 +20,7 @@
 ########################################################################################
 
 # Base image
-  FROM s390x/ubuntu:16.04
+  FROM s390x/ubuntu:latest
 
 # The author
   MAINTAINER LoZ Open Source Ecosystem (https://www.ibm.com/developerworks/community/groups/community/lozopensource)
