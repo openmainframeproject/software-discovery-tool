@@ -1,12 +1,12 @@
 # Adding new distributions to the tool
 
-This documents details the steps to be performed in order to add a distribution support to PDS tool. 
+This documents details the steps to be performed in order to add a distribution support to software-discovery-tool . 
 
 _**General Notes:**_ 	
 
  * _A directory `/<DATA_FILE_LOCATION>/` defined in Step 6 of [Installation](Installation.md) document._
 
- * _A directory `/<PDS_BASE>/` defined in Step 6 of [Installation](Installation.md) document._
+ * _A directory `/<SDT_BASE>/` defined in Step 6 of [Installation](Installation.md) document._
 
 ### Step 1. Create a JSON file with package data
 
@@ -58,11 +58,11 @@ The Content of the distribution data JSON file has to be in the following format
 }]
 ```
 
-### Step 2. Update the SUPPORTED_DISTROS variable in configuration file `/<PDS_BASE>/src/config/config.py`
-PDS application requires a mapping between each JSON file and relevant Distro Version.  This is done using SUPPORTED_DISTROS object in config file.
+### Step 2. Update the SUPPORTED_DISTROS variable in configuration file `/<SDT_BASE>/src/config/config.py`
+software-discovery-tool application requires a mapping between each JSON file and relevant Distro Version.  This is done using SUPPORTED_DISTROS object in config file.
 SUPPORTED_DISTROS is a dictionary object having the "Distro Name" as the keys.  And each distro name has another dictionary having "Distro Version" has its key and "JSON file as its value"
 
-PDS uses the "Distro Name" and "Distro Version" keys to create "Display Names" of check-boxes on the PDS main page.  Ensure that there are no duplicate 
+software-discovery-tool uses the "Distro Name" and "Distro Version" keys to create "Display Names" of check-boxes on the software-discovery-tool main page.  Ensure that there are no duplicate 
 "Distro Name" or "Distro Version" entries.
 
 SUPPORTED_DISTROS must have following structure
@@ -98,14 +98,14 @@ SUPPORTED_DISTROS = {
 ```
 
 ### Step 3. Delete the cached data file `<DATA_FILE_LOCATION>/cached_data.json`
-In order to search efficiently, the PDS caches the data from all JSON files into a single file called as 'cached_data.json'
+In order to search efficiently, the software-discovery-tool caches the data from all JSON files into a single file called as 'cached_data.json'
 
 Cache file maintains the array of following JSON structure...
 
 `{P:<Package Name>, S:<Uppercase variant of P>, V:<Package Version>, B: <Search Flag indicating availability of P in various distro versions>}`
 
-NOTE About `B` search flag field in cache:  PDS assigns a binary flag to each distro version when the SUPPORTED_DISTROS is loaded for the first time.  For e.g. referring to the SUPPORTED_DISTROS example given above,
-PDS may assign following flags to the distros...
+NOTE About `B` search flag field in cache:  software-discovery-tool assigns a binary flag to each distro version when the SUPPORTED_DISTROS is loaded for the first time.  For e.g. referring to the SUPPORTED_DISTROS example given above,
+software-discovery-tool may assign following flags to the distros...
 ```
 'Ubuntu_17_04.json' = 1
 'Ubuntu_16_10.json' = 2

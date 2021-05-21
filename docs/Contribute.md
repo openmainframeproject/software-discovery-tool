@@ -1,12 +1,12 @@
-## PDS is an Open source project and all of the contents are freely editable.
+## Software Discovery Tool is an Open source project and all of the contents are freely editable.
 
-This document explains how to contribute changes to the PDS project. The project welcomes submissions. You can find and sign the contributor license agreement under the same folder.
+This document explains how to contribute changes to the software-discovery-tool project. The project welcomes submissions. You can find and sign the contributor license agreement under the same folder.
 
 - Fork the project on GitHub.
 
 - Clone it to a local machine. Do not edit online in github.com, as the editor may cause issues with JSON formatted data.
 
-- Create a branch with the form **PDS-feature_name** and make your changes in that branch and commit them.
+- Create a branch with the form **software-discovery-tool-feature_name** and make your changes in that branch and commit them.
 
 - Push the branch online (if editing locally).
 

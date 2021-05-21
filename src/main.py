@@ -11,8 +11,8 @@ app = Flask(__name__)
 package_search = PackageSearch.load()
 
 @app.route('/')
-@app.route('/pds/faq')
-@app.route('/pds/')
+@app.route('/sdt/faq')
+@app.route('/sdt/')
 def index():
     resp = make_response(render_template('index.html'))
     resp.headers.set('Cache-Control','no-cache, no-store, must-revalidate')
@@ -21,7 +21,7 @@ def index():
     return resp
 
 @app.route('/getSupportedDistros')
-@app.route('/pds/getSupportedDistros')
+@app.route('/sdt/getSupportedDistros')
 def getSupportedDistros():
     package_search = PackageSearch.load()
     json_data = json.dumps(package_search.getSupportedDistros())
@@ -32,7 +32,7 @@ def getSupportedDistros():
     return resp
 
 @app.route('/searchPackages')
-@app.route('/pds/searchPackages')
+@app.route('/sdt/searchPackages')
 def searchPackages():
     package_search = PackageSearch.load()
     search_term = ''

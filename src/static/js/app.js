@@ -1,8 +1,8 @@
-var myApp = angular.module("pds", ['ngRoute']); 
+var myApp = angular.module("sdt", ['ngRoute']); 
 
 myApp.config(
 	[ '$routeProvider', '$locationProvider', function($routeProvider,$locationProvider) {
-        $locationProvider.hashPrefix('/pds/');
+        $locationProvider.hashPrefix('/sdt/');
         $locationProvider.html5Mode({
             enabled: true,
             requireBase: false,
