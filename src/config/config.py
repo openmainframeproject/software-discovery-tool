@@ -35,8 +35,8 @@ DEBUG_LEVEL = logging.ERROR
 
 SUPPORTED_DISTROS = {
     'Ubuntu': {
-        'Ubuntu 16.04': 'Ubuntu_16_04_Package_List.json',
         'Ubuntu 18.04': 'Ubuntu_18_04_Package_List.json',
+        'Ubuntu 19.04': 'Ubuntu_19_04_Package_List.json',
         'Ubuntu 20.04': 'Ubuntu_20_04_Package_List.json',
         'Ubuntu 20.10': 'Ubuntu_20_10_Package_List.json'
     }, 

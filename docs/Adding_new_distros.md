@@ -16,7 +16,7 @@ _**General Notes:**_
 
 **Here's sample file naming:**
 
-    Ubuntu_14.04.json
+    Ubuntu_20.04.json
 
 NOTE: File should not be named as `cached_data.json`
 
@@ -85,9 +85,9 @@ SUPPORTED_DISTROS = {
 ```
 SUPPORTED_DISTROS = {
     'Ubuntu': {
-        'Ubuntu 17.04': 'Ubuntu_17_04.json',
-        'Ubuntu 16.10': 'Ubuntu_16_10.json',
-        'Ubuntu 16.04': 'Ubuntu_16_04.json'
+        'Ubuntu 18.04': 'Ubuntu_18_04.json',
+        'Ubuntu 19.04': 'Ubuntu_19_04.json',
+        'Ubuntu 20.04': 'Ubuntu_20_04.json'
     }, 
     'SUSE Linux Enterprise Server': {
         'SUSE Linux Enterprise Server 11 SP4': 'Suse_Linux_Enterprise_Server_11_SP4.json',
@@ -107,14 +107,14 @@ Cache file maintains the array of following JSON structure...
 NOTE About `B` search flag field in cache:  Software Discovery Tool assigns a binary flag to each distro version when the SUPPORTED_DISTROS is loaded for the first time.  For e.g. referring to the SUPPORTED_DISTROS example given above,
 Software Discovery Tool may assign following flags to the distros...
 ```
-'Ubuntu_17_04.json' = 1
-'Ubuntu_16_10.json' = 2
-'Ubuntu_16_04.json' = 4
+'Ubuntu_20_04.json' = 1
+'Ubuntu_19_04.json' = 2
+'Ubuntu_18_04.json' = 4
 'Suse_Linux_Enterprise_Server_11_SP4.json' = 8
 'Suse_Linux_Enterprise_Server_12_SP1.json' = 16
 'Suse_Linux_Enterprise_Server_12_SP2.json' = 32
 ```
-In case the `PackageNameX` is available in in `Ubuntu 16.04` and `Ubuntu 16.10` then the `B` will be set to `6`
+In case the `PackageNameX` is available in in `Ubuntu 20.04` and `Ubuntu 20.10` then the `B` will be set to `6`
 
 Cache file has to be regenerated whenever there is a change in SUPPORTED_DISTROS object.  Hence delete the existing cache as follows:
 
