@@ -7,7 +7,7 @@ from config.config import server_host
 
 class TestFlask(unittest.TestCase):
 
-    routes = ['pds','getSupportedDistros','faq']
+    routes = ['sdt','getSupportedDistros','faq']
     base_route='http://' + server_host + ':80/'
 
     def test_web_app_running(self):
