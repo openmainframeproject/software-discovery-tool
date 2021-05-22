@@ -65,14 +65,14 @@ Note: In case software-discovery-tool code is already checked out, do the follow
 
 * SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (18.04, 19.04, 20.04):
 
-    #### Copy the apache configuration file from `/opt/software-discovery-tool/src/config/pds.conf` into respective apache configuration folder as below
+    #### Copy the apache configuration file from `/opt/software-discovery-tool/src/config/sdt.conf` into respective apache configuration folder as below
     * SLES (12 SP1, 12 SP2, 12 SP3):
 
-            sudo cp -f /opt/software-discovery-tool/src/config/pds.conf /etc/apache2/conf.d/pds.conf
+            sudo cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/conf.d/sdt.conf
 
     * For Ubuntu (18.04, 19.04, 20.04):
 
-            sudo cp -f /opt/software-discovery-tool/src/config/pds.conf /etc/apache2/sites-enabled/pds.conf
+            sudo cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/sites-enabled/sdt.conf
             sudo mv /etc/apache2/sites-enabled/000-default.conf /etc/apache2/sites-enabled/z-000-default.conf
 
     #### Create new user and group for apache

@@ -25,7 +25,7 @@ class PackageSearch:
     @classmethod
     def loadSupportedDistros(cls):
         '''
-        Returns list of supported OS distributions in PDS
+        Returns list of supported OS distributions in software-discovery-tool
         '''
         LOGGER.debug('loadSupportedDistros: In loadSupportedDistros')
         
@@ -45,7 +45,7 @@ class PackageSearch:
     @classmethod
     def loadPackageData(cls):
         '''
-        Returns list of Packages in PDS
+        Returns list of Packages in software-discovery-tool
         '''
 
         LOGGER.debug('loadPackageData: In loadSupportedDistros')
