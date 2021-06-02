@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="input_group distrolist" >
         <!--<pre>{{ os_versions_list | json }} </pre>-->
-        <div style="font-size:14px;font-weight:bold;">Select linux distribution:</div>
+        <div style="font-size:14px;font-weight:bold;">Select Operating System:</div>
 
 	<div style="font-size:14px;font-weight:bold;">
           <span ng-repeat="os_name in os_list" style="font-size:12px;">
@@ -28,7 +28,8 @@
 
 
       <div class="input-group searchbuttons">
-        <input type="text" id="searchtext" class="form-control" style="width:200px;" autocomplete="on" placeholder="Enter Package Name" ng-model="package_name" ng-keyup="searchPackagesFromText($event)" />
+        <input type="text" id="searchtext" class="form-control" style="width:200px;" autocomplete="on"
+		placeholder="Enter Software Name" ng-model="package_name" ng-keyup="searchPackagesFromText($event)" />
         <input type="button" id="fuzzySearch" class="btn btn-small btn-primary" value="Search" title="package Name in search should be more than two characters long" ng-click="searchPackages(null, 'fuzzySearch',false);" ng-disabled="package_name.length <= 1" />
         <a class="btn btn-small btn-info"  href="javascript:void(0);" ng-click="searchPackages(null, 'exactSearch', true);" ng-hide="package_name.length <= 0">Search Exact</a>
       </div>
