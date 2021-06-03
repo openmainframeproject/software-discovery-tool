@@ -1,14 +1,14 @@
 import urllib.request, urllib.error, urllib.parse
 import logging
 
-PDS_BASE = '/opt/software-discovery-tool'
-DATA_FILE_LOCATION = '%s/distro_data' % PDS_BASE
-LOG_FILE_LOCATION = '%s/log/pds.log' % PDS_BASE
+SDT_BASE = '/opt/software-discovery-tool'
+DATA_FILE_LOCATION = '%s/distro_data' % SDT_BASE
+LOG_FILE_LOCATION = '%s/log/sdt.log' % SDT_BASE
 MIN_DATA_FILE_SIZE = 50000
 MAX_RECORDS_TO_CONCAT = 5000
 MAX_RECORDS_TO_SEND = 100
 CACHE_SIZE = 10
-STATS_FILE_LOCATION = '/opt/PDS/stats'
+STATS_FILE_LOCATION = '/opt/software-discovery-tool/stats'
 proxy_user = 'proxy_user'
 proxy_password = 'proxy_password'
 proxy_server = 'proxy_server'
@@ -74,7 +74,7 @@ SUPPORTED_DISTROS = {
 
 logging.basicConfig(format='%(asctime)s %(message)s', filename=LOG_FILE_LOCATION, level=DEBUG_LEVEL)
 
-LOGGER = logging.getLogger('PDS_SERVER')
+LOGGER = logging.getLogger('SDT_SERVER')
    
 # In case application is hosted on server with proxy, set "enable_proxy_authentication = True" in config.py 
 # and update the proxy details

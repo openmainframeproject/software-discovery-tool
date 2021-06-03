@@ -66,8 +66,8 @@ RUN  cd /opt/ \
 # Set Environmental Variables
 &&  sh -c "echo 'export PYTHONPATH=/opt/software-discovery-tool/src/classes:/opt/software-discovery-tool/src/config:$PYTHONPATH' > /etc/profile.d/software-discovery-tool.sh" \
 
-# Copy the apache configuration file from /opt/software-discovery-tool/src/config/pds.conf into respective apache configuration folder as below
-&&  cp -f /opt/software-discovery-tool/src/config/pds.conf /etc/apache2/sites-enabled/pds.conf \
+# Copy the apache configuration file from /opt/software-discovery-tool/src/config/sdt.conf into respective apache configuration folder as below
+&&  cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/sites-enabled/sdt.conf \
 &&  mv /etc/apache2/sites-enabled/000-default.conf /etc/apache2/sites-enabled/z-000-default.conf \
 
 #Create new user and group for apache
