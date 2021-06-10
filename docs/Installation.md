@@ -99,7 +99,7 @@ Note: In case software-discovery-tool code is already checked out, do the follow
 
 (Alternatively, you can check with unittesting) <br />
 ```cd software-discovery-tool/src/tests``` <br />
-```pytest```
+```pytest -p no:warnings```
 
 _**NOTE:**_ 
 

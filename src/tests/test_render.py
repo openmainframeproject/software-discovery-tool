@@ -3,7 +3,7 @@ import requests
 import os, sys
 modulepath='../config/config.py'
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(modulepath))))
-from config.config import server_host
+from config import server_host
 
 class TestFlask(unittest.TestCase):
 
