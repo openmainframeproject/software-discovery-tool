@@ -5,6 +5,9 @@ The instructions provided below specify the steps for SLES 11 SP4/12/12 SP1/12 S
 _**NOTE:**_
 * make sure you are logged in as user with sudo permissions
 
+_**RECOMMENDED:**_
+Create and activate a virtual environment before instaling python packages. If you are facing permission issues while creating environment inside software-discovery-tool folder, refer Step 6 of Installation.
+
 ### Step 1: Install prerequisite
 
 * For SLES (11 SP4, 12):
@@ -17,7 +20,7 @@ _**NOTE:**_
 
         sudo apt-get update
         sudo apt-get install -y python3 python3-pip gcc git python3-dev libssl-dev libffi-dev cron python3-lxml apache2 libapache2-mod-wsgi-py3
-        sudo pip3 install 'cffi==1.11.5' 'cryptography==1.4' Flask launchpadlib simplejson requests pytest
+        sudo pip3 install 'cffi==1.11.5' 'cryptography==1.4'  
 
 * For SLES (12 SP1, 12 SP2, 12 SP3):
 
@@ -100,6 +103,12 @@ Note: In case software-discovery-tool code is already checked out, do the follow
 (Alternatively, you can check with unittesting) <br />
 ```cd software-discovery-tool/src/tests``` <br />
 ```pytest```
+
+### Step 6: Set read/write permissions on /opt/software-discovery-tool/ folder if you are getting PytestCacheWarning when running pytest
+
+        sudo chown -R user:user /opt/software-discovery-tool/
+
+Where "user" is your current user. You can get it by running "whoami" in Command Line.
 
 _**NOTE:**_ 
 
