@@ -102,15 +102,6 @@ Note: In case software-discovery-tool code is already checked out, do the follow
 
 If you run `pytest` as your logged user, it may give errors/warnings since you have given user `apache` ownership.
 
-* For Ubuntu (18.04, 19.04, 20.04):
-
-		sudo -u apache pytest
-
-* SLES (12 SP1, 12 SP2, 12 SP3):
-
-		sudo -u apache pytest
-		#if you are prompted with a password, then follow these:
-		sudo -u apache passwd #ignore all BAD PASSWORD warnings OR set a strong password
 		sudo -u apache pytest
 
 _**NOTE:**_ 
