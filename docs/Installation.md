@@ -112,7 +112,28 @@ git pull <upstream remote> <default branch> --submodule-recursive
 ```
 - To update ONLY the data directory keeping the main repo as it is:
 ```
-git submodule update
+git submodule update --recursive --remote
+```
+
+#### Using data from PDS
+For example, taking RHEL_8_Package_List.json, SUSE_Package_Hub_SLES_15.json and Ubuntu_21_04_Package_List.json
+- create a file listing all the needed files
+```
+$cat distro_list
+RHEL_8_Package_List.json
+SUSE_Package_Hub_SLES_15.json
+Ubuntu_21_04_Package_List.json
+```
+- format each line with starting `https://raw.githubusercontent.com/linux-on-ibm-z/PDS/master/distro_data/`
+```
+$cat distro_list
+https://raw.githubusercontent.com/linux-on-ibm-z/PDS/master/distro_data/RHEL_8_Package_List.json
+https://raw.githubusercontent.com/linux-on-ibm-z/PDS/master/distro_data/SUSE_Package_Hub_SLES_15.json
+https://raw.githubusercontent.com/linux-on-ibm-z/PDS/master/distro_data/Ubuntu_21_04_Package_List.json
+```
+- `curl` the latest json files
+```
+while read -r line; do curl -o `echo $line | cut -f 8 -d "/"` $line; done < distro_list
 ```
 
 ###  Step 6: Verify that the software-discovery-tool server is up and running
