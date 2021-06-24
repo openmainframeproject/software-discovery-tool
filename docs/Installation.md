@@ -93,7 +93,29 @@ Note: In case software-discovery-tool code is already checked out, do the follow
 
         sudo apachectl restart
 
-###  Step 5: Verify that the software-discovery-tool server is up and running
+### Step 5: Cloning Data Directory (Only First Time)
+ openmainframeproject/software-discovery-tool-data contains all OMP created json files. To add the data files, we will use `git submodule`
+- map the submodule directory with the directory path and update the directory:
+```
+git submodule init && git submodule update
+```
+- since we cloned a new repo as root just now, give the permissions to `apache` user like we did before:
+```
+sudo chown -R apache:apache /opt/software-discovery-tool/distro_data
+```
+
+#### Updating Data Directory
+Everytime there's an upstream change in the submodule:
+- To update the data directory with the main repo with the remote changes:
+```
+git pull <upstream remote> <default branch> --submodule-recursive
+```
+- To update ONLY the data directory keeping the main repo as it is:
+```
+git submodule update
+```
+
+###  Step 6: Verify that the software-discovery-tool server is up and running
 
 ```http://server_ip_or_fully_qualified_domain_name:port_number/software-discovery-tool``` <br />
 
