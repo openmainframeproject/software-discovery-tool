@@ -47,6 +47,8 @@ var HomeController = function($scope) {
     $scope.forced_stop = false;
     $scope.xhr = null;
     $scope.pctcomplete = 0;
+
+    $scope.showDescription = false;
     
     // Get the package information data from the server and process it for display
     $.ajax({
@@ -277,6 +279,7 @@ var HomeController = function($scope) {
             else{
                 package_data = distro_data.packages;
                 packages_all = [];
+                console.log(package_data)
                 for(var i = 0; i < package_data.length; i++){
                     package_data[i].P = decodeURI(package_data[i].P);
                     packages_all.push(package_data[i]);
