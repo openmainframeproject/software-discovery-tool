@@ -62,6 +62,7 @@ class PackageSearch:
             LOGGER.debug('loadPackageData: end writing distros data')
 
         LOGGER.debug('loadPackageData: Loading supported distros data')
+        LOGGER.debug(json_data)
 
         return json_data
 
@@ -89,6 +90,7 @@ class PackageSearch:
                         cachedPackage["P"] = pkg["packageName"]
                         cachedPackage["S"] = cachedPackage["P"].lower().upper()
                         cachedPackage["V"] = pkg["version"]
+                        cachedPackage["D"] = pkg["description"]
                         try:
                             cachedPackage["B"] = cls.DISTRO_BIT_MAP[distroName][distroVersion]
                         except Exception as e:
@@ -106,6 +108,9 @@ class PackageSearch:
                                 package_data[pkg_key]['B'] += cls.DISTRO_BIT_MAP[distroName][distroVersion]
                                 
         json_data = list(package_data.values())
+
+        LOGGER.debug("json_data : \n")
+        LOGGER.debug(json_data)
 
         return json_data
 
@@ -167,7 +172,8 @@ class PackageSearch:
         preliminary_results = {}
         if( (cache_key in self.INSTANCE.local_cache) == False ):
             LOGGER.debug('searchPackages: Not available in cache, so make fresh search')
-            if (exact_match.lower() == 'true'):
+            LOGGER.debug(self.INSTANCE.package_data)
+            if (exact_match == True):
                 LOGGER.debug('searchPackages: Doing exact search')
                 preliminary_results = [s for s in self.INSTANCE.package_data if s['P'] == search_term and (s['B'] & search_bit_flag) > 0]
             elif search_anywhere_in_packages:
