@@ -137,7 +137,8 @@ Example of extracting the RHEL_8_Package_List.json from PDS repo:
 Extracting RHEL_8_Package_List.json from PDS data ...
 Thanks for using SDT!
 ```
-Make sure the json file exists in the PDS data directory.
+ _**NOTE:**_
+- Make sure the json file exists in the PDS data directory.
 
 ###  Step 6: Verify that the software-discovery-tool server is up and running
 
