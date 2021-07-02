@@ -116,25 +116,28 @@ git submodule update --recursive --remote
 ```
 
 #### Using data from PDS
-For example, taking RHEL_8_Package_List.json, SUSE_Package_Hub_SLES_15.json and Ubuntu_21_04_Package_List.json
-- create a file listing all the needed files
+For example, taking RHEL_8_Package_List.json
+- Usage help will be displayed:
 ```
-$cat distro_list
-RHEL_8_Package_List.json
-SUSE_Package_Hub_SLES_15.json
-Ubuntu_21_04_Package_List.json
+cd /opt/software-discovery-tool/distro_data/distro_data
+./package_build
+Usage:
+./package_build <exact_file_name.json>
+			[if data is from PDS]
+./package_build debian
+			[if data is from Debian]
+./package_build
+			[for displaying this help]
+Example:
+./package_build RHEL_8_Package_List.json
 ```
-- format each line with starting `https://raw.githubusercontent.com/linux-on-ibm-z/PDS/master/distro_data/`
+Example of extracting the RHEL_8_Package_List.json from PDS repo:
 ```
-$cat distro_list
-https://raw.githubusercontent.com/linux-on-ibm-z/PDS/master/distro_data/RHEL_8_Package_List.json
-https://raw.githubusercontent.com/linux-on-ibm-z/PDS/master/distro_data/SUSE_Package_Hub_SLES_15.json
-https://raw.githubusercontent.com/linux-on-ibm-z/PDS/master/distro_data/Ubuntu_21_04_Package_List.json
+./package_build RHEL_8_Package_List.json
+Extracting RHEL_8_Package_List.json from PDS data ...
+Thanks for using SDT!
 ```
-- `curl` the latest json files
-```
-while read -r line; do curl -o `echo $line | cut -f 8 -d "/"` $line; done < distro_list
-```
+Make sure the json file exists in the PDS data directory.
 
 ###  Step 6: Verify that the software-discovery-tool server is up and running
 
