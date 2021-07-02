@@ -32,6 +32,10 @@
 		placeholder="Enter Software Name" ng-model="package_name" ng-keyup="searchPackagesFromText($event)" />
         <input type="button" id="fuzzySearch" class="btn btn-small btn-primary" value="Search" title="package Name in search should be more than two characters long" ng-click="searchPackages(null, 'fuzzySearch',false);" ng-disabled="package_name.length <= 1" />
         <a class="btn btn-small btn-info"  href="javascript:void(0);" ng-click="searchPackages(null, 'exactSearch', true);" ng-hide="package_name.length <= 0">Search Exact</a>
+        <label>
+          <input type="checkbox" ng-checked="showDescription" ng-click="showDescription=!showDescription"/>
+          Show Description
+        </label>
       </div>
       <div class="h6">         
         <summary><label id="help_text" style="padding-left:10px;">Enter the name of the package or at least three characters to enable pattern search.  Wildcard ('*') can be used either before or after the search keywords. </label></summary>
@@ -93,7 +97,7 @@
               <th>Package Name<a ng-click="set_sort_order('P')"><i ng-class="sortIcon('P')"></i></a></th>
               <th>Version<a ng-click="set_sort_order('V')"><i ng-class="sortIcon('V')"></i></a></th>
               <th>Distro</th> <!-- <th>Distro<a ng-click="set_sort_order('D')"><i ng-class="sortIcon('D')"></i></a></th>-->
-              <!-- <th></th> <th>Description<a ng-click="set_sort_order('id')"><i class="icon-sort"></i></a></th> -->
+              <th ng-if="showDescription">Description</th> <!--<th>Description<a ng-click="set_sort_order('id')"><i class="icon-sort"></i></a></th>-->
             </tr>
           </thead>
           <tfoot>
@@ -101,7 +105,7 @@
               <th>Package Name<a ng-click="set_sort_order('P')"><i ng-class="sortIcon('P')"></i></a></th>
               <th>Version<a ng-click="set_sort_order('V')"><i ng-class="sortIcon('V')"></i></a></th>
               <th>Distro</th> <!-- <th>Distro<a ng-click="set_sort_order('D')"><i ng-class="sortIcon('D')"></i></a></th>-->
-              <!-- <th></th> <th>Description<a ng-click="set_sort_order('id')"><i class="icon-sort"></i></a></th> -->
+              <th ng-if="showDescription">Description</th> <!--<th>Description<a ng-click="set_sort_order('id')"><i class="icon-sort"></i></a></th>-->
             </tr>
             <tr>
               <td colspan="3">
@@ -134,7 +138,7 @@
               <td>{{item.P}}</td>
               <td>{{item.V}}</td>
               <td>{{getDisplayDistro(item)}}</td>
-              <!-- <td>    </td> -->
+              <td ng-if="showDescription">{{item.D}}</td>
             </tr>
           </tbody>
         </table>
@@ -142,3 +146,4 @@
     </div>
   </div>
 </div>
+
