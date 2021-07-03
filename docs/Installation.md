@@ -119,21 +119,21 @@ git submodule update --recursive --remote
 For example, taking RHEL_8_Package_List.json
 - Usage help will be displayed:
 ```
-cd /opt/software-discovery-tool/distro_data/distro_data
-./package_build
+cd /opt/software-discovery-tool/bin
+./package_build.py
 Usage:
-./package_build <exact_file_name.json>
+./package_build.py <exact_file_name.json>
 			[if data is from PDS]
-./package_build debian
+./package_build.py debian
 			[if data is from Debian]
-./package_build
+./package_build.py
 			[for displaying this help]
 Example:
-./package_build RHEL_8_Package_List.json
+./package_build.py RHEL_8_Package_List.json
 ```
 Example of extracting the RHEL_8_Package_List.json from PDS repo:
 ```
-./package_build RHEL_8_Package_List.json
+./package_build.py RHEL_8_Package_List.json
 Extracting RHEL_8_Package_List.json from PDS data ...
 Thanks for using SDT!
 ```
