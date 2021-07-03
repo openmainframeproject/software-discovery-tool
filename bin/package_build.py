@@ -4,7 +4,7 @@ import re
 import sys
 
 DATA = ""
-SDT_BASE = '/home/divya/assignment/opensource/software-discovery-tool'
+SDT_BASE = '/opt/software-discovery-tool'
 DATA_FILE_LOCATION = '%s/distro_data/distro_data' % SDT_BASE
 
 def purify(dirty):
