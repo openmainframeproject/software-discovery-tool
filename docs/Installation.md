@@ -112,8 +112,33 @@ git pull <upstream remote> <default branch> --submodule-recursive
 ```
 - To update ONLY the data directory keeping the main repo as it is:
 ```
-git submodule update
+git submodule update --recursive --remote
 ```
+
+#### Using data from PDS
+For example, taking RHEL_8_Package_List.json
+- Usage help will be displayed:
+```
+cd /opt/software-discovery-tool/bin
+./package_build.py
+Usage:
+./package_build.py <exact_file_name.json>
+			[if data is from PDS]
+./package_build.py debian
+			[if data is from Debian]
+./package_build.py
+			[for displaying this help]
+Example:
+./package_build.py RHEL_8_Package_List.json
+```
+Example of extracting the RHEL_8_Package_List.json from PDS repo:
+```
+./package_build.py RHEL_8_Package_List.json
+Extracting RHEL_8_Package_List.json from PDS data ...
+Thanks for using SDT!
+```
+ _**NOTE:**_
+- Make sure the json file exists in the PDS data directory.
 
 ###  Step 6: Verify that the software-discovery-tool server is up and running
 
