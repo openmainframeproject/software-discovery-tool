@@ -35,9 +35,9 @@ DEBUG_LEVEL = logging.ERROR
 
 SUPPORTED_DISTROS = {
 	'IBM z/OS ™': {
-		'ZOS Software': 'ZOS_Software_List.json'
+		'z/OS Software': 'ZOS_Software_List.json'
 	},
-	'Debian': {
+	'Debian 10': {
 		'Buster': 'Debian_Buster_List.json'
 	}
 }
