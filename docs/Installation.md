@@ -141,7 +141,8 @@ Thanks for using SDT!
 - Make sure the json file exists in the PDS data directory.
 
 Now to know how to update the `src/config/config.py` to reflect the new json files in the UI, follow steps mentioned in
-Step 2 of [Adding_new_distros](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Adding_new_distros.md#step-2-update-the-supported_distros-variable-in-configuration-file-pds_basesrcconfigconfigpy)
+Step 2 of
+[Adding_new_distros](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Adding_new_distros.md#step-2-update-the-supported_distros-variable-in-configuration-file-sdt_basesrcconfigconfigpy)
 
 ###  Step 6: Verify that the software-discovery-tool server is up and running
 
