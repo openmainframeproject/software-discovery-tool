@@ -140,6 +140,9 @@ Thanks for using SDT!
  _**NOTE:**_
 - Make sure the json file exists in the PDS data directory.
 
+Now to know how to update the `src/config/config.py` to reflect the new json files in the UI, follow steps mentioned in
+Step 2 of [Adding_new_distros](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Adding_new_distros.md#step-2-update-the-supported_distros-variable-in-configuration-file-pds_basesrcconfigconfigpy)
+
 ###  Step 6: Verify that the software-discovery-tool server is up and running
 
 ```http://server_ip_or_fully_qualified_domain_name:port_number/software-discovery-tool``` <br />
@@ -156,7 +159,7 @@ _**NOTE:**_
 * For SLES (11 SP4, 12) by default the port_number will be 5000
 * For SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (18.04, 19.04, 20.04)  by default the port_number will be 80
 
-###  Step 6: (Optional) Custom configuration
+###  Step 7: (Optional) Custom configuration
 Following configuration settings can be managed in `/opt/software-discovery-tool/src/config/config.py`:
 
         <software-discovery-tool_BASE> - Base location where software-discovery-tool is Installed/Cloned. Defaults to `/opt/software-discovery-tool/`
