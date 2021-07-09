@@ -108,7 +108,7 @@ sudo chown -R apache:apache /opt/software-discovery-tool/distro_data
 Everytime there's an upstream change in the submodule:
 - To update the data directory with the main repo with the remote changes:
 ```
-git pull <upstream remote> <default branch> --recurse-submodule
+git pull <upstream remote> <default branch> --recurse-submodules
 ```
 - To update ONLY the data directory keeping the main repo as it is:
 ```
