@@ -34,7 +34,7 @@ Refer https://docs.python.org/2/library/logging.html for more information.
 DEBUG_LEVEL = logging.ERROR
 
 SUPPORTED_DISTROS = {
-	'ZOS': {
+	'IBM z/OS ™': {
 		'ZOS Software': 'ZOS_Software_List.json'
 	}
 }
