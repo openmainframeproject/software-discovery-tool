@@ -57,12 +57,11 @@ class PackageSearch:
             LOGGER.debug('loadPackageData: start writing distros data')
             json_data = cls.preparePackageData()
             cached_file = open(distro_data_file, 'w')
-            cached_file.write(json.dumps(json_data))
+            cached_file.write(json.dumps(json_data, indent=2, separators=(',', ': ')))
             cached_file.close()
             LOGGER.debug('loadPackageData: end writing distros data')
 
         LOGGER.debug('loadPackageData: Loading supported distros data')
-        LOGGER.debug(json_data)
 
         return json_data
 
@@ -90,7 +89,8 @@ class PackageSearch:
                         cachedPackage["P"] = pkg["packageName"]
                         cachedPackage["S"] = cachedPackage["P"].lower().upper()
                         cachedPackage["V"] = pkg["version"]
-                        cachedPackage["D"] = pkg["description"]
+                        if "description" in pkg:
+                            cachedPackage["D"] = pkg["description"]
                         try:
                             cachedPackage["B"] = cls.DISTRO_BIT_MAP[distroName][distroVersion]
                         except Exception as e:
@@ -108,9 +108,6 @@ class PackageSearch:
                                 package_data[pkg_key]['B'] += cls.DISTRO_BIT_MAP[distroName][distroVersion]
                                 
         json_data = list(package_data.values())
-
-        LOGGER.debug("json_data : \n")
-        LOGGER.debug(json_data)
 
         return json_data
 
