@@ -37,8 +37,8 @@ SUPPORTED_DISTROS = {
 	'IBM z/OS ™': {
 		'z/OS Software': 'ZOS_Software_List.json'
 	},
-	'Debian': {
-		'Buster 10': 'Debian_Buster_List.json'
+	'Debian 10': {
+		'Buster': 'Debian_Buster_List.json'
 	},
 	'ClefOS': {
 		'ClefOS Epel 7': 'ClefOS_7_List.json'
