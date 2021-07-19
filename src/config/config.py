@@ -41,7 +41,7 @@ SUPPORTED_DISTROS = {
 		'Buster': 'Debian_Buster_List.json'
 	},
 	'ClefOS': {
-		'ClefOS Epel 7': 'ClefOS_7_List.json'
+		'ClefOS Base 7': 'ClefOS_7_List.json'
 	}
 }
 
