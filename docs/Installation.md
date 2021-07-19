@@ -139,7 +139,11 @@ Thanks for using SDT!
 ```
  _**NOTE:**_
 - Make sure the json file exists in the PDS data directory.
-
+- Please keep in mind that the directory belongs to user `apache`, so in case of permission error,
+	run the chown cmd or directly use `package_build.py` as `apache` user like:
+	```
+	sudo -u apache ./bin/package_build.py RHEL_8_Package_List.json
+	```
 Now to know how to update the `src/config/config.py` to reflect the new json files in the UI, follow steps mentioned in
 Step 2 of
 [Adding_new_distros](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Adding_new_distros.md#step-2-update-the-supported_distros-variable-in-configuration-file-sdt_basesrcconfigconfigpy)
