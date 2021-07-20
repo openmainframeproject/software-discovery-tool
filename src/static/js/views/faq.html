@@ -25,7 +25,6 @@
         <ul>
             <li>IBM z/OS</li>
             <li>Debain 10(buster)</li>
-            <li>ClefOS Epel 7 </li>
         </ul></p>
       </div>
       <div class="list-group-item list-group-item-info ng-class:{'active': questionState(3), 'glyphicon-minus':questionState(3), 'glyphicon-plus':!questionState(3)};"  ng-click="clickQuestion(3)">
@@ -34,16 +33,14 @@
       <div class="list-group-item" ng-show="questionState(3)">
         <p>More details of packages can be obtained directly from following links provided by respective distros.</p>
         <ul>
-          <li><a href="https://www.rocketsoftware.com/zos-open-source/tools" target="blank">IBM z/OS</a></li>
-          <li><a href="https://download.sinenomine.net/clefos/7/base/" target="blank">ClefOS</a></li>
-          <li><a href="https://packages.debian.org/stable/allpackagesx" target="blank">Debian 10 "buster"</a></li>
+          <li><a href="https://www.debian.org/distrib/packages" target="blank">Debian 10 "buster"</a>. In this link, under the section <b>Search the contents of packages</b> select the Architecture as s390x from the dropdown to search for packages.</li>
         </ul>
       </div>
       <div class="list-group-item list-group-item-info ng-class:{'active': questionState(4), 'glyphicon-minus':questionState(4), 'glyphicon-plus':!questionState(4)};"  ng-click="clickQuestion(4)">
         Does Software Discovery Tool list the packages for all architectures?
       </div>
       <div class="list-group-item" ng-show="questionState(4)">
-        <p>No. The packages that Software Discovery Tool lists are primarily for s390x architecture.</p>
+        <p>No. The packages that Software Discovery Tool lists are for s390x architecture.</p>
       </div>
       <div class="list-group-item list-group-item-info ng-class:{'active': questionState(5), 'glyphicon-minus':questionState(5), 'glyphicon-plus':!questionState(5)};"  ng-click="clickQuestion(5)">
         What is the format for entering the search keywords?
