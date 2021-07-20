@@ -15,17 +15,17 @@
         What is Software Discovery Tool?
       </div>
       <div class="list-group-item" ng-show="questionState(1)">
-        <p>Software Discovery Tool, helps you to search for available packages across OS distributions in a single user interface. Current version of Software Discovery Tool is v1.5.28</p>
+        <p>Software Discovery Tool, helps you to search for available packages across OS distributions supported by the s390x architecture in a single user interface.</p>
       </div>
       <div class="list-group-item list-group-item-info ng-class:{'active': questionState(2), 'glyphicon-minus':questionState(2), 'glyphicon-plus':!questionState(2)};"  ng-click="clickQuestion(2)"> <!--ng-class="[list-group-item, { 'active':questionState(2) } ]"-->
         Which operating systems does Software Discovery Tool support?
       </div>
       <div class="list-group-item" ng-show="questionState(2)">
-        <p>Currently, Software Discovery Tool supports the following operating systems:
+        <p>Currently, Software Discovery Tool contains data for the following operating systems:
         <ul>
-            <li>SUSE Linux Enterprise Server (12 SP3,SP4,SP5,15, 15 SP1, SP2)</li>
-            <li>Ubuntu (19.04,19.04,20.04,20.10)</li>
-            <li>Red Hat Enterprise Linux 6.10/7.6/7.7/7.8/7.9/8.0/8.1/8.2/8.3 </li>
+            <li>IBM z/OS</li>
+            <li>Debain 10(buster)</li>
+            <li>ClefOS Epel 7 </li>
         </ul></p>
       </div>
       <div class="list-group-item list-group-item-info ng-class:{'active': questionState(3), 'glyphicon-minus':questionState(3), 'glyphicon-plus':!questionState(3)};"  ng-click="clickQuestion(3)">
@@ -34,44 +34,21 @@
       <div class="list-group-item" ng-show="questionState(3)">
         <p>More details of packages can be obtained directly from following links provided by respective distros.</p>
         <ul>
-          <li><a href="https://www.suse.com/releasenotes/x86_64/SUSE-SLES/12/#InfraPackArch.SystemZ" target="blank">SUSE Linux Enterprise Server 12</a></li>
-          <li><a href="https://www.suse.com/releasenotes/s390x/SUSE-SLES/15/" target="blank">SUSE Linux Enterprise Server 15</a></li>
-          <li><a href="https://www.suse.com/releasenotes/s390x/SUSE-SLES/15-SP1/" target="blank">SUSE Linux Enterprise Server 15 SP1</a></li>
-          <li><a href="https://www.suse.com/releasenotes/s390x/SUSE-SLES/15-SP2/" target="blank">SUSE Linux Enterprise Server 15 SP2</a></li>
-          <li><a href="https://packagehub.suse.com/#packages" target="blank">SUSE Package Hub</a></li>
-          <li><a href="https://launchpad.net/ubuntu/xenial/s390x" target="blank">Ubuntu 18.04</a></li>
-          <li><a href="https://launchpad.net/ubuntu/bionic/s390x" target="blank">Ubuntu 19.04</a></li>
-          <li><a href="https://launchpad.net/ubuntu/focal/s390x/" target="blank">Ubuntu 20.04</a></li>
-          <li><a href="https://launchpad.net/ubuntu/groovy/s390x/" target="blank">Ubuntu 20.10</a></li>
-          <li><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/6.10_release_notes/index" target="blank">RHEL 6.10</a></li>
-          <li><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/package_manifest/package_lists_base_repository#Base-Server" target="blank">RHEL 7</a></li>
-          <li><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/8.0_release_notes/index" target="blank">RHEL 8.0</a></li>
-          <li><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/package_manifest/index" target="blank">RHEL 8.1</a></li>
-          <li><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/8.2_release_notes/distribution-of-content-in-rhel-8#repositories" target="blank">RHEL 8.2</a></li>
-          <li><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/8.3_release_notes/distribution-of-content-in-rhel-8#repositories" target="blank">RHEL 8.3</a></li>
+          <li><a href="https://www.rocketsoftware.com/zos-open-source/tools" target="blank">IBM z/OS</a></li>
+          <li><a href="https://download.sinenomine.net/clefos/7/base/" target="blank">ClefOS</a></li>
+          <li><a href="https://packages.debian.org/stable/allpackagesx" target="blank">Debian 10 "buster"</a></li>
         </ul>
       </div>
       <div class="list-group-item list-group-item-info ng-class:{'active': questionState(4), 'glyphicon-minus':questionState(4), 'glyphicon-plus':!questionState(4)};"  ng-click="clickQuestion(4)">
         Does Software Discovery Tool list the packages for all architectures?
       </div>
       <div class="list-group-item" ng-show="questionState(4)">
-        <p>No. The packages that Software Discovery Tool lists are for s390x and Intel architecture.</p>
+        <p>No. The packages that Software Discovery Tool lists are primarily for s390x architecture.</p>
       </div>
       <div class="list-group-item list-group-item-info ng-class:{'active': questionState(5), 'glyphicon-minus':questionState(5), 'glyphicon-plus':!questionState(5)};"  ng-click="clickQuestion(5)">
-        Which web browsers does Software Discovery Tool work on?
-      </div>
-      <div class="list-group-item" ng-show="questionState(5)">
-        <p>Currently, Software Discovery Tool works on the following web browsers:
-        <ul>
-            <li>Mozilla Firefox 56.0.1</li>
-            <li>Google Chrome 66</li>
-            <li>Internet Explorer 11</li>
-        </ul></p>
-      </div>
-      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(6), 'glyphicon-minus':questionState(6), 'glyphicon-plus':!questionState(6)};"  ng-click="clickQuestion(6)">
         What is the format for entering the search keywords?
       </div>
-      <div class="list-group-item" ng-show="questionState(6)">
+      <div class="list-group-item" ng-show="questionState(5)">
         <p>The keyword must be three or more characters.
         <ul>
            <li>To search for a package that contains the keyword anywhere in its name, enter three or more characters</li>           
@@ -81,42 +58,43 @@
         </ul>
         </p>
       </div>
-      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(7), 'glyphicon-minus':questionState(7), 'glyphicon-plus':!questionState(7)};"  ng-click="clickQuestion(7)">
+      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(6), 'glyphicon-minus':questionState(6), 'glyphicon-plus':!questionState(6)};"  ng-click="clickQuestion(6)">
         How can I narrow my search?
       </div>
-      <div class="list-group-item" ng-show="questionState(7)">
+      <div class="list-group-item" ng-show="questionState(6)">
         <p>To get packages which exactly matches the search keyword, click on the hyperlink &quot;Search &lt;keyword&gt; (Exact Match)&quot; after entering search keyword</p>
       </div>
-      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(8), 'glyphicon-minus':questionState(8), 'glyphicon-plus':!questionState(8)};"  ng-click="clickQuestion(8)">
+      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(7), 'glyphicon-minus':questionState(7), 'glyphicon-plus':!questionState(7)};"  ng-click="clickQuestion(7)">
         How can I refine my search results?
       </div>
-      <div class="list-group-item" ng-show="questionState(8)">
+      <div class="list-group-item" ng-show="questionState(7)">
         <p>For every successful search, Software Discovery Tool displays a panel next to the results grid.  You may enter a few characters of Package Name or Version in the 'Refine your results' text box and the results will be filtered automatically as you type.</p>
         <p>Similarly you may select or unselect the specific Distro Versions under "Filter distribution" to locate the necessary package.</p>
         <p>With each distro version, Software Discovery Tool displays count of displayed packages and total packages found per Distro Version for your help.</p>
       </div>
-      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(9), 'glyphicon-minus':questionState(9), 'glyphicon-plus':!questionState(9)};"  ng-click="clickQuestion(9)">
+      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(8), 'glyphicon-minus':questionState(8), 'glyphicon-plus':!questionState(8)};"  ng-click="clickQuestion(8)">
         What package details does Software Discovery Tool display in the search results?
       </div>
-      <div class="list-group-item" ng-show="questionState(9)">
+      <div class="list-group-item" ng-show="questionState(8)">
         <p>Software Discovery Tool displays the following package details in the search results:
            <ul>
            <li>Package Name</li>
            <li>Package Version</li>
+           <li>Package Description</li>
            <li>Operating system for which the package is available</li>
            </ul>
         </p>
       </div>
-      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(10), 'glyphicon-minus':questionState(10), 'glyphicon-plus':!questionState(10)};"  ng-click="clickQuestion(10)">
+      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(9), 'glyphicon-minus':questionState(9), 'glyphicon-plus':!questionState(9)};"  ng-click="clickQuestion(9)">
         How accurate is the package information that Software Discovery Tool provides?
       </div>
-      <div class="list-group-item" ng-show="questionState(10)">
+      <div class="list-group-item" ng-show="questionState(9)">
         <p>The package information is regularly updated. It is accurate as on the date of the update. However, the information might become obsolete between updates. To obtain the most current package information, go to the official Linux distribution websites.</p>
       </div>
-      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(11), 'glyphicon-minus':questionState(11), 'glyphicon-plus':!questionState(11)};"  ng-click="clickQuestion(11)">
+      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(10), 'glyphicon-minus':questionState(10), 'glyphicon-plus':!questionState(10)};"  ng-click="clickQuestion(10)">
         Where can I find more information on running Linux open source packages on IBM LinuxONE and IBM z Systems?
       </div>
-      <div class="list-group-item" ng-show="questionState(11)">
+      <div class="list-group-item" ng-show="questionState(10)">
         <p>More information on open source packages that have been ported and/or validated on corresponding distro versions by IBM could be found on <a href="https://www.ibm.com/developerworks/community/forums/html/topic?id=5dee144a-7c64-4bfe-884f-751d6308dbdf">Forum</a> from <a href="https://www.ibm.com/developerworks/community/groups/community/lozopensource">Community</a>.</p>
       </div>
     </div>
