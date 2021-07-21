@@ -39,6 +39,9 @@ SUPPORTED_DISTROS = {
 	},
 	'Debian 10': {
 		'Buster': 'Debian_Buster_List.json'
+	},
+	'ClefOS': {
+		'ClefOS Base 7': 'ClefOS_7_List.json'
 	}
 }
 

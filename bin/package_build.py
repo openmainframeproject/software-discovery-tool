@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/python3
 import requests
 import re
 import sys
@@ -42,8 +42,38 @@ def debian():
 		DATA.close()
 		print(f"Saved!\nfilename: {q}")
 
-def pds(q):
+def clefos():
 	global DATA, DATA_FILE_LOCATION
+	results = []
+	results_json = []
+	q = 'ClefOS_7_List.json'
+	file_name = f'{DATA_FILE_LOCATION}/{q}'
+	source = [f"https://download.sinenomine.net/clefos/7/base/{x}/" for x in ['s390x','noarch']]
+	for each in source:
+		try:
+			req = requests.get(each)
+			data = req.text
+			if req.status_code == 404:
+				raise Exception("404 File not found")
+		except Exception as e:
+			print("Couldn't pull. Error: ",str(e))
+		else:
+			ref_data = re.findall(r"<a href=\"(.*\.rpm)\">.*<\/a>", data)
+			results.extend(ref_data)
+	DATA = open(file_name, 'w')
+	DATA.write('[')
+	for result in results:
+		result = re.sub(r'\.el.*','', result)
+		pkg = re.search(r'([\w+\-]+)-([\w\-\.]+)', result)
+		each_pkg = f'"packageName": "{pkg.group(1)}","version": "{pkg.group(2)}"'
+		each_pkg = '{'+each_pkg+'},'
+		DATA.write(each_pkg+'\n')
+	DATA.write('{}]')
+	DATA.close()	
+	print(f"Saved!\nfilename: {q}")
+
+def pds(q):
+	global DATA,DATA_FILE_LOCATION
 	file_name = f'{DATA_FILE_LOCATION}/{q}'
 	try:
 		req = requests.get(f"https://raw.githubusercontent.com/linux-on-ibm-z/PDS/master/distro_data/{q}")
@@ -60,21 +90,23 @@ def pds(q):
 		print(f"Saved!\nfilename: {q}")
 
 if __name__ == "__main__":
-	try:	
-		file = sys.argv[1]
-		if re.match(r'.*\.json', file):
-			print(f"Extracting {file} from PDS data ... ")
-			pds(file)
-		elif file == 'Debian' or file == 'debian':
-			print(f"Extracting {file} data ... ")
-			debian()
-		else:
-			raise
-	except:
+	
+	file = sys.argv[1]
+	if re.match(r'.*\.json', file):
+		print(f"Extracting {file} from PDS data ... ")
+		pds(file)
+	elif file == 'Debian' or file == 'debian':
+		print(f"Extracting {file} data ... ")
+		debian()
+	elif file == 'Clef' or file == 'clef':
+		print(f"Extracting {file} data ... ")
+		clefos()
+	else:
 		print(
 			"Usage:\n./package_build <exact_file_name.json>\n\t\t\t[if data is from PDS]"
 			"\n./package_build debian\n\t\t\t[if data is from Debian]"
+			"\n./package_build clef\n\t\t\t[if data is from ClefOS]"
 			"\n./package_build\n\t\t\t[for displaying this help]\n"
 			"Example:\n./package_build RHEL_8_Package_List.json\n./package_build debian")
-	else:
-		print("Thanks for using SDT!")
+	
+	print("Thanks for using SDT!")
