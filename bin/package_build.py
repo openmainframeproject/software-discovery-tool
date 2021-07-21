@@ -91,25 +91,22 @@ def pds(q):
 
 if __name__ == "__main__":
 	
-	try:
-		file = sys.argv[1]
-		if re.match(r'.*\.json', file):
-			print(f"Extracting {file} from PDS data ... ")
-			pds(file)
-		elif file == 'Debian' or file == 'debian':
-			print(f"Extracting {file} data ... ")
-			debian()
-		elif file == 'Clef' or file == 'clef':
-			print(f"Extracting {file} data ... ")
-			clefos()
-		else:
-			raise
-	except:
+	file = sys.argv[1]
+	if re.match(r'.*\.json', file):
+		print(f"Extracting {file} from PDS data ... ")
+		pds(file)
+	elif file == 'Debian' or file == 'debian':
+		print(f"Extracting {file} data ... ")
+		debian()
+	elif file == 'Clef' or file == 'clef':
+		print(f"Extracting {file} data ... ")
+		clefos()
+	else:
 		print(
 			"Usage:\n./package_build <exact_file_name.json>\n\t\t\t[if data is from PDS]"
 			"\n./package_build debian\n\t\t\t[if data is from Debian]"
 			"\n./package_build clef\n\t\t\t[if data is from ClefOS]"
 			"\n./package_build\n\t\t\t[for displaying this help]\n"
 			"Example:\n./package_build RHEL_8_Package_List.json\n./package_build debian")
-	else:
-		print("Thanks for using SDT!")
+	
+	print("Thanks for using SDT!")
