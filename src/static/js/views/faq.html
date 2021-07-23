@@ -24,7 +24,10 @@
         <p>Currently, Software Discovery Tool contains data for the following operating systems:
         <ul>
             <li>IBM z/OS</li>
-            <li>Debain 10(buster)</li>
+            <li>Debian 10(buster)</li>
+			<li>ClefOS 7</li>
+			<li>OpenSUSE Tumbleweeb</li>
+			<li>OpenSUSE Leap 15.3</li>
         </ul></p>
       </div>
       <div class="list-group-item list-group-item-info ng-class:{'active': questionState(3), 'glyphicon-minus':questionState(3), 'glyphicon-plus':!questionState(3)};"  ng-click="clickQuestion(3)">
@@ -34,7 +37,10 @@
         <p>More details of packages can be obtained directly from following links provided by respective distros.</p>
         <ul>
           <li><a href="https://www.debian.org/distrib/packages" target="blank">Debian 10 "buster"</a>. In this link, under the section <b>Search the contents of packages</b> select the Architecture as s390x from the dropdown to search for packages.</li>
-        </ul>
+		<li><a href="https://download.sinenomine.net/clefos/7/base/" target="blank">ClefOS 7</a>. In this link, go over the s390x directory</li>
+		<li><a href="https://download.opensuse.org/ports/zsystems/tumbleweed/" target="blank">OpenSUSE Tumbleweed</a>.</li>
+		<li><a href="https://download.opensuse.org/distribution/leap/15.3/repo/oss/" target="blank">OpenSUSE Leap</a>.</li>
+		</ul>
       </div>
       <div class="list-group-item list-group-item-info ng-class:{'active': questionState(4), 'glyphicon-minus':questionState(4), 'glyphicon-plus':!questionState(4)};"  ng-click="clickQuestion(4)">
         Does Software Discovery Tool list the packages for all architectures?
@@ -86,13 +92,13 @@
         How accurate is the package information that Software Discovery Tool provides?
       </div>
       <div class="list-group-item" ng-show="questionState(9)">
-        <p>The package information is regularly updated. It is accurate as on the date of the update. However, the information might become obsolete between updates. To obtain the most current package information, go to the official Linux distribution websites.</p>
+        <p>The package information is regularly updated. It is accurate as on the date of the update. However, the information might become obsolete between updates. To obtain the most current package information, go to the respective official Operating System websites.</p>
       </div>
       <div class="list-group-item list-group-item-info ng-class:{'active': questionState(10), 'glyphicon-minus':questionState(10), 'glyphicon-plus':!questionState(10)};"  ng-click="clickQuestion(10)">
-        Where can I find more information on running Linux open source packages on IBM LinuxONE and IBM z Systems?
+        Where can I find more information on running open source packages on z/OS and other Linux distributions?
       </div>
       <div class="list-group-item" ng-show="questionState(10)">
-        <p>More information on open source packages that have been ported and/or validated on corresponding distro versions by IBM could be found on <a href="https://www.ibm.com/developerworks/community/forums/html/topic?id=5dee144a-7c64-4bfe-884f-751d6308dbdf">Forum</a> from <a href="https://www.ibm.com/developerworks/community/groups/community/lozopensource">Community</a>.</p>
+        <p>More information on open source packages that have been ported and/or validated on corresponding distro versions by IBM could be found on <a href="https://www.ibm.com/community/z/open-source-software/">This Table</a> from <a href=" https://www.ibm.com/community/z/open-source/">Community</a>.</p>
       </div>
     </div>
   </div>
