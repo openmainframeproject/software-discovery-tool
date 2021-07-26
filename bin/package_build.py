@@ -162,6 +162,7 @@ if __name__ == "__main__":
 			"Usage:\n./package_build <exact_file_name.json>\n\t\t\t[if data is from PDS]"
 			"\n./package_build debian\n\t\t\t[if data is from Debian]"
 			"\n./package_build clef\n\t\t\t[if data is from ClefOS]"
+			"\n./package_build opensuse\n\t\t\t[if data is from OpenSUSE]"
 			"\n./package_build\n\t\t\t[for displaying this help]\n"
 			"Example:\n./package_build RHEL_8_Package_List.json\n./package_build debian")
 	
