@@ -46,10 +46,10 @@ def opensuse():
 	global DATA, DATA_FILE_LOCATION
 	results = []
 	results_str = ''
-	q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15.json']
+	q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_3.json']
 	file_name = [f'{DATA_FILE_LOCATION}/{x}' for x in q]
-	source_leap = [f"https://raw.githubusercontent.com/rachejazz/data-stuff/main/{x}" for x in ['leap_390x', 'leap_noarch']]
-	source_tumbleweed = [f"https://raw.githubusercontent.com/rachejazz/data-stuff/main/{x}" for x in ['tumbleweed_390x', 'tumbleweed_noarch']]
+	source_leap = [f"https://download.opensuse.org/distribution/leap/15.3/repo/oss/{x}" for x in ['s390x', 'noarch']]
+	source_tumbleweed = [f"https://download.opensuse.org/ports/zsystems/tumbleweed/repo/oss/{x}" for x in ['s390x', 'noarch']]
 	for each in source_tumbleweed:
 		try:
 			req = requests.get(each)
