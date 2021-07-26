@@ -42,6 +42,10 @@ SUPPORTED_DISTROS = {
 	},
 	'ClefOS': {
 		'ClefOS Base 7': 'ClefOS_7_List.json'
+	},
+	'OpenSUSE': {
+		'Leap 15.3': 'OpenSUSE_Leap_15_3.json',
+		'Tumbleweed': 'OpenSUSE_Tumbleweed.json'
 	}
 }
 

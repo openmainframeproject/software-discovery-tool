@@ -42,10 +42,63 @@ def debian():
 		DATA.close()
 		print(f"Saved!\nfilename: {q}")
 
+def opensuse():
+	global DATA, DATA_FILE_LOCATION
+	results = []
+	results_str = ''
+	q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_3.json']
+	file_name = [f'{DATA_FILE_LOCATION}/{x}' for x in q]
+	source_leap = [f"https://download.opensuse.org/distribution/leap/15.3/repo/oss/{x}" for x in ['s390x', 'noarch']]
+	source_tumbleweed = [f"https://download.opensuse.org/ports/zsystems/tumbleweed/repo/oss/{x}" for x in ['s390x', 'noarch']]
+	for each in source_tumbleweed:
+		try:
+			req = requests.get(each)
+			data = req.text
+			if req.status_code == 404:
+				raise Exception("404 File not found")
+		except Exception as e:
+			print("Couldn't pull. Error: ",str(e))
+		else:
+			ref_data = re.findall(r"<a href=\"(.*\.rpm)\"><img.*<\/a>", data)
+			results.extend(ref_data)
+	DATA = open(file_name[0], 'w')
+	DATA.write('[')
+	for result in results:
+		result = re.sub(r'\.(noarch|s390x)\.rpm', '', result)
+		pkg = re.search(r'^([\w+\.-]+)-([+~\w\-\.]+)', result)
+		each_pkg = f'"packageName": "{pkg.group(1)}","version": "{pkg.group(2)}"'
+		each_pkg = '{'+each_pkg+'},'
+		DATA.write(each_pkg+'\n')
+	DATA.write('{}]')
+	DATA.close()
+	print(f"Saved!\nfilename: {q[0]}")
+	results = []
+	for each in source_leap:
+		try:
+			req = requests.get(each)
+			data = req.text
+			if req.status_code == 404:
+				raise Exception("404 File not found")
+		except Exception as e:
+			print("Couldn't pull. Error: ",str(e))
+		else:
+			ref_data = re.findall(r"<a href=\"(.*\.rpm)\"><img.*<\/a>", data)
+			results.extend(ref_data)
+	DATA = open(file_name[1], 'w')
+	DATA.write('[')
+	for result in results:
+		result = re.sub(r'\.(noarch|s390x)\.rpm', '', result)
+		pkg = re.search(r'^([\w+\.-]+)-([+~\w\-\.]+)', result)
+		each_pkg = f'"packageName": "{pkg.group(1)}","version": "{pkg.group(2)}"'
+		each_pkg = '{'+each_pkg+'},'
+		DATA.write(each_pkg+'\n')
+	DATA.write('{}]')
+	DATA.close()
+	print(f"Saved!\nfilename: {q[1]}")
+
 def clefos():
 	global DATA, DATA_FILE_LOCATION
 	results = []
-	results_json = []
 	q = 'ClefOS_7_List.json'
 	file_name = f'{DATA_FILE_LOCATION}/{q}'
 	source = [f"https://download.sinenomine.net/clefos/7/base/{x}/" for x in ['s390x','noarch']]
@@ -69,7 +122,7 @@ def clefos():
 		each_pkg = '{'+each_pkg+'},'
 		DATA.write(each_pkg+'\n')
 	DATA.write('{}]')
-	DATA.close()	
+	DATA.close()
 	print(f"Saved!\nfilename: {q}")
 
 def pds(q):
@@ -101,11 +154,15 @@ if __name__ == "__main__":
 	elif file == 'Clef' or file == 'clef':
 		print(f"Extracting {file} data ... ")
 		clefos()
+	elif file == 'OpenSuse' or file == 'opensuse':
+		print(f"Extracting data for {file} ... ")
+		opensuse()
 	else:
 		print(
 			"Usage:\n./package_build <exact_file_name.json>\n\t\t\t[if data is from PDS]"
 			"\n./package_build debian\n\t\t\t[if data is from Debian]"
 			"\n./package_build clef\n\t\t\t[if data is from ClefOS]"
+			"\n./package_build opensuse\n\t\t\t[if data is from OpenSUSE]"
 			"\n./package_build\n\t\t\t[for displaying this help]\n"
 			"Example:\n./package_build RHEL_8_Package_List.json\n./package_build debian")
 	
