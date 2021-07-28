@@ -31,17 +31,15 @@ def addfile(file, ind):
 		data = DATA.read()
 	groups = regexes[ind].search(file)
 	if not ind == 0:
-		if groups.group(1) in data:
-			if not file in data:
-				start = data.index(groups.group(1)) + len(groups.group(1))+7
-				new_data = f"\t'{groups.group(1)} {groups.group(2)}.{groups.group(3)}': '{file}',\n"
-				flag = True
+		if groups.group(1) in data and not file in data:
+			start = data.index(groups.group(1)) + len(groups.group(1))+7
+			new_data = f"\t'{groups.group(1)} {groups.group(2)}.{groups.group(3)}': '{file}',\n"
+			flag = True
 	else:
-		if groups.group(1).replace('_', ' ') in data:
-			if not file in data:
-				start = data.index(groups.group(1).replace('_', ' ')) + len(groups.group(1))+7
-				new_data = f"\t'SLES {groups.group(4)} {'' if groups.group(6)==None else groups.group(6)}': '{file}',\n"
-				flag = True
+		if groups.group(1).replace('_', ' ') in data and not file in data:
+			start = data.index(groups.group(1).replace('_', ' ')) + len(groups.group(1))+7
+			new_data = f"\t'SLES {groups.group(4)} {'' if groups.group(6)==None else groups.group(6)}': '{file}',\n"
+			flag = True
 
 	if flag:
 		with open(SUPPORTED_DISTRO_FILE, 'r+') as DATA:
