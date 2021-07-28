@@ -1,5 +1,6 @@
 import urllib.request, urllib.error, urllib.parse
 import logging
+from config import supported_distros
 
 SDT_BASE = '/opt/software-discovery-tool'
 DATA_FILE_LOCATION = '%s/distro_data/distro_data' % SDT_BASE
@@ -32,22 +33,6 @@ NOTSET
 Refer https://docs.python.org/2/library/logging.html for more information.
 '''
 DEBUG_LEVEL = logging.ERROR
-
-SUPPORTED_DISTROS = {
-	'IBM z/OS ™': {
-		'z/OS Software': 'ZOS_Software_List.json'
-	},
-	'Debian 10': {
-		'Buster': 'Debian_Buster_List.json'
-	},
-	'ClefOS': {
-		'ClefOS Base 7': 'ClefOS_7_List.json'
-	},
-	'OpenSUSE': {
-		'Leap 15.3': 'OpenSUSE_Leap_15_3.json',
-		'Tumbleweed': 'OpenSUSE_Tumbleweed.json'
-	}
-}
 
 logging.basicConfig(format='%(asctime)s %(message)s', filename=LOG_FILE_LOCATION, level=DEBUG_LEVEL)
 
