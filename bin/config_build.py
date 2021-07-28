@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 import re
 import os
-import sys
 
 SDT_BASE = '/opt/software-discovery-tool'
 DATA_FILE_LOCATION = '%s/distro_data/distro_data' % SDT_BASE
