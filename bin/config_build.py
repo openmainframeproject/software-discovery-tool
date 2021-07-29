@@ -23,7 +23,6 @@ def packagetype(file):
 	global SLES_reg, RHEL_reg, Ubuntu_reg, regexes
 	for ind,reg in enumerate(regexes):
 		if reg.match(file):
-			print(f"Found file: {file}")
 			addfile(file, ind)
 
 def addfile(file, ind):
@@ -35,11 +34,13 @@ def addfile(file, ind):
 	name = re.sub(r'^x', '', groups.group(1).replace('_', ' '))
 	if not ind == 0:
 		if name in data and not file in data:
+			print(f"Found new file: {file}")
 			start = data.index(name) + len(name)+7
 			new_data = f"\t'{groups.group(1)} {groups.group(2)}.{groups.group(3)}': '{file}',\n"
 			flag = True
 	else:
 		if name in data and not file in data:
+			print(f"Found new file: {file}")
 			start = data.index(name) + len(name)+7
 			new_data = f"\t'SLES {groups.group(4)} {'' if groups.group(6)==None else groups.group(6)}': '{file}',\n"
 			flag = True
