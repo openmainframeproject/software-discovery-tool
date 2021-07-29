@@ -58,7 +58,7 @@ The Content of the distribution data JSON file has to be in the following format
 }]
 ```
 
-### Step 2. Update the SUPPORTED_DISTROS variable in configuration file `/<SDT_BASE>/src/config/supported_ditros.py`
+### Step 2. Update the SUPPORTED_DISTROS variable in file `/<SDT_BASE>/src/config/supported_ditros.py`
 Software Discovery application requires a mapping between each JSON file and relevant Distro Version.  This is done using SUPPORTED_DISTROS object in supported_distros file.
 SUPPORTED_DISTROS is a dictionary object having the "Distro Name" as the keys.  And each distro name has another dictionary having "Distro Version" has its key and "JSON file as its value"
 
@@ -124,7 +124,7 @@ Software Discovery Tool may assign following flags to the distros...
 ```
 In case the `PackageNameX` is available in in `Ubuntu 20.04` and `Ubuntu 20.10` then the `B` will be set to `6`
 
-Cache file has to be regenerated whenever there is a change in `supported_distros.py` file. Fortunately, `bin/config_build.py` does that for you. With this, it also attempts to update PDS data sources, if found any, to the latest version as available on their repository.
+Cache file has to be regenerated whenever there is a change in `supported_distros.py` file. Fortunately, `bin/config_build.py` does that for you. Incase, it does not find any cached_data.json file, it says so. With this, it also attempts to update all the PDS data sources, if found any in the directory, to the latest version as available on their repository.
 ```
 sudo -u apache ./bin/config_build.py
 Scanning distro_data directory...
