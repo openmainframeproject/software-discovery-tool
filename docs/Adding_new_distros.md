@@ -58,11 +58,19 @@ The Content of the distribution data JSON file has to be in the following format
 }]
 ```
 
-### Step 2. Update the SUPPORTED_DISTROS variable in configuration file `/<SDT_BASE>/src/config/config.py`
-Software Discovery application requires a mapping between each JSON file and relevant Distro Version.  This is done using SUPPORTED_DISTROS object in config file.
+### Step 2. Update the SUPPORTED_DISTROS variable in configuration file `/<SDT_BASE>/src/config/supported_ditros.py`
+Software Discovery application requires a mapping between each JSON file and relevant Distro Version.  This is done using SUPPORTED_DISTROS object in supported_distros file.
 SUPPORTED_DISTROS is a dictionary object having the "Distro Name" as the keys.  And each distro name has another dictionary having "Distro Version" has its key and "JSON file as its value"
 
-Software Discovery Tool uses the "Distro Name" and "Distro Version" keys to create "Display Names" of check-boxes on the Software Discovery Tool main page.  Ensure that there are no duplicate
+Software Discovery Tool uses an automatic script `config_build.py` to scan the directory and update the SUPPORTED_DISTROS object accordingly. It is highly crucial to follow the naming file scheme,
+which is `<DistroName>_<DistroVersion>.json`. This is helpful for the script to parse through the file name and update the object with the correct distro version and name.
+To use the script, just follow:
+```
+sudo -u apache ./bin/config_build.py
+```
+With this, it also tries to update all data files taken from PDS to keep them working as the latest versions.
+
+Software Discovery Tool also uses the "Distro Name" and "Distro Version" keys to create "Display Names" of check-boxes on the Software Discovery Tool main page.  Ensure that there are no duplicate
 "Distro Name" or "Distro Version" entries.
 
 SUPPORTED_DISTROS must have following structure
@@ -116,11 +124,19 @@ Software Discovery Tool may assign following flags to the distros...
 ```
 In case the `PackageNameX` is available in in `Ubuntu 20.04` and `Ubuntu 20.10` then the `B` will be set to `6`
 
-Cache file has to be regenerated whenever there is a change in SUPPORTED_DISTROS object.  Hence delete the existing cache as follows:
-
+Cache file has to be regenerated whenever there is a change in `supported_distros.py` file. Fortunately, `bin/config_build.py` does that for you. With this, it also attempts to update PDS data sources, if found any, to the latest version as available on their repository.
 ```
-cd <DATA_FILE_LOCATION>
-rm -f cached_data.json
+sudo -u apache ./bin/config_build.py
+Scanning distro_data directory...
+Found file: xUbuntu_21_04_Package_List.json
+Attempting to update PDS data sources...
+Updating xUbuntu_21_04_Package_List.json...
+Extracting xUbuntu_21_04_Package_List.json from PDS data ...
+Saved!
+filename: xUbuntu_21_04_Package_List.json
+Thanks for using SDT!
+Attempting to delete cached_data.json...
+File not found in directory.
+Done.
 ```
-
 ### Step 4. Restart the server by referring to the steps mentioned in [Installation](Installation.md) document.
