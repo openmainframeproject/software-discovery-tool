@@ -1,0 +1,23 @@
+name: Final Deploy SDT
+on:
+  push:
+    branches: [master]
+jobs:
+
+  build:
+    name: Deploy direct
+    runs-on: ubuntu-latest
+    steps:
+    - name: ssh and pull and restart
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        script: |
+          . init.sh
+          cd /opt/software-discovery-tool
+          git pull origin master --recurse-submodules
+          sudo chown -R apache:apache /opt/software-discovery-tool
+          sudo -u apache ./bin/config_build.py
+          sudo apachectl restart
