@@ -75,7 +75,7 @@ def pull_new(files):
 	for file in files:
 		if any(regex.match(file) for regex in regexes):
 			print(f'Updating {file}...')
-			subprocess.run([f'{SDT_BASE}/bin/package_build.py', file])
+			subprocess.run([f'{SDT_BASE}/bin/package_build.py', file], stdout=subprocess.DEVNULL)
 
 if __name__ == "__main__":
 	print("Scanning distro_data directory...")
