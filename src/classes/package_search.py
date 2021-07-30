@@ -5,7 +5,7 @@ import collections
 import copy 
 import math
 from config import DATA_FILE_LOCATION, DISABLE_PAGINATION, MAX_RECORDS_TO_CONCAT, LOGGER, MAX_RECORDS_TO_SEND, CACHE_SIZE
-from config import SUPPORTED_DISTROS
+from config.supported_distros import SUPPORTED_DISTROS
 
 class PackageSearch:
     package_data = {}

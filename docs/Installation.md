@@ -144,7 +144,7 @@ Thanks for using SDT!
 	```
 	sudo -u apache ./bin/package_build.py RHEL_8_Package_List.json
 	```
-Now to know how to update the `src/config/config.py` to reflect the new json files in the UI, follow steps mentioned in
+Now to know how to update the `src/config/supported_distros.py` to reflect the new json files in the UI, follow steps mentioned in
 Step 2 of
 [Adding_new_distros](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Adding_new_distros.md#step-2-update-the-supported_distros-variable-in-configuration-file-sdt_basesrcconfigconfigpy)
 
