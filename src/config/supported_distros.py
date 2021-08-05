@@ -12,6 +12,9 @@ SUPPORTED_DISTROS = {
 	'Leap 15.3': 'OpenSUSE_Leap_15_3.json',
 	'Tumbleweed': 'OpenSUSE_Tumbleweed.json'
 },
+'Fedora': {
+	'Fedora 34': 'Fedora_34_List.json'
+},
 'SUSE Package Hub SLES': {
 },
 'Suse Linux Enterprise Server': {
