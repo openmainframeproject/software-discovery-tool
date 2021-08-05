@@ -125,6 +125,34 @@ def clefos():
 	DATA.close()
 	print(f"Saved!\nfilename: {q}")
 
+def fedora():
+	global DATA,DATA_FILE_LOCATION
+	results = []
+	q = 'Fedora_34_List.json'
+	file_name = f'{DATA_FILE_LOCATION}/{q}'
+	pkg_reg = r'<a href="(.*)\.rpm"'
+	dirs = '023456789abcdefghijklmnopqrstuvwxyz'
+	for each in range(len(dirs)):
+		try:
+			req = requests.get(f"https://dl.fedoraproject.org/pub/fedora-secondary/releases/34/Everything/s390x/os/Packages/{dirs[each]}/")
+			data = req.text
+			if req.status_code == 404:
+				raise Exception(f"404 File {dirs[each]} not found")
+		except Exception as e:
+			print("Couldn't pull. Error: ",str(e))
+		else:
+			ref_data = re.findall(pkg_reg, data)
+			results.extend(ref_data)
+	DATA = open(file_name, 'w')
+	DATA.write('[\n')
+	for each in results:
+		each = each.replace('.s390x', '').replace('.noarch', '').replace('.fc34', '')
+		pkg = re.search(r'([\w+\-]+)-([\w\-\.]+)', each)
+		DATA.write('{"packageName": "'+pkg.group(1)+'","version": "'+pkg.group(2)+'"},\n')
+	DATA.write('{}\n]')
+	DATA.close()
+	print(f"Saved!\nfilename: {q}")
+
 def pds(q):
 	global DATA,DATA_FILE_LOCATION
 	file_name = f'{DATA_FILE_LOCATION}/{q}'
@@ -144,7 +172,10 @@ def pds(q):
 
 if __name__ == "__main__":
 	
-	file = sys.argv[1]
+	try:
+		file = sys.argv[1]
+	except:
+		file = ''
 	if re.match(r'.*\.json', file):
 		print(f"Extracting {file} from PDS data ... ")
 		pds(file)
@@ -157,13 +188,17 @@ if __name__ == "__main__":
 	elif file == 'OpenSuse' or file == 'opensuse':
 		print(f"Extracting data for {file} ... ")
 		opensuse()
+	elif file == 'Fedora' or file == 'fedora':
+		print(f"Extracting data for {file} ... ")
+		fedora()
 	else:
 		print(
 			"Usage:\n./package_build <exact_file_name.json>\n\t\t\t[if data is from PDS]"
-			"\n./package_build debian\n\t\t\t[if data is from Debian]"
-			"\n./package_build clef\n\t\t\t[if data is from ClefOS]"
-			"\n./package_build opensuse\n\t\t\t[if data is from OpenSUSE]"
-			"\n./package_build\n\t\t\t[for displaying this help]\n"
-			"Example:\n./package_build RHEL_8_Package_List.json\n./package_build debian")
+			"\n./package_build.py debian\n\t\t\t[if data is from Debian]"
+			"\n./package_build.py clef\n\t\t\t[if data is from ClefOS]"
+			"\n./package_build.py opensuse\n\t\t\t[if data is from OpenSUSE]"
+			"\n./package_build.py fedora\n\t\t\t[if data is from Fedora]"
+			"\n./package_build.py\n\t\t\t[for displaying this help]\n"
+			"Example:\n./package_build.py RHEL_8_Package_List.json\n./package_build.py debian")
 	
 	print("Thanks for using SDT!")
