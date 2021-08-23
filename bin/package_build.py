@@ -14,33 +14,34 @@ def purify(dirty):
 
 def debian():
 	global DATA, DATA_FILE_LOCATION
-	q = 'Debian_Buster_List.json'
-	file_name = f'{DATA_FILE_LOCATION}/{q}'
-	try:
-		req = requests.get(f"https://packages.debian.org/stable/allpackages")
-		data = req.text
-		if req.status_code == 404:
-			raise Exception("404 File not found")
-	except Exception as e:
-		print("Couldn't pull. Error: ",str(e))
-	else:
-		ref_data = data.split('<dl>')[1].split('</dl>')[0]
-#		cut unwanted unicode by placing regexes here. This is important
-		sp_reg = r' \[<.*\]'
-		if re.search(sp_reg, ref_data):
-			ref_data = re.sub(sp_reg, '', ref_data)
-		ref_data = re.sub(r"(<dt><a[^>]*'>)", '{\n\t"packageName": "', ref_data)
-		ref_data = re.sub(r"(<\/a>(( \()|(</dt>))+)", '",\n\t"version": "', ref_data)
-		ref_data = re.sub(r"\n*(<dd[^>]*>)", "%%<dd>", ref_data)
-		ref_data = re.sub(r"((\)<\/dt>)*\n*%%)", '",\n', ref_data)
-		ref_data = re.sub(r"(<dd[^>]*>)", '\t"description": "', ref_data)
-		ref_data = re.sub(r"(<\/dd>)",'"\n},',ref_data)
-#		To remove undecodable ascii chars
-		ref_data = purify(ref_data)
-		DATA = open(file_name, 'w')
-		DATA.write('['+ref_data+'{}\n]')
-		DATA.close()
-		print(f"Saved!\nfilename: {q}")
+	q = ['Debian_Buster_List.json', 'Debian_Bullseye_List.json']
+	urls = ['https://packages.debian.org/buster/allpackages', 'https://packages.debian.org/bullseye/allpackages']
+#	urls = ['https://raw.githubusercontent.com/rachejazz/data-stuff/main/buster', 'https://raw.githubusercontent.com/rachejazz/data-stuff/main/bullseye']
+	for i in range(2):
+		file_name = f'{DATA_FILE_LOCATION}/{q[i]}'
+		try:
+			req = requests.get(urls[i])
+			data = req.text
+			if req.status_code == 404:
+				raise Exception("404 File not found")
+		except Exception as e:
+			print("Couldn't pull. Error: ",str(e))
+		else:
+			ref_data = data.split('license terms.')[1]
+			sp_reg = r'[\"]'
+	#		cut unwanted unicode by placing regexes here. This is important
+			if re.search(sp_reg, ref_data):
+				ref_data = re.sub(sp_reg, '', ref_data)
+	#		To remove undecodable ascii chars
+			ref_data = purify(ref_data)
+			ref_data = re.sub(r"(^(?=\w))", '{\t"packageName": "', ref_data, flags=re.MULTILINE)
+			ref_data = re.sub(r"(?<=([^\n])$)",'"\n},',ref_data, flags=re.MULTILINE)
+			ref_data = re.sub(r"( \((?=\d))", '",\n\t"version": "', ref_data)
+			ref_data = re.sub(r"\]?\) ", '",\n\t"description": "', ref_data)
+			DATA = open(file_name, 'w')
+			DATA.write('['+ref_data+'{}\n]')
+			DATA.close()
+			print(f"Saved!\nfilename: {q[i]}")
 
 def opensuse():
 	global DATA, DATA_FILE_LOCATION
