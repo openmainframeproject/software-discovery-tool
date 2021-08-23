@@ -16,7 +16,6 @@ def debian():
 	global DATA, DATA_FILE_LOCATION
 	q = ['Debian_Buster_List.json', 'Debian_Bullseye_List.json']
 	urls = ['https://packages.debian.org/buster/allpackages', 'https://packages.debian.org/bullseye/allpackages']
-#	urls = ['https://raw.githubusercontent.com/rachejazz/data-stuff/main/buster', 'https://raw.githubusercontent.com/rachejazz/data-stuff/main/bullseye']
 	for i in range(2):
 		file_name = f'{DATA_FILE_LOCATION}/{q[i]}'
 		try:
