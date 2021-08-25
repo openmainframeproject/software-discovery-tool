@@ -3,8 +3,8 @@ SUPPORTED_DISTROS = {
 	'z/OS Software': 'ZOS_Software_List.json'
 },
 'Debian': {
-	'Buster': 'Debian_Buster_List.json',
-	'Bullseye': 'Debian_Bullseye_List.json'
+	'10(Buster)': 'Debian_Buster_List.json',
+	'11(Bullseye)': 'Debian_Bullseye_List.json'
 },
 'ClefOS': {
 	'ClefOS Base 7': 'ClefOS_7_List.json'

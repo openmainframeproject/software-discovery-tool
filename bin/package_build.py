@@ -5,7 +5,7 @@ import sys
 
 DATA = ""
 SDT_BASE = '/opt/software-discovery-tool'
-DATA_FILE_LOCATION = '%s/distro_data/distro_data' % SDT_BASE
+DATA_FILE_LOCATION = '%s/distro_data/data_files' % SDT_BASE
 
 def purify(dirty):
 	dirty_encode = dirty.encode("ascii", "ignore")
@@ -180,6 +180,11 @@ if __name__ == "__main__":
 		print(f"Extracting {file} from PDS data ... ")
 		pds(file)
 	elif file == 'Debian' or file == 'debian':
+	######
+	#NOTE
+	#For Debian list, we are pulling pkg data regardless whether it's s390x compatible or not.
+	#If you have any resources that can help us narrow down our list, feel free to raise an issue :)
+	#####
 		print(f"Extracting {file} data ... ")
 		debian()
 	elif file == 'Clef' or file == 'clef':
