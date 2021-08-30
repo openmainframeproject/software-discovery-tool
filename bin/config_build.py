@@ -4,7 +4,7 @@ import os
 import subprocess
 
 SDT_BASE = '/opt/software-discovery-tool'
-DATA_FILE_LOCATION = '%s/distro_data/distro_data' % SDT_BASE
+DATA_FILE_LOCATION = '%s/distro_data/data_files' % SDT_BASE
 SUPPORTED_DISTRO_FILE = '%s/src/config/supported_distros.py' % SDT_BASE
 
 SLES_reg = r'((x?Suse_Linux_Enterprise_Server)|(x?SUSE_Package_Hub)_SLES)_(\d{2})(_(SP\d))?_?.*\.json'

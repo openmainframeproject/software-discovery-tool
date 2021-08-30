@@ -2,45 +2,50 @@
 import requests
 import re
 import sys
+import gzip
 
 DATA = ""
 SDT_BASE = '/opt/software-discovery-tool'
-DATA_FILE_LOCATION = '%s/distro_data/distro_data' % SDT_BASE
+DATA_FILE_LOCATION = '%s/distro_data/data_files' % SDT_BASE
 
 def purify(dirty):
 	dirty_encode = dirty.encode("ascii", "ignore")
 	clean = dirty_encode.decode()
-	return clean
+	cleaner = clean.replace('"', '')
+	return cleaner
 
 def debian():
 	global DATA, DATA_FILE_LOCATION
-	q = 'Debian_Buster_List.json'
-	file_name = f'{DATA_FILE_LOCATION}/{q}'
-	try:
-		req = requests.get(f"https://packages.debian.org/stable/allpackages")
-		data = req.text
-		if req.status_code == 404:
-			raise Exception("404 File not found")
-	except Exception as e:
-		print("Couldn't pull. Error: ",str(e))
-	else:
-		ref_data = data.split('<dl>')[1].split('</dl>')[0]
-#		cut unwanted unicode by placing regexes here. This is important
-		sp_reg = r' \[<.*\]'
-		if re.search(sp_reg, ref_data):
-			ref_data = re.sub(sp_reg, '', ref_data)
-		ref_data = re.sub(r"(<dt><a[^>]*'>)", '{\n\t"packageName": "', ref_data)
-		ref_data = re.sub(r"(<\/a>(( \()|(</dt>))+)", '",\n\t"version": "', ref_data)
-		ref_data = re.sub(r"\n*(<dd[^>]*>)", "%%<dd>", ref_data)
-		ref_data = re.sub(r"((\)<\/dt>)*\n*%%)", '",\n', ref_data)
-		ref_data = re.sub(r"(<dd[^>]*>)", '\t"description": "', ref_data)
-		ref_data = re.sub(r"(<\/dd>)",'"\n},',ref_data)
-#		To remove undecodable ascii chars
-		ref_data = purify(ref_data)
-		DATA = open(file_name, 'w')
-		DATA.write('['+ref_data+'{}\n]')
-		DATA.close()
-		print(f"Saved!\nfilename: {q}")
+	q = ['Debian_Buster_List.json', 'Debian_Bullseye_List.json']
+	urls = ['http://ftp.debian.org/debian/dists/Debian10.10/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/Debian11.0/main/binary-s390x/Packages.gz']
+	file_name = [f'{DATA_FILE_LOCATION}/{x}' for x in q]
+	for i in range(2):
+		try:
+			req = requests.get(urls[i])
+			data = req.content
+			if req.status_code == 404:
+				raise Exception("404 File not found")
+		except Exception as e:
+			print("Couldn't pull. Error: ",str(e))
+		else:
+			capure_reg = r'^.+\n'
+			data_d = gzip.decompress(data)
+			data_d_str = str(data_d, 'utf-8')
+			data_d_raw = data_d_str.encode
+			data_list = re.findall(r'(^((?:Package)|(?:Version)|(?:Description))+: .*)', data_d_str, re.MULTILINE)
+			DATA = open(file_name[i], 'w')
+			DATA.write('[')
+			for each in data_list:
+				if each[1] == 'Package':
+					DATA.write('{\n\t'+each[0].replace('Package: ', '"packageName": "')+'",\n')
+				if each[1] == 'Description':
+					ref_data = purify(each[0])
+					DATA.write('\t'+ref_data.replace('Description: ', '"description": "')+'"\n},\n')
+				if each[1] == 'Version':
+					DATA.write('\t'+each[0].replace('Version: ', '"version": "')+'",\n')
+			DATA.write('{}]')
+			DATA.close()
+			print(f"Saved!\nfilename: {q[i]}")
 
 def opensuse():
 	global DATA, DATA_FILE_LOCATION
