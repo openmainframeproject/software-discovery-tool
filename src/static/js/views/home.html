@@ -8,19 +8,11 @@
 	<div style="font-size:14px;font-weight:bold;">
           <span ng-repeat="os_name in os_list" style="font-size:12px;">
             <!--label style="padding-left:10px;font-weight:normal;"-->
-<label style="padding-left:10px;font-weight:normal;vertical-align: middle;" ng-if="os_name.type != 'xUbuntu' && os_name.type != 'xSUSE Linux Enterprise Server' && os_name.type != 'xSUSE Package Hub' && os_name.type != 'xRHEL'">
+<label style="padding-left:10px;font-weight:normal;vertical-align: middle;" >
 	    <input style="margin-right:2px;" type="checkbox" ng-model="os_name.value" ng-if="os_name.type === 'All'"  ng-click="tickUntick($event);" id="chkAll" >
             <input style="margin-right:3px;" type="checkbox" ng-model="os_name.value"  ng-checked="os_name.value" ng-if="os_name.type !== 'All'" ng-click="tickUntick($event);">{{os_name.type}}</label>
           </span>
 	</div>
-
-        <div style="font-size:14px;font-weight:bold;padding-left:22px">
-	<span ng-repeat="os_name in os_list" style="font-size:12px;padding-left:11px;">
-        	<label style="padding-left:2px;font-weight:normal;vertical-align: middle;" ng-if="os_name.type === 'xUbuntu' || os_name.type === 'xSUSE Linux Enterprise Server' ||  os_name.type === 'xSUSE Package Hub' ||  os_name.type === 'xRHEL'">
-        	<input style="margin-right:3px;" type="checkbox" ng-model="os_name.value"  ng-checked="os_name.value" ng-if="os_name.type !== 'All'" ng-click="tickUntick($event);">{{os_name.type}}
-        </label>
-        </span>
-        </div>
 
 
       </div>
