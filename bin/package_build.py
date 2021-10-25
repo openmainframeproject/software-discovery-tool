@@ -169,7 +169,6 @@ def pds(q):
 	except Exception as e:
 		print("Couldn't pull. Error: ",str(e))
 	else:
-		data = purify(data)
 		DATA = open(file_name, 'w')
 		DATA.write(data)
 		DATA.close()
