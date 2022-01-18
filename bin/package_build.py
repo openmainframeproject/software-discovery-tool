@@ -132,31 +132,35 @@ def clefos():
 
 def fedora():
 	global DATA,DATA_FILE_LOCATION
-	results = []
-	q = 'Fedora_34_List.json'
-	file_name = f'{DATA_FILE_LOCATION}/{q}'
+	sources = [34, 35]
 	pkg_reg = r'<a href="(.*)\.rpm"'
 	dirs = '023456789abcdefghijklmnopqrstuvwxyz'
-	for each in range(len(dirs)):
-		try:
-			req = requests.get(f"https://dl.fedoraproject.org/pub/fedora-secondary/releases/34/Everything/s390x/os/Packages/{dirs[each]}/")
-			data = req.text
-			if req.status_code == 404:
-				raise Exception(f"404 File {dirs[each]} not found")
-		except Exception as e:
-			print("Couldn't pull. Error: ",str(e))
-		else:
-			ref_data = re.findall(pkg_reg, data)
-			results.extend(ref_data)
-	DATA = open(file_name, 'w')
-	DATA.write('[\n')
-	for each in results:
-		each = each.replace('.s390x', '').replace('.noarch', '').replace('.fc34', '')
-		pkg = re.search(r'([\w+\-]+)-([\w\-\.]+)', each)
-		DATA.write('{"packageName": "'+pkg.group(1)+'","version": "'+pkg.group(2)+'"},\n')
-	DATA.write('{}\n]')
-	DATA.close()
-	print(f"Saved!\nfilename: {q}")
+	for i in range(2):
+		results = []
+		q = f'Fedora_{sources[i]}_List.json'
+		file_name = f'{DATA_FILE_LOCATION}/{q}'
+		for each in range(len(dirs)):
+			link = f"https://dl.fedoraproject.org/pub/fedora-secondary/releases/{sources[i]}/Everything/s390x/os/Packages/{dirs[each]}/"
+			try:
+				req = requests.get(link)
+				data = req.text
+				if req.status_code == 404:
+					raise Exception(f"404 Directory {dirs[each]} not found")
+			except Exception as e:
+				print("Couldn't pull. Error: ",str(e))
+			else:
+				ref_data = re.findall(pkg_reg, data)
+				results.extend(ref_data)
+		DATA = open(file_name, 'w')
+		DATA.write('[\n')
+		for each in results:
+			each = each.replace('.s390x', '').replace('.noarch', '')
+			each = re.sub(r'\.fc\d\d', '', each)
+			pkg = re.search(r'([\w+\-]+)-([\w\-\.]+)', each)
+			DATA.write('{"packageName": "'+pkg.group(1)+'","version": "'+pkg.group(2)+'"},\n')
+		DATA.write('{}\n]')
+		DATA.close()
+		print(f"Saved!\nfilename: {q}")
 
 def pds(q):
 	global DATA,DATA_FILE_LOCATION
