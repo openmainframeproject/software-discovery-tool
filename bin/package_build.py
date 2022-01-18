@@ -17,7 +17,7 @@ def purify(dirty):
 def debian():
 	global DATA, DATA_FILE_LOCATION
 	q = ['Debian_Buster_List.json', 'Debian_Bullseye_List.json']
-	urls = ['http://ftp.debian.org/debian/dists/Debian10.10/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/Debian11.0/main/binary-s390x/Packages.gz']
+	urls = ['http://ftp.debian.org/debian/dists/Debian10.11/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/Debian11.0/main/binary-s390x/Packages.gz']
 	file_name = [f'{DATA_FILE_LOCATION}/{x}' for x in q]
 	for i in range(2):
 		try:
