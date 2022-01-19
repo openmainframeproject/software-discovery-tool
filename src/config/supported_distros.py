@@ -14,7 +14,7 @@ SUPPORTED_DISTROS = {
 	'Tumbleweed': 'OpenSUSE_Tumbleweed.json'
 },
 'Fedora': {
-	'Fedora 34': 'Fedora_34_List.json'
+	'Fedora 34': 'Fedora_34_List.json',
 	'Fedora 35': 'Fedora_35_List.json'
 },
 'SUSE Package Hub SLES': {
