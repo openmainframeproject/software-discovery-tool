@@ -3,7 +3,7 @@ import logging
 from config import supported_distros
 
 SDT_BASE = '/opt/software-discovery-tool'
-DATA_FILE_LOCATION = '%s/distro_data/distro_data' % SDT_BASE
+DATA_FILE_LOCATION = '%s/distro_data/data_files' % SDT_BASE
 LOG_FILE_LOCATION = '%s/log/sdt.log' % SDT_BASE
 MIN_DATA_FILE_SIZE = 50000
 MAX_RECORDS_TO_CONCAT = 5000
