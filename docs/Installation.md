@@ -17,7 +17,7 @@ _**NOTE:**_
 
         sudo apt-get update
         sudo apt-get install -y python3 python3-pip gcc git python3-dev libssl-dev libffi-dev cron python3-lxml apache2 libapache2-mod-wsgi-py3
-        sudo pip3 install 'cffi==1.11.5' 'cryptography==1.4' Flask launchpadlib simplejson requests pytest
+        sudo pip3 install cffi cryptography Flask launchpadlib simplejson requests pytest
 
 * For SLES (12 SP1, 12 SP2, 12 SP3):
 
@@ -72,8 +72,8 @@ Note: In case software-discovery-tool code is already checked out, do the follow
 
 * For Ubuntu (18.04, 19.04, 20.04):
 
-            sudo cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/sites-enabled/sdt.conf
-            sudo mv /etc/apache2/sites-enabled/000-default.conf /etc/apache2/sites-enabled/z-000-default.conf
+            sudo cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/sites-available/sdt.conf
+            sudo mv /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/z-000-default.conf
 
     #### Create new user and group for apache
 
@@ -149,8 +149,18 @@ Step 2 of
 [Adding_new_distros](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Adding_new_distros.md#step-2-update-the-supported_distros-variable-in-configuration-file-sdt_basesrcconfigconfigpy)
 
 ###  Step 6: Verify that the software-discovery-tool server is up and running
+* For Ubuntu (18.04, 19.04, 20.04):
+ We now run the following commands to properly enable the config files of the software-discovery-tool server and then restart the apache server. 
 
-```http://server_ip_or_fully_qualified_domain_name:port_number/software-discovery-tool``` <br />
+            sudo a2ensite z-000-default.conf
+            systemctl reload apache2
+            sudo a2ensite sdt.conf
+            systemctl reload apache2
+            sudo apachectl restart
+
+We can check if the server is up and running by going to following URL :
+
+```http://server_ip_or_fully_qualified_domain_name:port_number/sdt``` <br />
 
 (Alternatively, you can check with unittesting) <br />
 ```cd software-discovery-tool/src/tests``` <br />
