@@ -132,12 +132,12 @@ def clefos():
 
 def fedora():
 	global DATA,DATA_FILE_LOCATION
-	sources = [34, 35]
+	sources = [34, 35, 36]
 	pkg_reg = r'<a href="(.*)\.rpm"'
 	dirs = '023456789abcdefghijklmnopqrstuvwxyz'
-	for i in range(2):
+	for i in range(len(sources)):
 		results = []
-		q = f'Fedora_{sources[i]}_List.json'
+		q = f'Fedora_{sources[i-1]}_List.json'
 		file_name = f'{DATA_FILE_LOCATION}/{q}'
 		for each in range(len(dirs)):
 			link = f"https://dl.fedoraproject.org/pub/fedora-secondary/releases/{sources[i]}/Everything/s390x/os/Packages/{dirs[each]}/"
