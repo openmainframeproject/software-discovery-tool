@@ -27,5 +27,8 @@ SUPPORTED_DISTROS = {
 'Ubuntu': {
 },
 'RHEL': {
+},
+'Alma Linux': {
+	'Alma Linux 9': 'AlmaLinux_9_List.json'
 }
 }
