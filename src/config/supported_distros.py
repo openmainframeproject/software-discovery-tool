@@ -27,5 +27,8 @@ SUPPORTED_DISTROS = {
 'Ubuntu': {
 },
 'RHEL': {
+},
+'Rocky Linux': {
+	'RockyLinux 9': 'RockyLinux_9_List.json'
 }
 }
