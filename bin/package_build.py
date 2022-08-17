@@ -17,7 +17,7 @@ def purify(dirty):
 def debian():
 	global DATA, DATA_FILE_LOCATION
 	q = ['Debian_Buster_List.json', 'Debian_Bullseye_List.json']
-	urls = ['http://ftp.debian.org/debian/dists/Debian10.11/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/Debian11.2/main/binary-s390x/Packages.gz']
+	urls = ['http://ftp.debian.org/debian/dists/buster/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/bullseye/main/binary-s390x/Packages.gz']
 	file_name = [f'{DATA_FILE_LOCATION}/{x}' for x in q]
 	for i in range(2):
 		try:
@@ -132,12 +132,12 @@ def clefos():
 
 def fedora():
 	global DATA,DATA_FILE_LOCATION
-	sources = [34, 35]
+	sources = [34, 35, 36]
 	pkg_reg = r'<a href="(.*)\.rpm"'
 	dirs = '023456789abcdefghijklmnopqrstuvwxyz'
-	for i in range(2):
+	for i in range(len(sources)):
 		results = []
-		q = f'Fedora_{sources[i]}_List.json'
+		q = f'Fedora_{sources[i-1]}_List.json'
 		file_name = f'{DATA_FILE_LOCATION}/{q}'
 		for each in range(len(dirs)):
 			link = f"https://dl.fedoraproject.org/pub/fedora-secondary/releases/{sources[i]}/Everything/s390x/os/Packages/{dirs[each]}/"
@@ -162,32 +162,31 @@ def fedora():
 		DATA.close()
 		print(f"Saved!\nfilename: {q}")
 
-def rockylinux():
+def almaLinux():
 	global DATA,DATA_FILE_LOCATION
 	sources = [9]
+	results = []
 	pkg_reg = r'<a href="(.*)\.rpm"'
-	dirs = 'abcdefghijklmnopqrstuvwxyz'
 	for i in range(len(sources)):
-		results=[]
-		q = f'RockyLinux_{sources[i]}_List.json'
+		results = []
+		q = f'AlmaLinux_{sources[i]}_List.json'
 		file_name = f'{DATA_FILE_LOCATION}/{q}'
-		for each in range(len(dirs)):
-			link = f"https://download.rockylinux.org/pub/rocky/{sources[i]}.0/BaseOS/s390x/os/Packages/{dirs[each]}/"
-			try:
-				req = requests.get(link)
-				data = req.text
-				if req.status_code == 404:
-					raise Exception(f"404 Directory {dirs[each]} not found")
-			except Exception as e:
-				print("Couldn't pull. Error: ",str(e))
-			else:
-				ref_data = re.findall(pkg_reg,data)
-				results.extend(ref_data)
-		DATA = open(file_name, 'w')
+		link = f"http://repo.almalinux.org/almalinux/{sources[i]}.0/BaseOS/s390x/os/Packages/"
+		try:
+			req = requests.get(link)
+			data = req.text
+			if req.status_code == 404:
+				raise Exception(f"404 File not found")
+		except Exception as e:
+			print("Couldn't pull. Error: ",str(e))
+		else:
+			ref_data = re.findall(pkg_reg,data)
+			results.extend(ref_data)
+		DATA = open(file_name,'w')
 		DATA.write('[\n')
 		for each in results:
 			each = each.replace('.s390x','').replace('.noarch','')
-			each = re.sub(r'.\fc\d\d','',each)
+			each = re.sub(r'\.fc\d\d', '', each)
 			pkg = re.search(r'([\w+\-]+)-([\w\-\.]+)', each)
 			DATA.write('{"packageName": "'+pkg.group(1)+'","version": "'+pkg.group(2)+'"},\n')
 		DATA.write('{}\n]')
@@ -231,9 +230,9 @@ if __name__ == "__main__":
 	elif file == 'Fedora' or file == 'fedora':
 		print(f"Extracting data for {file} ... ")
 		fedora()
-	elif file == 'RockyLinux' or file == 'rockylinux':
+	elif file == 'AlmaLinux' or file == 'almalinux':
 		print(f"Extracting data for {file} ... ")
-		rockylinux()
+		almaLinux()
 	else:
 		print(
 			"Usage:\n./package_build <exact_file_name.json>\n\t\t\t[if data is from PDS]"
@@ -241,7 +240,7 @@ if __name__ == "__main__":
 			"\n./package_build.py clef\n\t\t\t[if data is from ClefOS]"
 			"\n./package_build.py opensuse\n\t\t\t[if data is from OpenSUSE]"
 			"\n./package_build.py fedora\n\t\t\t[if data is from Fedora]"
-			"\n./package_build.py rockylinux\n\t\t\t[if data is from RockyLinux]"
+			"\n./package_build.py almalinux\n\t\t\t[if data is from AlmaLinux]"
 			"\n./package_build.py\n\t\t\t[for displaying this help]\n"
 			"Example:\n./package_build.py RHEL_8_Package_List.json\n./package_build.py debian")
 	
