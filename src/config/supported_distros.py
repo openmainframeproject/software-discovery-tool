@@ -30,5 +30,8 @@ SUPPORTED_DISTROS = {
 },
 'Alma Linux': {
 	'Alma Linux 9': 'AlmaLinux_9_List.json'
+},
+'Rocky Linux': {
+	'RockyLinux 9': 'RockyLinux_9_List.json'
 }
 }

@@ -193,6 +193,38 @@ def almaLinux():
 		DATA.close()
 		print(f"Saved!\nfilename: {q}")
 
+def rockylinux():
+	global DATA,DATA_FILE_LOCATION
+	sources = [9]
+	pkg_reg = r'<a href="(.*)\.rpm"'
+	dirs = 'abcdefghijklmnopqrstuvwxyz'
+	for i in range(len(sources)):
+		results=[]
+		q = f'RockyLinux_{sources[i]}_List.json'
+		file_name = f'{DATA_FILE_LOCATION}/{q}'
+		for each in range(len(dirs)):
+			link = f"https://download.rockylinux.org/pub/rocky/{sources[i]}.0/BaseOS/s390x/os/Packages/{dirs[each]}/"
+			try:
+				req = requests.get(link)
+				data = req.text
+				if req.status_code == 404:
+					raise Exception(f"404 Directory {dirs[each]} not found")
+			except Exception as e:
+				print("Couldn't pull. Error: ",str(e))
+			else:
+				ref_data = re.findall(pkg_reg,data)
+				results.extend(ref_data)
+		DATA = open(file_name, 'w')
+		DATA.write('[\n')
+		for each in results:
+			each = each.replace('.s390x','').replace('.noarch','')
+			each = re.sub(r'.\fc\d\d','',each)
+			pkg = re.search(r'([\w+\-]+)-([\w\-\.]+)', each)
+			DATA.write('{"packageName": "'+pkg.group(1)+'","version": "'+pkg.group(2)+'"},\n')
+		DATA.write('{}\n]')
+		DATA.close()
+		print(f"Saved!\nfilename: {q}")
+
 def pds(q):
 	global DATA,DATA_FILE_LOCATION
 	file_name = f'{DATA_FILE_LOCATION}/{q}'
@@ -233,6 +265,9 @@ if __name__ == "__main__":
 	elif file == 'AlmaLinux' or file == 'almalinux':
 		print(f"Extracting data for {file} ... ")
 		almaLinux()
+	elif file == 'RockyLinux' or file == 'rockylinux':
+		print(f"Extracting data for {file} ... ")
+		rockylinux()
 	else:
 		print(
 			"Usage:\n./package_build <exact_file_name.json>\n\t\t\t[if data is from PDS]"
@@ -241,6 +276,7 @@ if __name__ == "__main__":
 			"\n./package_build.py opensuse\n\t\t\t[if data is from OpenSUSE]"
 			"\n./package_build.py fedora\n\t\t\t[if data is from Fedora]"
 			"\n./package_build.py almalinux\n\t\t\t[if data is from AlmaLinux]"
+			"\n./package_build.py rockylinux\n\t\t\t[if data is from RockyLinux]"
 			"\n./package_build.py\n\t\t\t[for displaying this help]\n"
 			"Example:\n./package_build.py RHEL_8_Package_List.json\n./package_build.py debian")
 	
