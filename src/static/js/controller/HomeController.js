@@ -281,7 +281,7 @@ var HomeController = function($scope) {
                 packages_all = [];
                 console.log(package_data)
                 for(var i = 0; i < package_data.length; i++){
-                    package_data[i].P = decodeURI(package_data[i].P);
+                    package_data[i][0] = decodeURI(package_data[i][0]);
                     packages_all.push(package_data[i]);
                 }
                 $scope.packages_all = packages_all;
@@ -394,7 +394,7 @@ var HomeController = function($scope) {
                 package_data = distro_data.packages;
                 if(package_data !== undefined){
                     for(var i = 0; i < package_data.length; i++){
-                        package_data[i].P = decodeURI(package_data[i].P);
+                        package_data[i][0] = decodeURI(package_data[i][0]);
                         $scope.packages_all.push(package_data[i]);
                     }
                 }
@@ -489,13 +489,13 @@ var HomeController = function($scope) {
             pkg = temp_packages[i];
             //console.log(JSON.stringify(pkg));
             for(os_name in $scope.os_versions_list){
-                if(pkg[os_name] === undefined){
+                if(pkg[3] === undefined){
                     continue; //current package does not belong to OS being checked so continue
                 }
                 else{
                     for(os_ver_rec in $scope.os_versions_list[os_name]){
                         //console.log(JSON.stringify($scope.os_versions_list[os_name][os_ver_rec]));
-                        if(pkg[os_name].indexOf($scope.os_versions_list[os_name][os_ver_rec].type) >= 0){
+                        if(pkg[3].indexOf($scope.os_versions_list[os_name][os_ver_rec].type) >= 0){
                             if(countFiltered){
                                 $scope.os_versions_list[os_name][os_ver_rec].filtercount += 1;
                             }
@@ -529,12 +529,14 @@ var HomeController = function($scope) {
             }
             else if(distro_version_filter == true){
                 $scope.filteredItems = $scope.packages_all.filter(function (pkg) {
-                    pfound = pkg.P.indexOf($scope.refine_package_name)>=0 || pkg.V.indexOf($scope.refine_package_name)>=0;
-                    if(!pfound){return false;}
+                    pfound = pkg[0].indexOf($scope.refine_package_name)>=0 || pkg[2].indexOf($scope.refine_package_name)>=0;
+                    if(!pfound){
+                        return false;
+                    }
                     os_found = false;
                     for(os_name in $scope.os_versions_list){
                         //console.log(os_name); //OS Name
-                        if(pkg[os_name] === undefined){
+                        if(pkg[3] === undefined){
                             continue; //current package does not belong to OS being checked so continue
                         }
                         else{
@@ -542,7 +544,7 @@ var HomeController = function($scope) {
                                 //console.log($scope.os_versions_list[os_name][os_ver_rec].type); //OS Version
                                 if($scope.os_versions_list[os_name][os_ver_rec].value){
                                     //OS Ver is ticked
-                                    if(pkg[os_name].indexOf($scope.os_versions_list[os_name][os_ver_rec].type) >= 0){
+                                    if(pkg[3].indexOf($scope.os_versions_list[os_name][os_ver_rec].type) >= 0){
                                         os_found = true;
                                         return os_found;
                                     }
@@ -568,7 +570,6 @@ var HomeController = function($scope) {
      // calculate page in place
     $scope.groupToPages = function () {
         $scope.pagedItems = [];
-        
         for (var i = 0; i < $scope.filteredItems.length; i++) {
             if (i % $scope.itemsPerPage === 0) {
                 $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [ $scope.filteredItems[i] ];

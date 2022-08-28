@@ -1,16 +1,16 @@
 SUPPORTED_DISTROS = {
 'IBM z/OS ™': {
-	'z/OS Software': 'ZOS_Software_List.json'
+	'z/OS Software': 'ZOS_Software_List'
 },
 'IBM Z and LinuxONE Container Registry': {
 	'Container Images for IBM Z and LinuxONE': 'IBMZ_container_registry.json'
 },
 'Debian': {
-	'10(Buster)': 'Debian_Buster_List.json',
-	'11(Bullseye)': 'Debian_Bullseye_List.json'
+	'10(Buster)': 'Debian_Buster_List',
+	'11(Bullseye)': 'Debian_Bullseye_List'
 },
 'ClefOS': {
-	'ClefOS Base 7': 'ClefOS_7_List.json'
+	'ClefOS Base 7': 'ClefOS_7_List'
 },
 'OpenSUSE': {
 	'Leap 15.3': 'OpenSUSE_Leap_15_3.json',
