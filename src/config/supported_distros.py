@@ -3,7 +3,7 @@ SUPPORTED_DISTROS = {
 	'z/OS Software': 'ZOS_Software_List.json'
 },
 'IBM Z and LinuxONE Container Registry': {
-	'Container Images for IBM Z and LinuxONE': 'IBMZ-container-registry.json'
+	'Container Images for IBM Z and LinuxONE': 'IBMZ_container_registry.json'
 },
 'Debian': {
 	'10(Buster)': 'Debian_Buster_List.json',
