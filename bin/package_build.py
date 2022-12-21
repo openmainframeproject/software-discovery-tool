@@ -51,10 +51,11 @@ def opensuse():
 	global DATA, DATA_FILE_LOCATION
 	results = []
 	results_str = ''
-	q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_3.json']
+	q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_3.json', 'OpenSUSE_Leap_15_4.json']
 	file_name = [f'{DATA_FILE_LOCATION}/{x}' for x in q]
 	source_leap = [f"https://download.opensuse.org/distribution/leap/15.3/repo/oss/{x}" for x in ['s390x', 'noarch']]
 	source_tumbleweed = [f"https://download.opensuse.org/ports/zsystems/tumbleweed/repo/oss/{x}" for x in ['s390x', 'noarch']]
+	source_leap_15_4 = [f"https://download.opensuse.org/distribution/leap/15.4/repo/oss/{x}" for x in ['s390x','noarch']]
 	for each in source_tumbleweed:
 		try:
 			req = requests.get(each)
@@ -100,6 +101,29 @@ def opensuse():
 	DATA.write('{}]')
 	DATA.close()
 	print(f"Saved!\nfilename: {q[1]}")
+	results = []
+	for each in source_leap_15_4:
+		try:
+			req = requests.get(each)
+			data = req.text
+			if req.status_code == 404:
+				raise Exception("404 File not found")
+		except Exception as e:
+			print("Couldn't pull. Error: ",str(e))
+		else:
+			ref_data = re.findall(r"<a href=\"(.*\.rpm)\"><img.*<\/a>", data)
+			results.extend(ref_data)
+	DATA = open(file_name[2], 'w')
+	DATA.write('[')
+	for result in results:
+		result = re.sub(r'\.(noarch|s390x)\.rpm', '', result)
+		pkg = re.search(r'^([\w+\.-]+)-([+~\w\-\.]+)', result)
+		each_pkg = f'"packageName": "{pkg.group(1)}","version": "{pkg.group(2)}"'
+		each_pkg = '{'+each_pkg+'},'
+		DATA.write(each_pkg+'\n')
+	DATA.write('{}]')
+	DATA.close()
+	print(f"Saved!\nfilename: {q[2]}")
 
 def clefos():
 	global DATA, DATA_FILE_LOCATION
