@@ -156,7 +156,7 @@ def clefos():
 
 def fedora():
 	global DATA,DATA_FILE_LOCATION
-	sources = [34, 35, 36]
+	sources = [34, 35, 36, 37]
 	pkg_reg = r'<a href="(.*)\.rpm"'
 	dirs = '023456789abcdefghijklmnopqrstuvwxyz'
 	for i in range(len(sources)):
