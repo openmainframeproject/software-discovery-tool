@@ -249,6 +249,52 @@ def rockylinux():
 		DATA.close()
 		print(f"Saved!\nfilename: {q}")
 
+def ubuntu():
+	global DATA,DATA_FILE_LOCATION
+	sources = ["lunar-23.04"]
+	chars="abcdefghijklmnopqrstuvwxyz"
+	arr=[]
+	for i in chars:
+		for j in chars:
+			arr.append(i+j)
+	for i in range(len(sources)):
+		result={}
+		q = f'Ubuntu_{sources[i][-5:]}_List.json'
+		file_name = f'{DATA_FILE_LOCATION}/{q}'
+		for each in range(len(arr)):
+			link = f"https://packages.ubuntu.com/search?suite={sources[i][:-6]}&section=all&arch=s390x&keywords={arr[each]}&searchon=names"
+			try:
+				req=requests.get(link)
+				data=req.txt
+				if req.status_code == 404:
+					raise Exception(f"Some error occured, no results for {arr[each]}")
+			except:
+				package=[]
+				version=[]
+				data_lines=data.splitlines()
+				print(data_lines)
+				for i in data_lines:
+					if i.strip().startswith("<h3>") and i.strip().endswith("</h3>"):
+						package.append(i.strip()[12:-5])
+					elif i.strip().startswith("<br>"):
+						version_string=(i.strip().split()[0][4:])
+						if version_string[-1]==":":
+							version.append(version_string[:-1])
+						else:
+							version.append(version_string)
+				for i in range(len(package)):
+					if package[i] not in result.keys():
+						result[package[i]]=version[i]
+		
+		DATA = open(file_name, 'w')
+		DATA.write('[\n')
+		for each in result:
+			DATA.write('{"packageName": "'+each+'","version": "'+result[each]+'"},\n')
+		DATA.write('{}\n]')
+		DATA.close()
+		print(f"Saved!\nfilename: {q}")
+		
+
 def pds(q):
 	global DATA,DATA_FILE_LOCATION
 	file_name = f'{DATA_FILE_LOCATION}/{q}'
