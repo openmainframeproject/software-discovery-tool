@@ -338,6 +338,9 @@ if __name__ == "__main__":
 	elif file == 'RockyLinux' or file == 'rockylinux':
 		print(f"Extracting data for {file} ... ")
 		rockylinux()
+	elif file == 'Ubuntu' or file == 'ubuntu':
+		print(f"Extracting data for {file} ... ")
+		rockylinux()
 	else:
 		print(
 			"Usage:\n./package_build <exact_file_name.json>\n\t\t\t[if data is from PDS]"
@@ -347,6 +350,7 @@ if __name__ == "__main__":
 			"\n./package_build.py fedora\n\t\t\t[if data is from Fedora]"
 			"\n./package_build.py almalinux\n\t\t\t[if data is from AlmaLinux]"
 			"\n./package_build.py rockylinux\n\t\t\t[if data is from RockyLinux]"
+			"\n./package_build.py ubuntu\n\t\t\t[if data is from Ubuntu]"
 			"\n./package_build.py\n\t\t\t[for displaying this help]\n"
 			"Example:\n./package_build.py RHEL_8_Package_List.json\n./package_build.py debian")
 	

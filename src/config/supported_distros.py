@@ -28,6 +28,7 @@ SUPPORTED_DISTROS = {
 'Suse Linux Enterprise Server': {
 },
 'Ubuntu': {
+	'Ubuntu 23.04': 'Ubuntu_23.04_List.json',
 },
 'RHEL': {
 },
