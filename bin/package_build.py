@@ -195,7 +195,7 @@ def almaLinux():
 		results = []
 		q = f'AlmaLinux_{sources[i]}_List.json'
 		file_name = f'{DATA_FILE_LOCATION}/{q}'
-		link = f"http://repo.almalinux.org/almalinux/{sources[i]}.0/BaseOS/s390x/os/Packages/"
+		link = f"http://repo.almalinux.org/almalinux/{sources[i]}/BaseOS/s390x/os/Packages/"
 		try:
 			req = requests.get(link)
 			data = req.text
