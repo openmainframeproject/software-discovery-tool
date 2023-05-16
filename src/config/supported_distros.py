@@ -21,8 +21,8 @@ SUPPORTED_DISTROS = {
 	'Fedora 34': 'Fedora_34_List.json',
 	'Fedora 35': 'Fedora_35_List.json',
 	'Fedora 36': 'Fedora_36_List.json',
-	'Fedora 37': 'Fedora_37_List.json',
-	'Fedora 38': 'Fedora_38_List.json'
+	'Fedora 37': 'Fedora_37_List.json'
+	# 'Fedora 38': 'Fedora_38_List.json' ---- Will be added soon
 },
 'SUSE Package Hub SLES': {
 },
@@ -37,5 +37,13 @@ SUPPORTED_DISTROS = {
 },
 'Rocky Linux': {
 	'RockyLinux 9': 'RockyLinux_9_List.json'
+},
+'IBM Z Validated': {
+    'IBM Z Validated RHEL 8': 'IBM_Validated_OSS_List_RHEL_8.json',
+    'IBM Z Validated RHEL 9': 'IBM_Validated_OSS_List_RHEL_9.json',
+    'IBM Z Validated SLES 12': 'IBM_Validated_OSS_List_SLES_12.json',
+    'IBM Z Validated SLES 15': 'IBM_Validated_OSS_List_SLES_15.json',
+    'IBM Z Validated Ubuntu 20.04': 'IBM_Validated_OSS_List_Ubuntu_2004.json',
+    'IBM Z Validated Ubuntu 22.04': 'IBM_Validated_OSS_List_Ubuntu_2204.json'
 }
 }

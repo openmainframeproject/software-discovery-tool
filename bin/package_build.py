@@ -3,6 +3,7 @@ import requests
 import re
 import sys
 import gzip
+import json
 
 DATA = ""
 SDT_BASE = '/opt/software-discovery-tool'
@@ -255,6 +256,122 @@ def rockylinux():
 		DATA.close()
 		print(f"Saved!\nfilename: {q}")
 
+def getIBMValidatedSoftwareName(data,key):
+	return data[key]['name']
+
+def getIBMValidatedSoftwareDescription(data,key,oskey):
+	L = data[key]['os_versions']
+	for l in L:
+		if oskey==l['os']:
+			for i in l['versions']:
+				if i['name'] != 'Distro':
+					return i['url']
+	return None
+
+def getIBMValidatedSoftwareVersion(data,key,oskey,distroNeeded = False):
+	L = data[key]['os_versions']
+	for l in L:
+		if l['os']==oskey:
+			if len(l['versions'])==2 and distroNeeded==True:
+				return "Distro"
+			else:
+				for i in l['versions']:
+					if i['name']!='Distro':
+						return i['name']
+	return None
+
+def createIBMValidatedSoftwareDict(name,description,version):
+	obj = {"packageName":name,
+			"description":description,
+			"version":version
+		}
+	return obj
+
+def getIBMValidatedSoftwareList(data,oskey):
+	softwares = data.keys()
+	swlist=[]
+	for software in softwares:
+		name = getIBMValidatedSoftwareName(data=data,key=software)
+		desc = getIBMValidatedSoftwareDescription(data=data,key=software,oskey=oskey)
+		ver = getIBMValidatedSoftwareVersion(data=data,key=software,oskey=oskey)
+		if desc == None and ver == None:
+			continue
+		obj = createIBMValidatedSoftwareDict(name=name,description=desc,version=ver)
+		swlist.append(obj)
+	return swlist
+
+def getIBMValidatedOpenSourceList(oskey):
+	src_url =  "https://www.ibm.com/community/z/open-source-software/output/json/"
+	try:
+		req = requests.get(src_url)
+		data = req.content
+		if req.status_code == 404:
+			raise Exception(f"404 Directory for IBM-z validated open source list not found")
+	except Exception as e:
+		print("Couldn't pull. Error: ",str(e))
+	else:
+		data_json = json.loads(data)
+
+		oskey_match = False
+		
+		if oskey == 'SLES_12' or oskey == 'all':
+			oskey_match = True
+			opensuse12_list = getIBMValidatedSoftwareList(data=data_json,oskey='SLES 12.x')
+			q = 'IBM_Validated_OSS_List_SLES_12.json'
+			file_name = f'{DATA_FILE_LOCATION}/{q}'
+			with open(file_name,'w') as file:
+				json.dump(opensuse12_list,file,indent=2)
+				print(f"Saved!\nfilename: {q}")
+				
+		if oskey == 'SLES_15' or oskey == 'all':
+			oskey_match = True
+			opensuse15_list = getIBMValidatedSoftwareList(data=data_json,oskey='SLES 15.x')
+			q = 'IBM_Validated_OSS_List_SLES_15.json'
+			file_name = f'{DATA_FILE_LOCATION}/{q}'
+			with open(file_name,'w') as file:
+				json.dump(opensuse15_list,file,indent=2)
+				print(f"Saved!\nfilename: {q}")
+				
+		if oskey == 'Ubuntu_20.04' or oskey == 'all':
+			oskey_match = True
+			ubuntu2004_list = getIBMValidatedSoftwareList(data=data_json,oskey='Ubuntu 20.x')
+			q = 'IBM_Validated_OSS_List_Ubuntu_2004.json'
+			file_name = f'{DATA_FILE_LOCATION}/{q}'
+			with open(file_name,'w') as file:
+				json.dump(ubuntu2004_list,file,indent=2)
+				print(f"Saved!\nfilename: {q}")
+				
+		if oskey == 'Ubuntu_22.04' or oskey == 'all':
+			oskey_match = True
+			ubuntu2204_list = getIBMValidatedSoftwareList(data=data_json,oskey='Ubuntu 22.x')
+			q = 'IBM_Validated_OSS_List_Ubuntu_2204.json'
+			file_name = f'{DATA_FILE_LOCATION}/{q}'
+			with open(file_name,'w') as file:
+				json.dump(ubuntu2204_list,file,indent=2)
+				print(f"Saved!\nfilename: {q}")
+				
+		if oskey == 'RHEL_9' or oskey == 'all':
+			oskey_match = True
+			rhel9_list = getIBMValidatedSoftwareList(data=data_json,oskey='RHEL 9.x')
+			q = 'IBM_Validated_OSS_List_RHEL_9.json'
+			file_name = f'{DATA_FILE_LOCATION}/{q}'
+			with open(file_name,'w') as file:
+				json.dump(rhel9_list,file,indent=2)
+				print(f"Saved!\nfilename: {q}")
+
+		if oskey == 'RHEL_8' or oskey == 'all':
+			oskey_match = True
+			rhel8_list = getIBMValidatedSoftwareList(data=data_json,oskey='RHEL 8.x/7.x')
+			q = 'IBM_Validated_OSS_List_RHEL_8.json'
+			file_name = f'{DATA_FILE_LOCATION}/{q}'
+			with open(file_name,'w') as file:
+				json.dump(rhel8_list,file,indent=2)
+				print(f"Saved!\nfilename: {q}")
+
+		if oskey_match == False:
+			print("Couldn't fetch appropriate package for given command.")
+
+
 def pds(q):
 	global DATA,DATA_FILE_LOCATION
 	file_name = f'{DATA_FILE_LOCATION}/{q}'
@@ -275,8 +392,12 @@ if __name__ == "__main__":
 	
 	try:
 		file = sys.argv[1]
+		oskey = ''
+		if len(sys.argv)>=3:
+			oskey = sys.argv[2]
 	except:
 		file = ''
+		oskey = ''
 	if re.match(r'.*\.json', file):
 		print(f"Extracting {file} from PDS data ... ")
 		pds(file)
@@ -287,17 +408,20 @@ if __name__ == "__main__":
 		print(f"Extracting {file} data ... ")
 		clefos()
 	elif file == 'OpenSuse' or file == 'opensuse':
-		print(f"Extracting data for {file} ... ")
+		print(f"Extracting {file} data ... ")
 		opensuse()
 	elif file == 'Fedora' or file == 'fedora':
-		print(f"Extracting data for {file} ... ")
+		print(f"Extracting {file} data ... ")
 		fedora()
 	elif file == 'AlmaLinux' or file == 'almalinux':
-		print(f"Extracting data for {file} ... ")
+		print(f"Extracting {file} data ... ")
 		almaLinux()
 	elif file == 'RockyLinux' or file == 'rockylinux':
-		print(f"Extracting data for {file} ... ")
+		print(f"Extracting {file} data ... ")
 		rockylinux()
+	elif file == 'IBM-Validated' or file == 'ibm-validated':
+		print(f"Extracting {file} data ... ")
+		getIBMValidatedOpenSourceList(oskey)
 	else:
 		print(
 			"Usage:\n./package_build <exact_file_name.json>\n\t\t\t[if data is from PDS]"
@@ -307,7 +431,9 @@ if __name__ == "__main__":
 			"\n./package_build.py fedora\n\t\t\t[if data is from Fedora]"
 			"\n./package_build.py almalinux\n\t\t\t[if data is from AlmaLinux]"
 			"\n./package_build.py rockylinux\n\t\t\t[if data is from RockyLinux]"
+			"\n./package_build.py ibm-validated\n\t\t\t[if data is from IBM Validated Open Source List]"
 			"\n./package_build.py\n\t\t\t[for displaying this help]\n"
 			"Example:\n./package_build.py RHEL_8_Package_List.json\n./package_build.py debian")
 	
 	print("Thanks for using SDT!")
+
