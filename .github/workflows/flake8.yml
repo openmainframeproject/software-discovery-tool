@@ -1,4 +1,4 @@
-# This workflow will cehck lint with a single version of Python
+# This workflow will check linting with Flake8 in Python
 
 name: Flake8 Workflow
 
