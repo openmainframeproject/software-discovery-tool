@@ -21,7 +21,8 @@ SUPPORTED_DISTROS = {
 	'Fedora 34': 'Fedora_34_List.json',
 	'Fedora 35': 'Fedora_35_List.json',
 	'Fedora 36': 'Fedora_36_List.json',
-	'Fedora 37': 'Fedora_37_List.json'
+	'Fedora 37': 'Fedora_37_List.json',
+	'Fedora 38': 'Fedora_38_List.json'
 },
 'SUSE Package Hub SLES': {
 },
