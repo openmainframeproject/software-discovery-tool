@@ -3,6 +3,7 @@ import requests
 import re
 import sys
 import gzip
+import json
 
 DATA = ""
 SDT_BASE = '/opt/software-discovery-tool'
@@ -249,6 +250,24 @@ def rockylinux():
 		DATA.close()
 		print(f"Saved!\nfilename: {q}")
 
+def zOSOpenTools():
+	url = "https://api.github.com/users/ZOSOpenTools/repos"
+	try:
+		req = requests.get(url)
+		git_data = json.loads(req.content)
+		if req.status_code == 404:
+			raise Exception("404 File not found")
+	except Exception as e:
+		print("Couldn't pull. Error: ",str(e))
+	
+	zOS_list = []
+	for repo in git_data:
+		repo_info = {"packageName":repo["name"],"description":repo["description"],"version":""}
+		zOS_list.append(repo_info)
+	
+	with open('ZOSOpenTools.json','w') as file:
+		json.dump(zOS_list,file,indent=2)
+
 def pds(q):
 	global DATA,DATA_FILE_LOCATION
 	file_name = f'{DATA_FILE_LOCATION}/{q}'
@@ -292,6 +311,9 @@ if __name__ == "__main__":
 	elif file == 'RockyLinux' or file == 'rockylinux':
 		print(f"Extracting data for {file} ... ")
 		rockylinux()
+	elif file == 'ZOSOpenTools' or file == 'zosopentools':
+		print(f"Extracting data for {file} ... ")
+		zOSOpenTools()
 	else:
 		print(
 			"Usage:\n./package_build <exact_file_name.json>\n\t\t\t[if data is from PDS]"
@@ -301,6 +323,7 @@ if __name__ == "__main__":
 			"\n./package_build.py fedora\n\t\t\t[if data is from Fedora]"
 			"\n./package_build.py almalinux\n\t\t\t[if data is from AlmaLinux]"
 			"\n./package_build.py rockylinux\n\t\t\t[if data is from RockyLinux]"
+			"\n./package_build.py zosopentools\n\t\t\t[if data is from ZOS Open Tools list]"
 			"\n./package_build.py\n\t\t\t[for displaying this help]\n"
 			"Example:\n./package_build.py RHEL_8_Package_List.json\n./package_build.py debian")
 	
