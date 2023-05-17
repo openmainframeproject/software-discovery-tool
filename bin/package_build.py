@@ -227,7 +227,7 @@ def rockylinux():
 		q = f'RockyLinux_{sources[i]}_List.json'
 		file_name = f'{DATA_FILE_LOCATION}/{q}'
 		for each in range(len(dirs)):
-			link = f"https://download.rockylinux.org/pub/rocky/{sources[i]}.0/BaseOS/s390x/os/Packages/{dirs[each]}/"
+			link = f"https://download.rockylinux.org/pub/rocky/{sources[i]}/BaseOS/s390x/os/Packages/{dirs[each]}/"
 			try:
 				req = requests.get(link)
 				data = req.text
