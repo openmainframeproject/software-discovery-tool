@@ -163,8 +163,14 @@ def fedora():
 		results = []
 		q = f'Fedora_{sources[i-1]}_List.json'
 		file_name = f'{DATA_FILE_LOCATION}/{q}'
+		current_link = f'https://dl.fedoraproject.org/pub/fedora-secondary/releases/{sources[i]}/Everything/s390x/os/Packages/'
+		archived_link = f'https://archives.fedoraproject.org/pub/archive/fedora-secondary/releases/{sources[i]}/Everything/s390x/os/Packages/'
+		req = requests.get(current_link)
+		if req.status_code == 404:
+			print(f'Fedora {sources[i]} has been moved to archive')
+			current_link = archived_link
 		for each in range(len(dirs)):
-			link = f"https://dl.fedoraproject.org/pub/fedora-secondary/releases/{sources[i]}/Everything/s390x/os/Packages/{dirs[each]}/"
+			link = f"{current_link}{dirs[each]}/"
 			try:
 				req = requests.get(link)
 				data = req.text
