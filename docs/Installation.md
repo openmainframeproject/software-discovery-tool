@@ -1,6 +1,6 @@
 # Steps for setting up software-discovery-tool application on server
 
-The instructions provided below specify the steps for SLES 11 SP4/12/12 SP1/12 SP2 and Ubuntu 18.04/19.04/20.04:
+The instructions provided below specify the steps for SLES 11 SP4/12/12 SP1/12 SP2 and Ubuntu 18.04/19.04/20.04/22.04:
 
 _**NOTE:**_
 * make sure you are logged in as user with sudo permissions
@@ -13,7 +13,7 @@ _**NOTE:**_
         sudo easy_install pip
         sudo pip install 'cryptography==1.4' Flask launchpadlib simplejson logging
 
-* For Ubuntu (18.04, 19.04, 20.04):
+* For Ubuntu (18.04, 19.04, 20.04, 22.04):
 
         sudo apt-get update
         sudo apt-get install -y python3 python3-pip gcc git python3-dev libssl-dev libffi-dev cron python3-lxml apache2 libapache2-mod-wsgi-py3
@@ -63,14 +63,14 @@ Note: In case software-discovery-tool code is already checked out, do the follow
 
         sudo service software-discovery-tool start
 
-* SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (18.04, 19.04, 20.04):
+* SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (18.04, 19.04, 20.04, 22.04):
 
     #### Copy the apache configuration file from `/opt/software-discovery-tool/src/config/sdt.conf` into respective apache configuration folder as below
 * SLES (12 SP1, 12 SP2, 12 SP3):
 
             sudo cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/conf.d/sdt.conf
 
-* For Ubuntu (18.04, 19.04, 20.04):
+* For Ubuntu (18.04, 19.04, 20.04, 22.04):
 
             sudo cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/sites-available/sdt.conf
             sudo mv /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/z-000-default.conf
@@ -149,7 +149,7 @@ Step 2 of
 [Adding_new_distros](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Adding_new_distros.md#step-2-update-the-supported_distros-variable-in-configuration-file-sdt_basesrcconfigconfigpy)
 
 ###  Step 6: Verify that the software-discovery-tool server is up and running
-* For Ubuntu (18.04, 19.04, 20.04):
+* For Ubuntu (18.04, 19.04, 20.04, 22.04):
  We now run the following commands to properly enable the config files of the software-discovery-tool server and then restart the apache server. 
 
             sudo a2ensite z-000-default.conf
@@ -172,7 +172,7 @@ If you run `pytest` as your logged user, it may give errors/warnings since you h
 _**NOTE:**_ 
 
 * For SLES (11 SP4, 12) by default the port_number will be 5000
-* For SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (18.04, 19.04, 20.04)  by default the port_number will be 80
+* For SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (18.04, 19.04, 20.04, 22.04)  by default the port_number will be 80
 
 ###  Step 7: (Optional) Custom configuration
 Following configuration settings can be managed in `/opt/software-discovery-tool/src/config/config.py`:
@@ -210,7 +210,7 @@ _**NOTE:**_
 
 In case any of the parameters are updated, the server has to be restarted:
 
-* SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (18.04, 19.04, 20.04):
+* SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (18.04, 19.04, 20.04, 22.04):
 
     #### Start/Restart Apache service
 
