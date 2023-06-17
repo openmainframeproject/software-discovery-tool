@@ -161,7 +161,7 @@ def fedora():
 	dirs = '023456789abcdefghijklmnopqrstuvwxyz'
 	for i in range(len(sources)):
 		results = []
-		q = f'Fedora_{sources[i-1]}_List.json'
+		q = f'Fedora_{sources[i]}_List.json'
 		file_name = f'{DATA_FILE_LOCATION}/{q}'
 		current_link = f'https://dl.fedoraproject.org/pub/fedora-secondary/releases/{sources[i]}/Everything/s390x/os/Packages/'
 		archived_link = f'https://archives.fedoraproject.org/pub/archive/fedora-secondary/releases/{sources[i]}/Everything/s390x/os/Packages/'
