@@ -3,7 +3,7 @@ SUPPORTED_DISTROS = {
 	'z/OS Software': 'ZOS_Software_List'
 },
 'IBM Z and LinuxONE Container Registry': {
-	'Container Images for IBM Z and LinuxONE': 'IBMZ_container_registry.json'
+	'Container Images for IBM Z and LinuxONE': 'IBMZ_container_registry'
 },
 'Debian': {
 	'10(Buster)': 'Debian_Buster_List',
@@ -13,9 +13,9 @@ SUPPORTED_DISTROS = {
 	'ClefOS Base 7': 'ClefOS_7_List'
 },
 'OpenSUSE': {
-	'Leap 15.3': 'OpenSUSE_Leap_15_3.json',
-	'Tumbleweed': 'OpenSUSE_Tumbleweed.json',
-	'Leap 15.4': 'OpenSUSE_Leap_15_4.json'
+	'Leap 15.3': 'OpenSUSE_Leap_15_3',
+	#'Tumbleweed': 'OpenSUSE_Tumbleweed',
+	#'Leap 15.4': 'OpenSUSE_Leap_15_4'
 },
 'Fedora': {
 	'Fedora 34': 'Fedora_34_List.json',
