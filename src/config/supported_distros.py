@@ -14,8 +14,8 @@ SUPPORTED_DISTROS = {
 },
 'OpenSUSE': {
 	'Leap 15.3': 'OpenSUSE_Leap_15_3',
-	#'Tumbleweed': 'OpenSUSE_Tumbleweed',
-	#'Leap 15.4': 'OpenSUSE_Leap_15_4'
+	'Tumbleweed': 'OpenSUSE_Tumbleweed',
+	'Leap 15.4': 'OpenSUSE_Leap_15_4'
 },
 'Fedora': {
 	'Fedora 34': 'Fedora_34_List',
