@@ -34,7 +34,12 @@ def jsontosql(db,table,file,os,user,password):
     filepath = f'{DATA_FILE_LOCATION}/{file}.json'
     jsonFile = open(file=filepath)
     data = json.load(jsonFile)
-    final_data = [dict(item, osName=os) for item in data]
+    #final_data = [dict(item, osName=os) for item in data]
+    final_data = []
+    for item in data :
+        if item : 
+            row = dict(item, osName = os)
+            final_data.append(row)
     keyset = data[0].keys()
     conn = pymysql.connect(host=HOST,user=user,password=password,database=db,autocommit=True)
     curr = conn.cursor()
@@ -46,9 +51,12 @@ def jsontosql(db,table,file,os,user,password):
         query = f"INSERT INTO {table} (packageName, version, osName) VALUES (%(packageName)s, %(version)s, %(osName)s)"
     else:
         query = f"INSERT INTO {table} (packageName, version, description, osName) VALUES (%(packageName)s, %(version)s, %(description)s, %(osName)s)"
-    curr.executemany(query,final_data)
+    if len(final_data) == 0 : 
+        print(f"{table} : No Entries found")
+    else :
+        curr.executemany(query,final_data)
+        print(f"{table} : Entries filled")
     conn.close()
-    print(f"{table} : Entries filled")
 
 def createTable(db,tblname,username,password):
     conn = pymysql.connect(host=HOST,user=username,password=password,database=db)
@@ -56,7 +64,7 @@ def createTable(db,tblname,username,password):
     query = f"CREATE OR REPLACE TABLE {tblname} ("\
 			"pkgId INT NOT NULL AUTO_INCREMENT, "\
 			"packageName VARCHAR(100) NOT NULL,"\
-			"version VARCHAR(100) NOT NULL,"\
+			"version VARCHAR(500) NOT NULL,"\
 			"description VARCHAR(500), "\
 			"osName VARCHAR(100) NOT NULL, "\
 			"PRIMARY KEY (pkgId)"\
