@@ -44,6 +44,6 @@ SUPPORTED_DISTROS = {
     'IBM Z Validated SLES 12': 'IBM_Validated_OSS_List_SLES_12',
     'IBM Z Validated SLES 15': 'IBM_Validated_OSS_List_SLES_15',
     'IBM Z Validated Ubuntu 20.04': 'IBM_Validated_OSS_List_Ubuntu_2004',
-    'IBM Z Validated Ubuntu 22.04': 'IBM_Validated_OSS_List_Ubuntu_2204'
+    # 'IBM Z Validated Ubuntu 22.04': 'IBM_Validated_OSS_List_Ubuntu_2204'  ---- will be added soon
 }
 }

@@ -4,7 +4,7 @@ import json
 import pymysql
 import sys
 
-sys.path.insert(1, '../src/config')
+sys.path.append('/opt/software-discovery-tool/src/config')
 import supported_distros
 SUPPORTED_DISTROS = supported_distros.SUPPORTED_DISTROS
 SDT_BASE = '/opt/software-discovery-tool'
