@@ -22,14 +22,26 @@ def connectdb(username,password,database):
 
 def db_init():
     username = ""
+    table_name = ""
+
     if len(sys.argv)==2 and sys.argv[1]=='root':
         username = sys.argv[1]
+    elif len(sys.argv)==2:
+        username = input("Enter username to use for connecting to MariaDB server : ")
+        table_name = sys.argv[1]
+    elif len(sys.argv)==3 and sys.argv[1]=='root':
+        username = sys.argv[1]
+        table_name = sys.argv[2]    
     else:
         username = input("Enter username to use for connecting to MariaDB server : ")
     password = input("Enter password for connecting to MariaDB server : ")
     dbName = DB_NAME
-    connectdb(username,password,dbName)
-    initall(dbName,username,password)
+
+    if table_name == "":
+        connectdb(username,password,dbName)
+        initall(dbName,username,password)
+    else:
+        create_one(dbName,username,password,table_name)
 
 def jsontosql(db,table,file,os,user,password):
     filepath = f'{DATA_FILE_LOCATION}/{file}.json'
@@ -57,7 +69,7 @@ def jsontosql(db,table,file,os,user,password):
         print(f"{table} : No Entries found")
     else :
         curr.executemany(query,final_data)
-        print(f"{table} : Entries filled")
+        print(f"{table} : {len(final_data)} Entries filled")
     conn.close()
 
 def createTable(db,tblname,username,password):
@@ -74,6 +86,30 @@ def createTable(db,tblname,username,password):
     curr.execute(query)
     conn.close()
     print(f"{tblname} formed successfully")
+
+def create_one(db,username,password,table_name): 
+
+    # conn = pymysql.connect(host=HOST,user=username,password=password,database=db)
+    # curr = conn.cursor()
+    # Check of db exist or not --- CREATE DATABASE IF NOT EXISTS DBname
+    # Execute Krna command
+    # Connection Close
+
+    flag=True
+    for os in SUPPORTED_DISTROS:
+        if not SUPPORTED_DISTROS[os]:
+            continue
+        else:
+            for distro in SUPPORTED_DISTROS[os]:
+                if SUPPORTED_DISTROS[os][distro] == table_name:
+                    flag=False
+                    createTable(db,SUPPORTED_DISTROS[os][distro],username,password)
+                    jsontosql(db,SUPPORTED_DISTROS[os][distro],SUPPORTED_DISTROS[os][distro],distro,username,password)
+        
+    if flag==False:
+        print(f"SUCCESSFULLY INITIALIZED {table_name} TABLE")
+    else:
+        print(f"NO MATCHES FOUND. TRY SOMETHING ELSE")
 
 def initall(db,username,password): 
     count = 0
@@ -100,7 +136,10 @@ def test():
         else:
             for distro in SUPPORTED_DISTROS[os]:
                 print(f"osName : {distro} file : {SUPPORTED_DISTROS[os][distro]}")
+                print()
 
 if __name__ == "__main__":
     db_init()
     #test()
+    
+    
