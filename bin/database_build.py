@@ -3,6 +3,7 @@ from pickle import TRUE
 import json
 import pymysql
 import sys
+import os
 
 sys.path.append('/opt/software-discovery-tool/src/config')
 import supported_distros
@@ -33,6 +34,7 @@ def db_init():
 def jsontosql(db,table,file,os,user,password):
     filepath = f'{DATA_FILE_LOCATION}/{file}.json'
     jsonFile = open(file=filepath)
+    #print(jsonFile)
     data = json.load(jsonFile)
     #final_data = [dict(item, osName=os) for item in data]
     final_data = []
@@ -75,14 +77,18 @@ def createTable(db,tblname,username,password):
 
 def initall(db,username,password): 
     count = 0
-    for os in SUPPORTED_DISTROS:
-        if not SUPPORTED_DISTROS[os]:
+    for os_Key in SUPPORTED_DISTROS:
+        if not SUPPORTED_DISTROS[os_Key]:
             continue
         else:
-            for distro in SUPPORTED_DISTROS[os]:
-                createTable(db,SUPPORTED_DISTROS[os][distro],username,password)
-                jsontosql(db,SUPPORTED_DISTROS[os][distro],SUPPORTED_DISTROS[os][distro],distro,username,password)
-                count = count+1 
+            for distro in SUPPORTED_DISTROS[os_Key]:
+                path = f'{DATA_FILE_LOCATION}/{SUPPORTED_DISTROS[os_Key][distro]}.json'
+                if os.path.exists(path):
+                    createTable(db,SUPPORTED_DISTROS[os_Key][distro],username,password)
+                    jsontosql(db,SUPPORTED_DISTROS[os_Key][distro],SUPPORTED_DISTROS[os_Key][distro],distro,username,password)
+                    count = count+1 
+                else:
+                    print(f"{SUPPORTED_DISTROS[os_Key][distro]} FILE DOESN'T EXIST")
     print(f"SUCCESSFULLY INITIALIZED {count} TABLES")
 
 def test():
