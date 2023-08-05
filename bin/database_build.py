@@ -37,7 +37,7 @@ def db_init():
     password = input("Enter password for connecting to MariaDB server : ")
     dbName = DB_NAME
 
-    if table_name == "":
+    if table_name == "" or table_name == "all" or table_name == "All":
         connectdb(username,password,dbName)
         initall(dbName,username,password)
     else:
@@ -69,7 +69,7 @@ def jsontosql(db,table,file,os,user,password):
         print(f"{table} : No Entries found")
     else :
         curr.executemany(query,final_data)
-        print(f"{table} : {len(final_data)} Entries filled")
+        print(f"{table} : Entries filled")
     conn.close()
 
 def createTable(db,tblname,username,password):
@@ -88,12 +88,10 @@ def createTable(db,tblname,username,password):
     print(f"{tblname} formed successfully")
 
 def create_one(db,username,password,table_name): 
-
-    # conn = pymysql.connect(host=HOST,user=username,password=password,database=db)
-    # curr = conn.cursor()
-    # Check of db exist or not --- CREATE DATABASE IF NOT EXISTS DBname
-    # Execute Krna command
-    # Connection Close
+    conn = pymysql.connect(host=HOST,user=username,password=password)
+    cur = conn.cursor()
+    query = f"CREATE DATABASE IF NOT EXISTS {db}"
+    cur.execute(query)
 
     flag=True
     for os in SUPPORTED_DISTROS:
@@ -105,7 +103,8 @@ def create_one(db,username,password,table_name):
                     flag=False
                     createTable(db,SUPPORTED_DISTROS[os][distro],username,password)
                     jsontosql(db,SUPPORTED_DISTROS[os][distro],SUPPORTED_DISTROS[os][distro],distro,username,password)
-        
+    conn.close()
+
     if flag==False:
         print(f"SUCCESSFULLY INITIALIZED {table_name} TABLE")
     else:
@@ -143,3 +142,5 @@ if __name__ == "__main__":
     #test()
     
     
+
+
