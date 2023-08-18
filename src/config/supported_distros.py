@@ -7,7 +7,8 @@ SUPPORTED_DISTROS = {
 },
 'Debian': {
 	'10(Buster)': 'Debian_Buster_List.json',
-	'11(Bullseye)': 'Debian_Bullseye_List.json'
+	'11(Bullseye)': 'Debian_Bullseye_List.json',
+    	'12(Bookworm)': 'Debian_Bookworm_List.json'
 },
 'ClefOS': {
 	'ClefOS Base 7': 'ClefOS_7_List.json'
@@ -21,8 +22,8 @@ SUPPORTED_DISTROS = {
 	'Fedora 34': 'Fedora_34_List.json',
 	'Fedora 35': 'Fedora_35_List.json',
 	'Fedora 36': 'Fedora_36_List.json',
-	'Fedora 37': 'Fedora_37_List.json'
-	# 'Fedora 38': 'Fedora_38_List.json' ---- Will be added soon
+	'Fedora 37': 'Fedora_37_List.json',
+	'Fedora 38': 'Fedora_38_List.json'
 },
 'SUSE Package Hub SLES': {
 },
