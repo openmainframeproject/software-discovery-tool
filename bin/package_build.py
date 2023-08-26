@@ -49,82 +49,38 @@ def debian():
 			print(f"Saved!\nfilename: {q[i]}")
 
 def opensuse():
-	global DATA, DATA_FILE_LOCATION
-	results = []
-	results_str = ''
+	source_data = [[f"https://download.opensuse.org/ports/zsystems/tumbleweed/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']], 
+		[f"https://download.opensuse.org/distribution/leap/15.3/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']], 
+		[f"https://download.opensuse.org/distribution/leap/15.4/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']]]
 	q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_3.json', 'OpenSUSE_Leap_15_4.json']
-	file_name = [f'{DATA_FILE_LOCATION}/{x}' for x in q]
-	source_leap = [f"https://download.opensuse.org/distribution/leap/15.3/repo/oss/{x}" for x in ['s390x', 'noarch']]
-	source_tumbleweed = [f"https://download.opensuse.org/ports/zsystems/tumbleweed/repo/oss/{x}" for x in ['s390x', 'noarch']]
-	source_leap_15_4 = [f"https://download.opensuse.org/distribution/leap/15.4/repo/oss/{x}" for x in ['s390x','noarch']]
-	for each in source_tumbleweed:
-		try:
-			req = requests.get(each)
-			data = req.text
-			if req.status_code == 404:
-				raise Exception("404 File not found")
-		except Exception as e:
-			print("Couldn't pull. Error: ",str(e))
-		else:
-			ref_data = re.findall(r"<a href=\"(.*\.rpm)\"><img.*<\/a>", data)
-			results.extend(ref_data)
-	DATA = open(file_name[0], 'w')
-	DATA.write('[')
-	for result in results:
-		result = re.sub(r'\.(noarch|s390x)\.rpm', '', result)
-		pkg = re.search(r'^([\w+\.-]+)-([+~\w\-\.]+)', result)
-		each_pkg = f'"packageName": "{pkg.group(1)}","version": "{pkg.group(2)}"'
-		each_pkg = '{'+each_pkg+'},'
-		DATA.write(each_pkg+'\n')
-	DATA.write('{}]')
-	DATA.close()
-	print(f"Saved!\nfilename: {q[0]}")
-	results = []
-	for each in source_leap:
-		try:
-			req = requests.get(each)
-			data = req.text
-			if req.status_code == 404:
-				raise Exception("404 File not found")
-		except Exception as e:
-			print("Couldn't pull. Error: ",str(e))
-		else:
-			ref_data = re.findall(r"<a href=\"(.*\.rpm)\"><img.*<\/a>", data)
-			results.extend(ref_data)
-	DATA = open(file_name[1], 'w')
-	DATA.write('[')
-	for result in results:
-		result = re.sub(r'\.(noarch|s390x)\.rpm', '', result)
-		pkg = re.search(r'^([\w+\.-]+)-([+~\w\-\.]+)', result)
-		each_pkg = f'"packageName": "{pkg.group(1)}","version": "{pkg.group(2)}"'
-		each_pkg = '{'+each_pkg+'},'
-		DATA.write(each_pkg+'\n')
-	DATA.write('{}]')
-	DATA.close()
-	print(f"Saved!\nfilename: {q[1]}")
-	results = []
-	for each in source_leap_15_4:
-		try:
-			req = requests.get(each)
-			data = req.text
-			if req.status_code == 404:
-				raise Exception("404 File not found")
-		except Exception as e:
-			print("Couldn't pull. Error: ",str(e))
-		else:
-			ref_data = re.findall(r"<a href=\"(.*\.rpm)\"><img.*<\/a>", data)
-			results.extend(ref_data)
-	DATA = open(file_name[2], 'w')
-	DATA.write('[')
-	for result in results:
-		result = re.sub(r'\.(noarch|s390x)\.rpm', '', result)
-		pkg = re.search(r'^([\w+\.-]+)-([+~\w\-\.]+)', result)
-		each_pkg = f'"packageName": "{pkg.group(1)}","version": "{pkg.group(2)}"'
-		each_pkg = '{'+each_pkg+'},'
-		DATA.write(each_pkg+'\n')
-	DATA.write('{}]')
-	DATA.close()
-	print(f"Saved!\nfilename: {q[2]}")
+	regex_pattern = r"-(.*?)-"
+	for i in range(len(source_data)):
+		opensuse_list= []
+		for src_url in source_data[i]:
+			try:
+				req = requests.get(src_url)
+				data_source = req.content
+				if req.status_code == 404:
+					raise Exception(f"404 Directory for Opensuse list not found")
+			except Exception as e:
+				print("Couldn't pull. Error: ",str(e))
+			else:
+				data = json.loads(data_source)
+				for d in data['data']:
+					name = d['name'][::-1]
+					reg_match = re.search(regex_pattern, name)
+					if reg_match:
+						package_name = name[reg_match.end():][::-1]
+						version = reg_match[0][1:-1][::-1]
+						if package_name == None or version == None:
+							continue
+						data_dict = {"packageName": package_name, "description": "","version" :version}
+						opensuse_list.append(data_dict)
+		file_name = q[i]
+		file_path = f'{DATA_FILE_LOCATION}/{file_name}'
+		with open(file_path, 'w') as file:
+			json.dump(opensuse_list, file, indent=2)
+			print(f"Saved!\nfilename: {file_name}")
 
 def clefos():
 	global DATA, DATA_FILE_LOCATION
@@ -436,4 +392,3 @@ if __name__ == "__main__":
 			"Example:\n./package_build.py RHEL_8_Package_List.json\n./package_build.py debian")
 	
 	print("Thanks for using SDT!")
-
