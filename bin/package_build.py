@@ -51,8 +51,9 @@ def debian():
 def opensuse():
 	source_data = [[f"https://download.opensuse.org/ports/zsystems/tumbleweed/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']], 
 		[f"https://download.opensuse.org/distribution/leap/15.3/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']], 
-		[f"https://download.opensuse.org/distribution/leap/15.4/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']]]
-	q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_3.json', 'OpenSUSE_Leap_15_4.json']
+		[f"https://download.opensuse.org/distribution/leap/15.4/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']],
+		[f"https://download.opensuse.org/distribution/leap/15.5/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']]]
+	q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_3.json', 'OpenSUSE_Leap_15_4.json', 'OpenSUSE_Leap_15_5.json']
 	regex_pattern = r"-(.*?)-"
 	for i in range(len(source_data)):
 		opensuse_list= []
@@ -75,7 +76,8 @@ def opensuse():
 						if package_name == None or version == None:
 							continue
 						data_dict = {"packageName": package_name, "description": "","version" :version}
-						opensuse_list.append(data_dict)
+						if data_dict not in opensuse_list:
+							opensuse_list.append(data_dict)
 		file_name = q[i]
 		file_path = f'{DATA_FILE_LOCATION}/{file_name}'
 		with open(file_path, 'w') as file:
