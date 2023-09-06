@@ -10,8 +10,8 @@ from config.supported_distros import SUPPORTED_DISTROS
 
 # Default user credentials
 HOST = "localhost"
-USER = 'sdtAdmin'
-PASSWORD = "admin1234"
+USER = 'sdtreaduser'
+PASSWORD = "UPDATEME"
 DB_NAME = 'sdtDB'
 
 class PackageSearch:

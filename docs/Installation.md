@@ -1,6 +1,6 @@
-# Steps for setting up software-discovery-tool application on server
+e Steps for setting up software-discovery-tool application on server
 
-The instructions provided below specify the steps for SLES 11 SP4/12/12 SP1/12 SP2 and Ubuntu 18.04/19.04/20.04/22.04:
+The instructions provided below specify the steps for SLES 11 SP4/12/12 SP1/12 SP2 and Ubuntu 18.04/20.04/22.04:
 
 _**NOTE:**_
 * make sure you are logged in as user with sudo permissions
@@ -13,7 +13,7 @@ _**NOTE:**_
         sudo easy_install pip
         sudo pip install 'cryptography==1.4' Flask launchpadlib simplejson logging
 
-* For Ubuntu (18.04, 19.04, 20.04, 22.04):
+* For Ubuntu (18.04, 20.04, 22.04):
 
         sudo apt-get update
         sudo apt-get install -y python3 python3-pip gcc git python3-dev libssl-dev libffi-dev cron python3-lxml apache2 libapache2-mod-wsgi-py3
@@ -63,14 +63,14 @@ Note: In case software-discovery-tool code is already checked out, do the follow
 
         sudo service software-discovery-tool start
 
-* SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (18.04, 19.04, 20.04, 22.04):
+* SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (18.04, 20.04, 22.04):
 
     #### Copy the apache configuration file from `/opt/software-discovery-tool/src/config/sdt.conf` into respective apache configuration folder as below
 * SLES (12 SP1, 12 SP2, 12 SP3):
 
             sudo cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/conf.d/sdt.conf
 
-* For Ubuntu (18.04, 19.04, 20.04, 22.04):
+* For Ubuntu (18.04, 20.04, 22.04):
 
             sudo cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/sites-available/sdt.conf
             sudo mv /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/z-000-default.conf
@@ -108,11 +108,11 @@ sudo chown -R apache:apache /opt/software-discovery-tool/distro_data
 Everytime there's an upstream change in the submodule:
 - To update the data directory with the main repo with the remote changes:
 ```
-git pull <upstream remote> <default branch> --recurse-submodules
+sudo -u apache git pull <upstream remote> <default branch> --recurse-submodules
 ```
 - To update ONLY the data directory keeping the main repo as it is:
 ```
-git submodule update --recursive --remote
+sudo -u apache git submodule update --recursive --remote
 ```
 
 #### Using data from PDS
@@ -148,15 +148,43 @@ Now to know how to update the `src/config/supported_distros.py` to reflect the n
 Step 2 of
 [Adding_new_distros](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Adding_new_distros.md#step-2-update-the-supported_distros-variable-in-configuration-file-sdt_basesrcconfigconfigpy)
 
-###  Step 6: Verify that the software-discovery-tool server is up and running
-* For Ubuntu (18.04, 19.04, 20.04, 22.04):
+### Step 6: Install and populate the SQL database
+* For Ubuntu (18.04, 20.04, 22.04):
+
+#### Install dependencies
+
+        sudo apt install mariadb-server python3-pymysql
+
+#### Run MariaDB from the command line and complete the secure installation. Remember the root password you set, you will need this in the future.
+
+        sudo mariadb
+        sudo mysql_secure_installation
+
+#### Log in to MariaDB with the root account you set and create the read-only user (with a password, changed below) and database.
+
+        mariadb -u root -p
+        MariaDB> GRANT SELECT ON sdtDB.* TO 'sdtreaduser'@localhost IDENTIFIED BY 'CHANGE_ME';
+        MariaDB> flush privileges;
+        MariaDB> quit
+
+#### Update src/classes/package_search.py with credentials set above
+
+The "CHANGE_ME" password above should have been changed, and this should be adjusted in your src/classes/package_search.py file.
+
+#### Run the script to populate the database, when prompted by the script for a user and password, use the root account and password you set above.
+
+        cd /opt/software-discovery-tool/bin/
+        ./database_build.py
+
+###  Step 7: Verify that the software-discovery-tool server is up and running
+* For Ubuntu (18.04, 20.04, 22.04):
  We now run the following commands to properly enable the config files of the software-discovery-tool server and then restart the apache server. 
 
-            sudo a2ensite z-000-default.conf
-            systemctl reload apache2
-            sudo a2ensite sdt.conf
-            systemctl reload apache2
-            sudo apachectl restart
+        sudo a2ensite z-000-default.conf
+        systemctl reload apache2
+        sudo a2ensite sdt.conf
+        systemctl reload apache2
+        sudo apachectl restart
 
 We can check if the server is up and running by going to following URL :
 
@@ -172,9 +200,9 @@ If you run `pytest` as your logged user, it may give errors/warnings since you h
 _**NOTE:**_ 
 
 * For SLES (11 SP4, 12) by default the port_number will be 5000
-* For SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (18.04, 19.04, 20.04, 22.04)  by default the port_number will be 80
+* For SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (18.04, 20.04, 22.04)  by default the port_number will be 80
 
-###  Step 7: (Optional) Custom configuration
+###  Step 8: (Optional) Custom configuration
 Following configuration settings can be managed in `/opt/software-discovery-tool/src/config/config.py`:
 
         <software-discovery-tool_BASE> - Base location where software-discovery-tool is Installed/Cloned. Defaults to `/opt/software-discovery-tool/`
@@ -210,7 +238,7 @@ _**NOTE:**_
 
 In case any of the parameters are updated, the server has to be restarted:
 
-* SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (18.04, 19.04, 20.04, 22.04):
+* SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (18.04, 20.04, 22.04):
 
     #### Start/Restart Apache service
 
