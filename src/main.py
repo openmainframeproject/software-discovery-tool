@@ -46,7 +46,7 @@ def searchPackages():
         search_bit_flag = int(request.args.get('search_bit_flag', '0'))
         page_number = int(request.args.get('page_number', '0'))
         
-        json_data = package_search.searchPackages(search_term, exact_match, search_bit_flag, page_number)   
+        json_data = package_search.searchSQLPackages(search_term,exact_match,search_bit_flag,page_number)
         resp = Response(json_data,mimetype="application/json")
         resp.headers.set('Cache-Control','no-cache, no-store, must-revalidate')
         resp.headers.set('Pragma','no-cache')

@@ -127,10 +127,10 @@
           </tfoot>
           <tbody>
             <tr ng-repeat="item in pagedItems[currentPage] | orderBy:sort.sortingOrder:sort.reverse">
-              <td>{{item.P}}</td>
-              <td>{{item.V}}</td>
-              <td>{{getDisplayDistro(item)}}</td>
-              <td ng-if="showDescription">{{item.D}}</td>
+              <td>{{item[0]}}</td>
+              <td>{{item[2]}}</td>
+              <td>{{item[3]}}</td>
+              <td ng-if="showDescription">{{item[1]}}</td>
             </tr>
           </tbody>
         </table>
