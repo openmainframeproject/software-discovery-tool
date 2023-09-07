@@ -1,4 +1,4 @@
-e Steps for setting up software-discovery-tool application on server
+# Steps for setting up software-discovery-tool application on server
 
 The instructions provided below specify the steps for SLES 11 SP4/12/12 SP1/12 SP2 and Ubuntu 18.04/20.04/22.04:
 
@@ -151,13 +151,9 @@ Step 2 of
 ### Step 6: Install and populate the SQL database
 * For Ubuntu (18.04, 20.04, 22.04):
 
-#### Install dependencies
+#### Install dependencies and complete the secure installation. Remember the root password you set, you will need this in the future.
 
         sudo apt install mariadb-server python3-pymysql
-
-#### Run MariaDB from the command line and complete the secure installation. Remember the root password you set, you will need this in the future.
-
-        sudo mariadb
         sudo mysql_secure_installation
 
 #### Log in to MariaDB with the root account you set and create the read-only user (with a password, changed below) and database.
