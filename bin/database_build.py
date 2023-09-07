@@ -126,21 +126,5 @@ def initall(db,username,password):
                     print(f"{SUPPORTED_DISTROS[os_Key][distro]} FILE DOESN'T EXIST")
     print(f"SUCCESSFULLY INITIALIZED {count} TABLES")
 
-def test():
-    print("OK")
-    #print(len(supported_distros.SUPPORTED_DISTROS))
-    for os in SUPPORTED_DISTROS:
-        if not SUPPORTED_DISTROS[os]:
-            continue
-        else:
-            for distro in SUPPORTED_DISTROS[os]:
-                print(f"osName : {distro} file : {SUPPORTED_DISTROS[os][distro]}")
-                print()
-
 if __name__ == "__main__":
     db_init()
-    #test()
-    
-    
-
-
