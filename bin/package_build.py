@@ -117,27 +117,32 @@ def fedora():
 	global DATA,DATA_FILE_LOCATION
 	sources = [34, 35, 36, 37, 38]
 	pkg_reg = r'<a href="(.*)\.rpm"'
-	dirs = '023456789abcdefghijklmnopqrstuvwxyz'
+	dirs = '0123456789abcdefghijklmnopqrstuvwxyz'
 	for i in range(len(sources)):
 		results = []
 		q = f'Fedora_{sources[i]}_List.json'
 		file_name = f'{DATA_FILE_LOCATION}/{q}'
 		current_link = f'https://dl.fedoraproject.org/pub/fedora-secondary/releases/{sources[i]}/Everything/s390x/os/Packages/'
 		archived_link = f'https://archives.fedoraproject.org/pub/archive/fedora-secondary/releases/{sources[i]}/Everything/s390x/os/Packages/'
-		req = requests.get(current_link)
-		if req.status_code == 404:
-			print(f'Fedora {sources[i]} has been moved to archive')
-			current_link = archived_link
-		for each in range(len(dirs)):
-			link = f"{current_link}{dirs[each]}/"
-			try:
+		try:
+			req = requests.get(current_link)
+			if req.status_code == 404:
+				current_link = archived_link
+				req = requests.get(current_link)
+				if req.status_code == 404:
+					raise Exception(f"For Fedora {sources[i]}: Current link and Archive link both are down")
+				else: 
+					print(f'Fedora {sources[i]} has been moved to archive')
+		except Exception as e:
+			print("Couldn't pull. Error: ",str(e))
+		else:
+			for each in range(len(dirs)):
+				link = f"{current_link}{dirs[each]}/"
 				req = requests.get(link)
 				data = req.text
 				if req.status_code == 404:
-					raise Exception(f"404 Directory {dirs[each]} not found")
-			except Exception as e:
-				print("Couldn't pull. Error: ",str(e))
-			else:
+					print(f"404 Directory {dirs[each]} not found")
+					continue
 				ref_data = re.findall(pkg_reg, data)
 				results.extend(ref_data)
 		DATA = open(file_name, 'w')
