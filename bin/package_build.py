@@ -159,7 +159,6 @@ def fedora():
 def almaLinux():
 	global DATA,DATA_FILE_LOCATION
 	sources = [9]
-	results = []
 	pkg_reg = r'<a href="(.*)\.rpm"'
 	for i in range(len(sources)):
 		results = []
