@@ -1,3 +1,0 @@
-[submodule "distro_data"]
-	path = distro_data
-	url = https://github.com/openmainframeproject/software-discovery-tool-data.git
