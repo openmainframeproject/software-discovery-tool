@@ -1,0 +1,135 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6" style="padding:50px;">
+      <h4>Frequently Asked Questions</h4>
+    </div>
+    <div class="col-md-6" style="padding:20px;">
+      <span class="pull-right"><a href="/sdt">Back to search</a></span>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="list-group refinemarginlefttenpx">
+      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(1), 'glyphicon-minus':questionState(1), 'glyphicon-plus':!questionState(1)};"  ng-click="clickQuestion(1)"> <!-- ng-class="[list-group-item, { 'active':questionState(1) }]"  -->
+        What is Software Discovery Tool?
+      </div>
+      <div class="list-group-item" ng-show="questionState(1)">
+        <p>Software Discovery Tool, helps you to search for available packages across OS distributions supported by the s390x architecture in a single user interface.</p>
+      </div>
+      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(2), 'glyphicon-minus':questionState(2), 'glyphicon-plus':!questionState(2)};"  ng-click="clickQuestion(2)"> <!--ng-class="[list-group-item, { 'active':questionState(2) } ]"-->
+        Which operating systems does Software Discovery Tool have data files for?
+      </div>
+      <div class="list-group-item" ng-show="questionState(2)">
+        <p>Currently, Software Discovery Tool contains data for the following operating systems:
+        <ul>
+            <li>IBM z/OS</li>
+            <li>Debian 10(Buster)</li>
+            <li>Debian 11(Bullseye)</li>
+            <li>Debian 12(Bookworm)</li>
+            <li>ClefOS 7</li>
+            <li>openSUSE Tumbleweed</li>
+            <li>openSUSE Leap 15.3</li>
+            <li>openSUSE Leap 15.4</li>
+            <li>openSUSE Leap 15.5</li>
+            <li>Fedora 34</li>
+            <li>Fedora 35</li>
+            <li>Fedora 36</li>
+            <li>Fedora 37</li>
+            <li>IBM Validated List for RHEL 8</li>
+            <li>IBM Validated List for RHEL 9</li>
+            <li>IBM Validated List for SLES 12</li>
+            <li>IBM Validated List for SLES 15</li>
+            <li>IBM Validated List for Ubuntu 20.04</li>
+            <li>IBM Validated List for Ubuntu 22.04</li>
+            <li>AlmaLinux 9</li>
+            <li>Rocky Linux 9</li>
+        </ul></p>
+      </div>
+      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(3), 'glyphicon-minus':questionState(3), 'glyphicon-plus':!questionState(3)};"  ng-click="clickQuestion(3)">
+        Where can I find more details about packages available for various distros?
+      </div>
+      <div class="list-group-item" ng-show="questionState(3)">
+        <h3>Linux</h3>
+        <ul>
+          <li><strong>IBM Z and LinuxONE Container Registry</strong>: A collection of Linux-based software containerized for the IBM Z architecture, and maintained by IBM. Details: <a href="https://ibm.github.io/ibm-z-oss-hub/main/main.html">https://ibm.github.io/ibm-z-oss-hub/main/main.html</a></li>
+          <li><strong>IBM Z Validated</strong>: A list of Linux-based software that is regularly reviewed by the open source ecosystem team at IBM as building for s390x, with build instructions included, where applicable. They span support for various versions of RHEL, SUSE, and Ubuntu. Details: <a href="https://www.ibm.com/community/z/open-source-software/">https://www.ibm.com/community/z/open-source-software/</a></li>
+          <li>The following are Linux distributions and the list of software is extracted from the public package lists for s390x, details of which are listed below.</li>
+             <ul><li><strong>Alma Linux</strong>: <a href="https://wiki.almalinux.org/repos/AlmaLinux.html">https://wiki.almalinux.org/repos/AlmaLinux.html</a></li>
+             <li><strong>ClefOS</strong>: <a href="https://www.sinenomine.net/offerings/linux/ClefOS">https://www.sinenomine.net/offerings/linux/ClefOS</a></li>
+             <li><strong>Debian</strong>: <a href="https://www.debian.org/distrib/packages">https://www.debian.org/distrib/packages</a></li>
+             <li><strong>Fedora</strong>: <a href="https://packages.fedoraproject.org/">https://packages.fedoraproject.org/</a></li>
+             <li><strong>OpenSUSE</strong>: <a href="https://en.opensuse.org/Package_repositories">https://en.opensuse.org/Package_repositories</a></li>
+             <li><strong>Rocky Linux</strong>: <a href="https://wiki.rockylinux.org/rocky/repo/">https://wiki.rockylinux.org/rocky/repo/</a></li></ul>
+          <li>The following are Linux distribution whose data is pulled from the <a href="https://github.com/Linux-on-ibm-z/PDS/">PDS project</a>, which is maintained by the open source ecosystem porting team at IBM.</li>
+             <ul><li><strong>RHEL (Red Hat Enterprise Linux)</strong></li>
+             <li><strong>SUSE Package Hub SLES</strong></li>
+             <li><strong>Suse Linux Enterprise Server</strong></li>
+             <li><strong>Ubuntu</strong></li></ul>
+        </ul>
+        <h3>z/OS</h3>
+        <ul>
+          <li><strong>IBM z/OS</strong> (General): This is a collection of manually curated open source software that has been discovered for z/OS, but doesn’t neatly fit into any other category or source. In the future, this will be split out into more specific areas.</li>
+        </ul>
+      </div>
+      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(4), 'glyphicon-minus':questionState(4), 'glyphicon-plus':!questionState(4)};"  ng-click="clickQuestion(4)">
+        Does Software Discovery Tool list the packages for all architectures?
+      </div>
+      <div class="list-group-item" ng-show="questionState(4)">
+        <p>No. The packages that Software Discovery Tool lists are for s390x architecture.</p>
+      </div>
+      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(5), 'glyphicon-minus':questionState(5), 'glyphicon-plus':!questionState(5)};"  ng-click="clickQuestion(5)">
+        What is the format for entering the search keywords?
+      </div>
+      <div class="list-group-item" ng-show="questionState(5)">
+        <p>The keyword must be three or more characters.
+        <ul>
+           <li>To search for a package that contains the keyword anywhere in its name, enter three or more characters</li>           
+           <li>To search for a package that contains the keyword at the end of its name, enter the asterisk character, followed by three or more characters. For example, enter <b>*docker</b> to search for package names that end with the string <b>docker</b>.</li>
+           <li>To search for a package that contains the keyword at the beginning of its name, enter three or more characters followed by the asterisk character. For example, enter <b>docker*</b> to search for package names that begin with the string <b>docker</b>.</li>
+           <li>To search for package names that exactly match the keyword, enter three or more characters, and then click the <b>Search <keyword> (Exact Match)</b> hyperlink.</li>
+        </ul>
+        </p>
+      </div>
+      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(6), 'glyphicon-minus':questionState(6), 'glyphicon-plus':!questionState(6)};"  ng-click="clickQuestion(6)">
+        How can I narrow my search?
+      </div>
+      <div class="list-group-item" ng-show="questionState(6)">
+        <p>To get packages which exactly matches the search keyword, click on the hyperlink &quot;Search &lt;keyword&gt; (Exact Match)&quot; after entering search keyword</p>
+      </div>
+      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(7), 'glyphicon-minus':questionState(7), 'glyphicon-plus':!questionState(7)};"  ng-click="clickQuestion(7)">
+        How can I refine my search results?
+      </div>
+      <div class="list-group-item" ng-show="questionState(7)">
+        <p>For every successful search, Software Discovery Tool displays a panel next to the results grid.  You may enter a few characters of Package Name or Version in the 'Refine your results' text box and the results will be filtered automatically as you type.</p>
+        <p>Similarly you may select or unselect the specific Distro Versions under "Filter distribution" to locate the necessary package.</p>
+        <p>With each distro version, Software Discovery Tool displays count of displayed packages and total packages found per Distro Version for your help.</p>
+      </div>
+      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(8), 'glyphicon-minus':questionState(8), 'glyphicon-plus':!questionState(8)};"  ng-click="clickQuestion(8)">
+        What package details does Software Discovery Tool display in the search results?
+      </div>
+      <div class="list-group-item" ng-show="questionState(8)">
+        <p>Software Discovery Tool displays the following package details in the search results:
+           <ul>
+           <li>Package Name</li>
+           <li>Package Version</li>
+           <li>Package Description</li>
+           <li>Operating system for which the package is available</li>
+           </ul>
+        </p>
+      </div>
+      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(9), 'glyphicon-minus':questionState(9), 'glyphicon-plus':!questionState(9)};"  ng-click="clickQuestion(9)">
+        How accurate is the package information that Software Discovery Tool provides?
+      </div>
+      <div class="list-group-item" ng-show="questionState(9)">
+        <p>The package information is regularly updated. It is accurate as on the date of the update. The z/OS software list and the other operating systems software lists are maintained by the community in the <a href="https://github.com/openmainframeproject/software-discovery-tool-data">Software Discovery Tool Data Repository</a>.</p>
+      </div>
+      <div class="list-group-item list-group-item-info ng-class:{'active': questionState(10), 'glyphicon-minus':questionState(10), 'glyphicon-plus':!questionState(10)};"  ng-click="clickQuestion(10)">
+        Where can I find more information on running open source packages on z/OS and other Linux distributions?
+      </div>
+      <div class="list-group-item" ng-show="questionState(10)">
+        <p>More information on some of the open source work being done can be found in <a href="https://openmainframeproject.org/">The Open Mainframe Project</a> and you can learn more and join the discussion around packages that have been ported and/or validated on corresponding distro versions by <a href="https://www.ibm.com/community/z/open-source/">IBM in the IBM Community for Open Source on IBM Z and LinuxONE</a>.</p>
+      </div>
+    </div>
+  </div>
+</div>

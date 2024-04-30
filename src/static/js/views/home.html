@@ -1,0 +1,141 @@
+<div class="container distrofilters">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="input_group distrolist" >
+        <!--<pre>{{ os_versions_list | json }} </pre>-->
+        <div style="font-size:14px;font-weight:bold;">Select Operating System:</div>
+
+	<div style="font-size:14px;font-weight:bold;">
+          <span ng-repeat="os_name in os_list" style="font-size:12px;">
+            <!--label style="padding-left:10px;font-weight:normal;"-->
+<label style="padding-left:10px;font-weight:normal;vertical-align: middle;" >
+	    <input style="margin-right:2px;" type="checkbox" ng-model="os_name.value" ng-if="os_name.type === 'All'"  ng-click="tickUntick($event);" id="chkAll" >
+            <input style="margin-right:3px;" type="checkbox" ng-model="os_name.value"  ng-checked="os_name.value" ng-if="os_name.type !== 'All'" ng-click="tickUntick($event);">{{os_name.type}}</label>
+          </span>
+	</div>
+
+
+      </div>
+
+
+
+      <div class="input-group searchbuttons">
+        <input type="text" id="searchtext" class="form-control" style="width:200px;" autocomplete="on"
+		placeholder="Enter Software Name" ng-model="package_name" ng-keyup="searchPackagesFromText($event)" />
+        <input type="button" id="fuzzySearch" class="btn btn-small btn-primary" value="Search" title="package Name in search should be more than two characters long" ng-click="searchPackages(null, 'fuzzySearch',false);" ng-disabled="package_name.length <= 1" />
+        <a class="btn btn-small btn-info"  href="javascript:void(0);" ng-click="searchPackages(null, 'exactSearch', true);" ng-hide="package_name.length <= 0">Search Exact</a>
+        <label>
+          <input type="checkbox" ng-checked="showDescription" ng-click="showDescription=!showDescription"/>
+          Show Description
+        </label>
+      </div>
+      <div class="h6">         
+        <summary><label id="help_text" style="padding-left:10px;">Enter the name of the package or at least three characters to enable pattern search.  Wildcard ('*') can be used either before or after the search keywords. </label></summary>
+        <summary><label id="error_message" ng-model="error_message"  ng-show="error_message.length > 0" style="color:red;">{{ error_message }}</label></summary>
+      </div> 
+    </div>
+  </div>
+</div>
+<!-- Begin page content -->
+<div class="container" ng-show="no_results_found.length > 0">
+  <h4 class="text-danger">{{no_results_found}}</h4>
+</div>
+<div ng-show="loading" class="loading" style="padding-left:49%"><div ng-show="loading" class="overlay"></div><img  src="/static/images/ajax-loader.gif"/><div>{{ main_request_progress}}</div></div>
+<div class="container-fluid" ng-show="packages_all.length > 0">
+  <div class="row">
+    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3 sidebar" > <!--sidebar  style="margin-top:200px;" -->
+      <div class="list-group refinemarginlefttenpx" style="padding-top:10px;">
+        <label class="active">Refine your results:</label>
+        <input id="refinesearch" type="text" class="list-group-item form-control refinesearch" style="height:50px;" ng-model="refine_package_name" ng-change="filterResults()" placeholder="Refine package name/version">
+      </div>
+      <div class="list-group refinemarginlefttenpx">
+        <label class="active">Filter distribution:</label>
+        <div ng-repeat="os_name in refine_os_list" class="customfont">
+          <span class="list-group-item list-group-item-info" style="padding-left: 5px;padding-right: 5px;">
+            <label>
+              <input type="checkbox" ng-model="os_wise_accordion_checkboxes[os_name.type]" ng-click="tickUntickRefineCheckboxes(os_name.type)">&nbsp;&nbsp;
+            </label>
+            <label ng-click="toggle_child_filters(os_name.type);" ng-class="{'glyphicon-minus':display_child_filters(os_name.type), 'glyphicon-plus':!display_child_filters(os_name.type)}">&nbsp;{{ os_name.type }}</label> <!-- -->
+          </span>
+          <div ng-repeat="os_ver_name in os_versions_list[os_name.type]" ng-show="display_child_filters(os_name.type);"> <!-- -->
+            <label class="list-group-item" style="padding-left:15px;font-weight:normal;">
+              <input type="checkbox" class="distroversioncheck" ng-model="os_ver_name.value" ng-click="tickUntickRefineCheckboxes(os_name.type,os_ver_name.type,os_ver_name.value)" >{{os_ver_name.type}}&nbsp - ({{ os_ver_name.value ? os_ver_name.filtercount : 0 }}/{{ os_ver_name.count }})
+            </label>
+          </div>
+        </div>  
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-9 main" >
+      <div class="table-responsive" ng-show="pagedItems.length == 0">
+        <h4 class="text-danger">Searching '{{ package_name }}' finds {{ packages_all.length }} packages but none matching the filter criteria.  Try changing the filters or perform a new search.</h4>
+      </div>
+      <div class="customfont"  ng-show="pagedItems.length > 0">
+        <table class="table table-condensed table-hover">
+          <thead>
+            <tr ng-show="background_fetch_message.length > 0">
+              <td colspan="3">
+                <!--<span class="alert alert-warning" >{{ background_fetch_message }}</span>-->
+                <input type="button" class="btn btn-small btn-warning" value="{{ background_fetch_message }}" ng-click="forced_stop = true;xhr.abort()" />
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <div>
+                  <span>Records per page:&nbsp;<select ng-model="itemsPerPage" ng-options="x for x in page_options"  ng-change="filterResults()" ></span>
+                </div>
+              </td>
+            </tr>
+            <tr class="info">
+              <th>Package Name<a ng-click="set_sort_order('P')"><i ng-class="sortIcon('P')"></i></a></th>
+              <th>Version<a ng-click="set_sort_order('V')"><i ng-class="sortIcon('V')"></i></a></th>
+              <th>Distro</th> <!-- <th>Distro<a ng-click="set_sort_order('D')"><i ng-class="sortIcon('D')"></i></a></th>-->
+              <th ng-if="showDescription">Description</th> <!--<th>Description<a ng-click="set_sort_order('id')"><i class="icon-sort"></i></a></th>-->
+            </tr>
+          </thead>
+          <tfoot>
+            <tr class="info">
+              <th>Package Name<a ng-click="set_sort_order('P')"><i ng-class="sortIcon('P')"></i></a></th>
+              <th>Version<a ng-click="set_sort_order('V')"><i ng-class="sortIcon('V')"></i></a></th>
+              <th>Distro</th> <!-- <th>Distro<a ng-click="set_sort_order('D')"><i ng-class="sortIcon('D')"></i></a></th>-->
+              <th ng-if="showDescription">Description</th> <!--<th>Description<a ng-click="set_sort_order('id')"><i class="icon-sort"></i></a></th>-->
+            </tr>
+            <tr>
+              <td colspan="3">
+                <div>
+                    <ul class="pagination" style="margin-top:0px;margin-bottom:0px;" ng-show="pagedItems.length > 1">
+                        <li ng-class="{disabled: currentPage <= 0}">
+                          <a href ng-click="firstPage()">< First</a>
+                        </li>
+                        <li ng-class="{disabled: currentPage == 0}">
+                          <a href ng-click="prevPage()">< Prev</a>
+                        </li>
+                        <li ng-repeat="n in range(pagedItems.length, currentPage, currentPage + gap) " ng-class="{active: n == currentPage}" ng-click="$parent.currentPage = n;">
+                          <a href ng-bind="n + 1">1</a>
+                        </li>
+                        <li ng-class="{disabled: (currentPage) == pagedItems.length - 1}">
+                          <a href ng-click="nextPage()">Next ></a>
+                        </li>
+                        <li ng-class="{disabled: (currentPage) >= pagedItems.length - 1}">
+                          <a href ng-click="lastPage()">Last >></a>
+                        </li>
+                    </ul>
+                    <p ng-show="background_fetch_message.length == 0" style="margin-top:0px;margin-bottom:0px;">Found <b>{{ filteredItems.length }}</b> packages. Displaying Page <b>{{ currentPage + 1 }}</b> of <b>{{ pagedItems.length }}</b></p>
+                    <p ng-show="background_fetch_message.length > 0" class="alert alert-warning" style="margin-top:0px;margin-bottom:0px;">Displaying initial <b>{{ filteredItems.length }}</b> packages. Displaying Page <b>{{ currentPage + 1 }}</b> of <b>{{ pagedItems.length }}</b></p>
+                </div>
+              </td>
+            </tr>
+          </tfoot>
+          <tbody>
+            <tr ng-repeat="item in pagedItems[currentPage] | orderBy:sort.sortingOrder:sort.reverse">
+              <td>{{item[0]}}</td>
+              <td>{{item[2]}}</td>
+              <td>{{item[3]}}</td>
+              <td ng-if="showDescription">{{item[1]}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <base href="/sdt/">
+    
+    <title>Software Discovery Tool</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+    <meta http-equiv="cache-control" content="no-cache, no-store">
+    <meta http-equiv="pragma" content="no-cache">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css" rel="stylesheet">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="/static/css/app.css">
+  </head>
+<body ng-app="sdt">
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <img src="/static/images/logo.svg" height="150px" width="100%"/>
+		  <p style="text-align:center;">Software Discovery Tool helps match developers with the best open source software that meets their needs. Developers can search through open source software for zArchitecture/s390x for any Z operating system from any source, any repo, anywhere, in one place.</p>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li class=""><a href="faq"><b>FAQ</b></a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div ng-view class="container-fluid nopadding">
+    </div>
+    <footer class="footer">
+      <div class="container-fluid">
+        <p class="text-muted" style="font-size:12px;">
+          <b>Disclaimer:</b>
+          &nbsp;The package information is provided AS-IS with no representations whatsoever with respect to accuracy and/or completeness. We reserve the right to change the information at any time and without notice. To obtain the most current package information, please visit the official Linux distribution websites or websites for specific software you're looking into.
+          <br>
+          <b>Contribute:</b>
+          Source code for Software Discovery Tool is available <a href="https://github.com/openmainframeproject/software-discovery-tool/">here</a>.  
+          Some of the source files for the operating systems included in this tool can be found in this <a href="https://github.com/openmainframeproject/software-discovery-tool-data/">data repository</a>.
+          <br>
+          The <a href="https://www.openmainframeproject.org/projects/software-discovery-tool">Software Discovery Tool</a> is a part of the Linux Foundation <a href="https://www.openmainframeproject.org/">Open Mainframe Project</a>. 
+        </p>
+      </div>
+      <script type="text/javascript" src="/static/js/app.js?v=00000002"></script>
+      <script type="text/javascript" src="/static/js/controller/HomeController.js?v=00000003"></script>
+      <script type="text/javascript" src="/static/js/controller/FAQController.js?v=00000002"></script>
+    </footer>
+  </body>
+</html>
