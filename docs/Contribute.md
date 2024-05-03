@@ -6,7 +6,7 @@ Thank you for your interest in contributing to the Software Discovery Tool! This
 
 To contribute to the Software Discovery Tool, please follow these steps:
 
-1. **Refer to the installation guide for detailed setup instructions: [Installation Wiki Link]**
+1. Refer to the installation guide for detailed setup instructions: [https://github.com/Ash-2k3/software-discovery-tool/blob/update_installaion_wiki/docs/Installation.md]
 
 2. Fork the project on GitHub by clicking the "Fork" button on the project's GitHub page.
 
