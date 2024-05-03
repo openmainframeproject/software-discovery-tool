@@ -158,16 +158,16 @@ Step 2 of
 
 #### Log in to MariaDB with the root account you set and create the read-only user (with a password, changed below) and database.
 
-	# Log in to MariaDB with the root account you set
-	mariadb -u root -p -pROOTPWD  # Replace 'ROOTPWD' with the actual root password 
+	# Log in to MariaDB with the root account you set.
+	mariadb -u root -p
 
 	# Create the read-only user
-	MariaDB> CREATE USER 'sdtreaduser'@'localhost' IDENTIFIED BY 'SDTUSERPWD';  # Replace 'SDTUSERPWD' with the desired password 
+	MariaDB> CREATE USER 'sdtreaduser'@'localhost' IDENTIFIED BY 'SDTUSERPWD';  # Replace 'SDTUSERPWD' with the desired password. 
 
- 	# Grant permissions
+ 	# Grant permissions.
 	MariaDB> GRANT SELECT ON sdtDB.* TO 'sdtreaduser'@'localhost';
  
- 	# Apply changes and exit
+ 	# Apply changes and exit.
         MariaDB> flush privileges;
         MariaDB> quit
 
