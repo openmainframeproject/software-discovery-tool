@@ -1,6 +1,6 @@
 # Steps for setting up software-discovery-tool application on server
 
-The instructions provided below specify the steps for SLES 11 SP4/12/12 SP1/12 SP2 and Ubuntu 18.04/20.04/22.04:
+The instructions provided below specify the steps for SLES 11 SP4/12/12 SP1/12 SP2 and Ubuntu 18.04/20.04/22.04. If you are using a different OS, install the listed dependencies using your OS's package manager. For the most reliable setup, consider using a virtual machine (VM) to create a sandboxed environment. This can minimize compatibility issues and avoids the need to create additional users on your primary system.
 
 _**NOTE:**_
 * make sure you are logged in as user with sudo permissions
@@ -158,10 +158,20 @@ Step 2 of
 
 #### Log in to MariaDB with the root account you set and create the read-only user (with a password, changed below) and database.
 
-        mariadb -u root -p
-        MariaDB> GRANT SELECT ON sdtDB.* TO 'sdtreaduser'@localhost IDENTIFIED BY 'CHANGE_ME';
+	# Log in to MariaDB with the root account you set.
+	mariadb -u root -p
+
+	# Create the read-only user
+	MariaDB> CREATE USER 'sdtreaduser'@'localhost' IDENTIFIED BY 'SDTUSERPWD';  # Replace 'SDTUSERPWD' with the desired password. 
+
+ 	# Grant permissions.
+	MariaDB> GRANT SELECT ON sdtDB.* TO 'sdtreaduser'@'localhost';
+ 
+ 	# Apply changes and exit.
         MariaDB> flush privileges;
         MariaDB> quit
+_**NOTE:**_
+* For enhanced security, it's recommended to grant the software-discovery-tool user (sdtreaduser) only read (SELECT) permissions on the required database. This adheres to the principle of least privilege and minimizes the impact if the user credentials are compromised.
 
 #### Update src/classes/package_search.py with credentials set above
 
