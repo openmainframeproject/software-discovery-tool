@@ -15,45 +15,10 @@ def purify(dirty):
 	cleaner = clean.replace('"', '')
 	return cleaner
 
-def debian():
-	global DATA, DATA_FILE_LOCATION
-	q = ['Debian_Buster_List.json', 'Debian_Bullseye_List.json', 'Debian_Bookworm_List.json']
-	urls = ['http://ftp.debian.org/debian/dists/buster/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/bullseye/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/bookworm/main/binary-s390x/Packages.gz']
-	file_name = [f'{DATA_FILE_LOCATION}/{x}' for x in q]
-	for i in range(len(q)):
-		try:
-			req = requests.get(urls[i])
-			data = req.content
-			if req.status_code == 404:
-				raise Exception("404 File not found")
-		except Exception as e:
-			print("Couldn't pull. Error: ",str(e))
-		else:
-			capure_reg = r'^.+\n'
-			data_d = gzip.decompress(data)
-			data_d_str = str(data_d, 'utf-8')
-			data_d_raw = data_d_str.encode
-			data_list = re.findall(r'(^((?:Package)|(?:Version)|(?:Description))+: .*)', data_d_str, re.MULTILINE)
-			DATA = open(file_name[i], 'w')
-			DATA.write('[')
-			for each in data_list:
-				if each[1] == 'Package':
-					DATA.write('{\n\t'+each[0].replace('Package: ', '"packageName": "')+'",\n')
-				if each[1] == 'Description':
-					ref_data = purify(each[0])
-					DATA.write('\t'+ref_data.replace('Description: ', '"description": "')+'"\n},\n')
-				if each[1] == 'Version':
-					DATA.write('\t'+each[0].replace('Version: ', '"version": "')+'",\n')
-			DATA.write('{}]')
-			DATA.close()
-			print(f"Saved!\nfilename: {q[i]}")
-
 def opensuse():
 	source_data = [[f"https://download.opensuse.org/ports/zsystems/tumbleweed/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']], 
-		[f"https://download.opensuse.org/distribution/leap/15.3/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']], 
-		[f"https://download.opensuse.org/distribution/leap/15.4/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']],
 		[f"https://download.opensuse.org/distribution/leap/15.5/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']]]
-	q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_3.json', 'OpenSUSE_Leap_15_4.json', 'OpenSUSE_Leap_15_5.json']
+	q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_5.json']
 	regex_pattern = r"-(.*?)-"
 	for i in range(len(source_data)):
 		opensuse_list= []
@@ -363,9 +328,6 @@ if __name__ == "__main__":
 	if re.match(r'.*\.json', file):
 		print(f"Extracting {file} from PDS data ... ")
 		pds(file)
-	elif file == 'Debian' or file == 'debian':
-		print(f"Extracting {file} data ... ")
-		debian()
 	elif file == 'Clef' or file == 'clef':
 		print(f"Extracting {file} data ... ")
 		clefos()
@@ -387,7 +349,6 @@ if __name__ == "__main__":
 	else:
 		print(
 			"Usage:\n./package_build <exact_file_name.json>\n\t\t\t[if data is from PDS]"
-			"\n./package_build.py debian\n\t\t\t[if data is from Debian]"
 			"\n./package_build.py clef\n\t\t\t[if data is from ClefOS]"
 			"\n./package_build.py opensuse\n\t\t\t[if data is from OpenSUSE]"
 			"\n./package_build.py fedora\n\t\t\t[if data is from Fedora]"
