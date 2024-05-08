@@ -273,66 +273,35 @@ def getIBMValidatedOpenSourceList(oskey):
 		print("Couldn't pull. Error: ",str(e))
 	else:
 		data_json = json.loads(data)
+		osversions = ['SLES 12.x', 'SLES 15.x', 'Ubuntu 20.x', 'Ubuntu 22.x', 'RHEL 8.x/7.x', 'RHEL 9.x']
+        for oskey in os_versions:
+            os_version_name = oskey.replace('.', '')
 
-		oskey_match = False
-		
-		if oskey == 'SLES_12' or oskey == 'all':
-			oskey_match = True
-			opensuse12_list = getIBMValidatedSoftwareList(data=data_json,oskey='SLES 12.x')
-			q = 'IBM_Validated_OSS_List_SLES_12.json'
-			file_name = f'{DATA_FILE_LOCATION}/{q}'
-			with open(file_name,'w') as file:
-				json.dump(opensuse12_list,file,indent=2)
-				print(f"Saved!\nfilename: {q}")
-				
-		if oskey == 'SLES_15' or oskey == 'all':
-			oskey_match = True
-			opensuse15_list = getIBMValidatedSoftwareList(data=data_json,oskey='SLES 15.x')
-			q = 'IBM_Validated_OSS_List_SLES_15.json'
-			file_name = f'{DATA_FILE_LOCATION}/{q}'
-			with open(file_name,'w') as file:
-				json.dump(opensuse15_list,file,indent=2)
-				print(f"Saved!\nfilename: {q}")
-				
-		if oskey == 'Ubuntu_20.04' or oskey == 'all':
-			oskey_match = True
-			ubuntu2004_list = getIBMValidatedSoftwareList(data=data_json,oskey='Ubuntu 20.x')
-			q = 'IBM_Validated_OSS_List_Ubuntu_2004.json'
-			file_name = f'{DATA_FILE_LOCATION}/{q}'
-			with open(file_name,'w') as file:
-				json.dump(ubuntu2004_list,file,indent=2)
-				print(f"Saved!\nfilename: {q}")
-				
-		if oskey == 'Ubuntu_22.04' or oskey == 'all':
-			oskey_match = True
-			ubuntu2204_list = getIBMValidatedSoftwareList(data=data_json,oskey='Ubuntu 22.x')
-			q = 'IBM_Validated_OSS_List_Ubuntu_2204.json'
-			file_name = f'{DATA_FILE_LOCATION}/{q}'
-			with open(file_name,'w') as file:
-				json.dump(ubuntu2204_list,file,indent=2)
-				print(f"Saved!\nfilename: {q}")
-				
-		if oskey == 'RHEL_9' or oskey == 'all':
-			oskey_match = True
-			rhel9_list = getIBMValidatedSoftwareList(data=data_json,oskey='RHEL 9.x')
-			q = 'IBM_Validated_OSS_List_RHEL_9.json'
-			file_name = f'{DATA_FILE_LOCATION}/{q}'
-			with open(file_name,'w') as file:
-				json.dump(rhel9_list,file,indent=2)
-				print(f"Saved!\nfilename: {q}")
+            osversions_dict = {
+                'SLES 12.x': 'SLES_12',
+                'SLES 15.x': 'SLES_15',
+                'Ubuntu 20.x': 'Ubuntu_20.04',
+                'Ubuntu 22.x': 'Ubuntu_22.04',
+                'RHEL 8.x/7.x': 'RHEL_8',
+                'RHEL 9.x': 'RHEL_9'
+            }
 
-		if oskey == 'RHEL_8' or oskey == 'all':
-			oskey_match = True
-			rhel8_list = getIBMValidatedSoftwareList(data=data_json,oskey='RHEL 8.x/7.x')
-			q = 'IBM_Validated_OSS_List_RHEL_8.json'
-			file_name = f'{DATA_FILE_LOCATION}/{q}'
-			with open(file_name,'w') as file:
-				json.dump(rhel8_list,file,indent=2)
-				print(f"Saved!\nfilename: {q}")
+            os_version_key = os_versions_dict.get(oskey)
 
-		if oskey_match == False:
-			print("Couldn't fetch appropriate package for given command.")
+            if os_version_key is None:
+                print(f"No mapping found for OS version: {oskey}")
+                continue
 
+            opensource_list = getIBMValidatedSoftwareList(data=data_json, oskey=oskey)
+            if not opensource_list:
+                print(f"No data found for {oskey}")
+                continue
+
+            q = f'IBM_Validated_OSS_List{os_version_name}.json'
+            file_name = f'{DATA_FILE_LOCATION}/{q}'
+            with open(file_name, 'w') as file:
+                json.dump(opensource_list, file, indent=2)
+                print(f"Saved!\nfilename: {q}")
 
 def pds(q):
 	global DATA,DATA_FILE_LOCATION
