@@ -1,6 +1,7 @@
 SUPPORTED_DISTROS = {
 'IBM z/OS ™': {
-	'z/OS Software': 'ZOS_Software_List'
+	'z/OS Software': 'ZOS_Software_List',
+	'ZOSOpenTools': 'ZOSOpenTools.json'
 },
 'IBM Z and LinuxONE Container Registry': {
 	'Container Images for IBM Z and LinuxONE': 'IBMZ_container_registry'

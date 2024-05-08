@@ -4,6 +4,7 @@ import re
 import sys
 import gzip
 import json
+import os
 
 DATA = ""
 SDT_BASE = '/opt/software-discovery-tool'
@@ -17,10 +18,10 @@ def purify(dirty):
 
 def debian():
 	global DATA, DATA_FILE_LOCATION
-	q = ['Debian_Buster_List.json', 'Debian_Bullseye_List.json', 'Debian_Bookworm_List.json']
-	urls = ['http://ftp.debian.org/debian/dists/buster/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/bullseye/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/bookworm/main/binary-s390x/Packages.gz']
+	q = ['Debian_Buster_List.json', 'Debian_Bullseye_List.json']
+	urls = ['http://ftp.debian.org/debian/dists/buster/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/bullseye/main/binary-s390x/Packages.gz']
 	file_name = [f'{DATA_FILE_LOCATION}/{x}' for x in q]
-	for i in range(len(q)):
+	for i in range(2):
 		try:
 			req = requests.get(urls[i])
 			data = req.content
@@ -49,40 +50,82 @@ def debian():
 			print(f"Saved!\nfilename: {q[i]}")
 
 def opensuse():
-	source_data = [[f"https://download.opensuse.org/ports/zsystems/tumbleweed/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']], 
-		[f"https://download.opensuse.org/distribution/leap/15.3/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']], 
-		[f"https://download.opensuse.org/distribution/leap/15.4/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']],
-		[f"https://download.opensuse.org/distribution/leap/15.5/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']]]
-	q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_3.json', 'OpenSUSE_Leap_15_4.json', 'OpenSUSE_Leap_15_5.json']
-	regex_pattern = r"-(.*?)-"
-	for i in range(len(source_data)):
-		opensuse_list= []
-		for src_url in source_data[i]:
-			try:
-				req = requests.get(src_url)
-				data_source = req.content
-				if req.status_code == 404:
-					raise Exception(f"404 Directory for Opensuse list not found")
-			except Exception as e:
-				print("Couldn't pull. Error: ",str(e))
-			else:
-				data = json.loads(data_source)
-				for d in data['data']:
-					name = d['name'][::-1]
-					reg_match = re.search(regex_pattern, name)
-					if reg_match:
-						package_name = name[reg_match.end():][::-1]
-						version = reg_match[0][1:-1][::-1]
-						if package_name == None or version == None:
-							continue
-						data_dict = {"packageName": package_name, "description": "","version" :version}
-						if data_dict not in opensuse_list:
-							opensuse_list.append(data_dict)
-		file_name = q[i]
-		file_path = f'{DATA_FILE_LOCATION}/{file_name}'
-		with open(file_path, 'w') as file:
-			json.dump(opensuse_list, file, indent=2)
-			print(f"Saved!\nfilename: {file_name}")
+	global DATA, DATA_FILE_LOCATION
+	results = []
+	results_str = ''
+	q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_3.json', 'OpenSUSE_Leap_15_4.json']
+	file_name = [f'{DATA_FILE_LOCATION}/{x}' for x in q]
+	source_leap = [f"https://download.opensuse.org/distribution/leap/15.3/repo/oss/{x}" for x in ['s390x', 'noarch']]
+	source_tumbleweed = [f"https://download.opensuse.org/ports/zsystems/tumbleweed/repo/oss/{x}" for x in ['s390x', 'noarch']]
+	source_leap_15_4 = [f"https://download.opensuse.org/distribution/leap/15.4/repo/oss/{x}" for x in ['s390x','noarch']]
+	for each in source_tumbleweed:
+		try:
+			req = requests.get(each)
+			data = req.text
+			if req.status_code == 404:
+				raise Exception("404 File not found")
+		except Exception as e:
+			print("Couldn't pull. Error: ",str(e))
+		else:
+			ref_data = re.findall(r"<a href=\"(.*\.rpm)\"><img.*<\/a>", data)
+			results.extend(ref_data)
+	DATA = open(file_name[0], 'w')
+	DATA.write('[')
+	for result in results:
+		result = re.sub(r'\.(noarch|s390x)\.rpm', '', result)
+		pkg = re.search(r'^([\w+\.-]+)-([+~\w\-\.]+)', result)
+		each_pkg = f'"packageName": "{pkg.group(1)}","version": "{pkg.group(2)}"'
+		each_pkg = '{'+each_pkg+'},'
+		DATA.write(each_pkg+'\n')
+	DATA.write('{}]')
+	DATA.close()
+	print(f"Saved!\nfilename: {q[0]}")
+	results = []
+	for each in source_leap:
+		try:
+			req = requests.get(each)
+			data = req.text
+			if req.status_code == 404:
+				raise Exception("404 File not found")
+		except Exception as e:
+			print("Couldn't pull. Error: ",str(e))
+		else:
+			ref_data = re.findall(r"<a href=\"(.*\.rpm)\"><img.*<\/a>", data)
+			results.extend(ref_data)
+	DATA = open(file_name[1], 'w')
+	DATA.write('[')
+	for result in results:
+		result = re.sub(r'\.(noarch|s390x)\.rpm', '', result)
+		pkg = re.search(r'^([\w+\.-]+)-([+~\w\-\.]+)', result)
+		each_pkg = f'"packageName": "{pkg.group(1)}","version": "{pkg.group(2)}"'
+		each_pkg = '{'+each_pkg+'},'
+		DATA.write(each_pkg+'\n')
+	DATA.write('{}]')
+	DATA.close()
+	print(f"Saved!\nfilename: {q[1]}")
+	results = []
+	for each in source_leap_15_4:
+		try:
+			req = requests.get(each)
+			data = req.text
+			if req.status_code == 404:
+				raise Exception("404 File not found")
+		except Exception as e:
+			print("Couldn't pull. Error: ",str(e))
+		else:
+			ref_data = re.findall(r"<a href=\"(.*\.rpm)\"><img.*<\/a>", data)
+			results.extend(ref_data)
+	DATA = open(file_name[2], 'w')
+	DATA.write('[')
+	for result in results:
+		result = re.sub(r'\.(noarch|s390x)\.rpm', '', result)
+		pkg = re.search(r'^([\w+\.-]+)-([+~\w\-\.]+)', result)
+		each_pkg = f'"packageName": "{pkg.group(1)}","version": "{pkg.group(2)}"'
+		each_pkg = '{'+each_pkg+'},'
+		DATA.write(each_pkg+'\n')
+	DATA.write('{}]')
+	DATA.close()
+	print(f"Saved!\nfilename: {q[2]}")
 
 def clefos():
 	global DATA, DATA_FILE_LOCATION
@@ -115,34 +158,23 @@ def clefos():
 
 def fedora():
 	global DATA,DATA_FILE_LOCATION
-	sources = [34, 35, 36, 37, 38]
+	sources = [34, 35, 36, 37]
 	pkg_reg = r'<a href="(.*)\.rpm"'
-	dirs = '0123456789abcdefghijklmnopqrstuvwxyz'
+	dirs = '023456789abcdefghijklmnopqrstuvwxyz'
 	for i in range(len(sources)):
 		results = []
-		q = f'Fedora_{sources[i]}_List.json'
+		q = f'Fedora_{sources[i-1]}_List.json'
 		file_name = f'{DATA_FILE_LOCATION}/{q}'
-		current_link = f'https://dl.fedoraproject.org/pub/fedora-secondary/releases/{sources[i]}/Everything/s390x/os/Packages/'
-		archived_link = f'https://archives.fedoraproject.org/pub/archive/fedora-secondary/releases/{sources[i]}/Everything/s390x/os/Packages/'
-		try:
-			req = requests.get(current_link)
-			if req.status_code == 404:
-				current_link = archived_link
-				req = requests.get(current_link)
-				if req.status_code == 404:
-					raise Exception(f"For Fedora {sources[i]}: Current link and Archive link both are down")
-				else: 
-					print(f'Fedora {sources[i]} has been moved to archive')
-		except Exception as e:
-			print("Couldn't pull. Error: ",str(e))
-		else:
-			for each in range(len(dirs)):
-				link = f"{current_link}{dirs[each]}/"
+		for each in range(len(dirs)):
+			link = f"https://dl.fedoraproject.org/pub/fedora-secondary/releases/{sources[i]}/Everything/s390x/os/Packages/{dirs[each]}/"
+			try:
 				req = requests.get(link)
 				data = req.text
 				if req.status_code == 404:
-					print(f"404 Directory {dirs[each]} not found")
-					continue
+					raise Exception(f"404 Directory {dirs[each]} not found")
+			except Exception as e:
+				print("Couldn't pull. Error: ",str(e))
+			else:
 				ref_data = re.findall(pkg_reg, data)
 				results.extend(ref_data)
 		DATA = open(file_name, 'w')
@@ -159,6 +191,7 @@ def fedora():
 def almaLinux():
 	global DATA,DATA_FILE_LOCATION
 	sources = [9]
+	results = []
 	pkg_reg = r'<a href="(.*)\.rpm"'
 	for i in range(len(sources)):
 		results = []
@@ -196,7 +229,7 @@ def rockylinux():
 		q = f'RockyLinux_{sources[i]}_List.json'
 		file_name = f'{DATA_FILE_LOCATION}/{q}'
 		for each in range(len(dirs)):
-			link = f"https://download.rockylinux.org/pub/rocky/{sources[i]}/BaseOS/s390x/os/Packages/{dirs[each]}/"
+			link = f"https://download.rockylinux.org/pub/rocky/{sources[i]}.0/BaseOS/s390x/os/Packages/{dirs[each]}/"
 			try:
 				req = requests.get(link)
 				data = req.text
@@ -218,121 +251,41 @@ def rockylinux():
 		DATA.close()
 		print(f"Saved!\nfilename: {q}")
 
-def getIBMValidatedSoftwareName(data,key):
-	return data[key]['name']
+def zOSOpenTools():
+    url = "https://api.github.com/users/ZOSOpenTools/repos"
+    repos = []
+    page = 1
+    per_page = 100
 
-def getIBMValidatedSoftwareDescription(data,key,oskey):
-	L = data[key]['os_versions']
-	for l in L:
-		if oskey==l['os']:
-			for i in l['versions']:
-				if i['name'] != 'Distro':
-					return i['url']
-	return None
+    while True:
+        params = {'page': page, 'per_page': per_page}
+        response = requests.get(url, params=params)
+        
+        if response.status_code == 200:
+            repos.extend(response.json())
+            if 'next' in response.links:
+                page += 1
+            else:
+                break
+        else:
+            print("Failed to fetch repositories:", response.status_code)
+            break
+    
+    zOS_list = []
+    for repo in repos:
+        repo_info = {"packageName": repo["name"], "description": repo["description"], "version": ""}
+        zOS_list.append(repo_info)
 
-def getIBMValidatedSoftwareVersion(data,key,oskey,distroNeeded = False):
-	L = data[key]['os_versions']
-	for l in L:
-		if l['os']==oskey:
-			if len(l['versions'])==2 and distroNeeded==True:
-				return "Distro"
-			else:
-				for i in l['versions']:
-					if i['name']!='Distro':
-						return i['name']
-	return None
+    directory = './distro_data/'
+    if not os.path.exists(directory):
+        os.makedirs(directory)
 
-def createIBMValidatedSoftwareDict(name,description,version):
-	obj = {"packageName":name,
-			"description":description,
-			"version":version
-		}
-	return obj
+    file_path = os.path.join(directory, 'ZOSOpenTools.json')
 
-def getIBMValidatedSoftwareList(data,oskey):
-	softwares = data.keys()
-	swlist=[]
-	for software in softwares:
-		name = getIBMValidatedSoftwareName(data=data,key=software)
-		desc = getIBMValidatedSoftwareDescription(data=data,key=software,oskey=oskey)
-		ver = getIBMValidatedSoftwareVersion(data=data,key=software,oskey=oskey)
-		if desc == None and ver == None:
-			continue
-		obj = createIBMValidatedSoftwareDict(name=name,description=desc,version=ver)
-		swlist.append(obj)
-	return swlist
+    with open(file_path, 'w') as file:
+        json.dump(zOS_list, file, indent=2)
 
-def getIBMValidatedOpenSourceList(oskey):
-	src_url =  "https://www.ibm.com/community/z/open-source-software/output/json/"
-	try:
-		req = requests.get(src_url)
-		data = req.content
-		if req.status_code == 404:
-			raise Exception(f"404 Directory for IBM-z validated open source list not found")
-	except Exception as e:
-		print("Couldn't pull. Error: ",str(e))
-	else:
-		data_json = json.loads(data)
-
-		oskey_match = False
-		
-		if oskey == 'SLES_12' or oskey == 'all':
-			oskey_match = True
-			opensuse12_list = getIBMValidatedSoftwareList(data=data_json,oskey='SLES 12.x')
-			q = 'IBM_Validated_OSS_List_SLES_12.json'
-			file_name = f'{DATA_FILE_LOCATION}/{q}'
-			with open(file_name,'w') as file:
-				json.dump(opensuse12_list,file,indent=2)
-				print(f"Saved!\nfilename: {q}")
-				
-		if oskey == 'SLES_15' or oskey == 'all':
-			oskey_match = True
-			opensuse15_list = getIBMValidatedSoftwareList(data=data_json,oskey='SLES 15.x')
-			q = 'IBM_Validated_OSS_List_SLES_15.json'
-			file_name = f'{DATA_FILE_LOCATION}/{q}'
-			with open(file_name,'w') as file:
-				json.dump(opensuse15_list,file,indent=2)
-				print(f"Saved!\nfilename: {q}")
-				
-		if oskey == 'Ubuntu_20.04' or oskey == 'all':
-			oskey_match = True
-			ubuntu2004_list = getIBMValidatedSoftwareList(data=data_json,oskey='Ubuntu 20.x')
-			q = 'IBM_Validated_OSS_List_Ubuntu_2004.json'
-			file_name = f'{DATA_FILE_LOCATION}/{q}'
-			with open(file_name,'w') as file:
-				json.dump(ubuntu2004_list,file,indent=2)
-				print(f"Saved!\nfilename: {q}")
-				
-		if oskey == 'Ubuntu_22.04' or oskey == 'all':
-			oskey_match = True
-			ubuntu2204_list = getIBMValidatedSoftwareList(data=data_json,oskey='Ubuntu 22.x')
-			q = 'IBM_Validated_OSS_List_Ubuntu_2204.json'
-			file_name = f'{DATA_FILE_LOCATION}/{q}'
-			with open(file_name,'w') as file:
-				json.dump(ubuntu2204_list,file,indent=2)
-				print(f"Saved!\nfilename: {q}")
-				
-		if oskey == 'RHEL_9' or oskey == 'all':
-			oskey_match = True
-			rhel9_list = getIBMValidatedSoftwareList(data=data_json,oskey='RHEL 9.x')
-			q = 'IBM_Validated_OSS_List_RHEL_9.json'
-			file_name = f'{DATA_FILE_LOCATION}/{q}'
-			with open(file_name,'w') as file:
-				json.dump(rhel9_list,file,indent=2)
-				print(f"Saved!\nfilename: {q}")
-
-		if oskey == 'RHEL_8' or oskey == 'all':
-			oskey_match = True
-			rhel8_list = getIBMValidatedSoftwareList(data=data_json,oskey='RHEL 8.x/7.x')
-			q = 'IBM_Validated_OSS_List_RHEL_8.json'
-			file_name = f'{DATA_FILE_LOCATION}/{q}'
-			with open(file_name,'w') as file:
-				json.dump(rhel8_list,file,indent=2)
-				print(f"Saved!\nfilename: {q}")
-
-		if oskey_match == False:
-			print("Couldn't fetch appropriate package for given command.")
-
+    return zOS_list
 
 def pds(q):
 	global DATA,DATA_FILE_LOCATION
@@ -354,12 +307,8 @@ if __name__ == "__main__":
 	
 	try:
 		file = sys.argv[1]
-		oskey = ''
-		if len(sys.argv)>=3:
-			oskey = sys.argv[2]
 	except:
 		file = ''
-		oskey = ''
 	if re.match(r'.*\.json', file):
 		print(f"Extracting {file} from PDS data ... ")
 		pds(file)
@@ -370,20 +319,20 @@ if __name__ == "__main__":
 		print(f"Extracting {file} data ... ")
 		clefos()
 	elif file == 'OpenSuse' or file == 'opensuse':
-		print(f"Extracting {file} data ... ")
+		print(f"Extracting data for {file} ... ")
 		opensuse()
 	elif file == 'Fedora' or file == 'fedora':
-		print(f"Extracting {file} data ... ")
+		print(f"Extracting data for {file} ... ")
 		fedora()
 	elif file == 'AlmaLinux' or file == 'almalinux':
-		print(f"Extracting {file} data ... ")
+		print(f"Extracting data for {file} ... ")
 		almaLinux()
 	elif file == 'RockyLinux' or file == 'rockylinux':
-		print(f"Extracting {file} data ... ")
+		print(f"Extracting data for {file} ... ")
 		rockylinux()
-	elif file == 'IBM-Validated' or file == 'ibm-validated':
-		print(f"Extracting {file} data ... ")
-		getIBMValidatedOpenSourceList(oskey)
+	elif file == 'ZOSOpenTools' or file == 'zosopentools':
+		print(f"Extracting data for {file} ... ")
+		zOSOpenTools()
 	else:
 		print(
 			"Usage:\n./package_build <exact_file_name.json>\n\t\t\t[if data is from PDS]"
@@ -393,7 +342,7 @@ if __name__ == "__main__":
 			"\n./package_build.py fedora\n\t\t\t[if data is from Fedora]"
 			"\n./package_build.py almalinux\n\t\t\t[if data is from AlmaLinux]"
 			"\n./package_build.py rockylinux\n\t\t\t[if data is from RockyLinux]"
-			"\n./package_build.py ibm-validated\n\t\t\t[if data is from IBM Validated Open Source List]"
+			"\n./package_build.py zosopentools\n\t\t\t[if data is from ZOS Open Tools list]"
 			"\n./package_build.py\n\t\t\t[for displaying this help]\n"
 			"Example:\n./package_build.py RHEL_8_Package_List.json\n./package_build.py debian")
 	
