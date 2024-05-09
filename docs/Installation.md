@@ -172,6 +172,7 @@ Step 2 of
         MariaDB> quit
 _**NOTE:**_
 * For enhanced security, it's recommended to grant the software-discovery-tool user (sdtreaduser) only read (SELECT) permissions on the required database. This adheres to the principle of least privilege and minimizes the impact if the user credentials are compromised.
+* This read-only user will be used by the tool to read the databases. Any updates to the database will still need to use your root/administrative user.
 
 #### Update src/classes/package_search.py with credentials set above
 
