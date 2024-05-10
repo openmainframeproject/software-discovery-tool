@@ -17,8 +17,8 @@ def purify(dirty):
 
 def debian():
 	global DATA, DATA_FILE_LOCATION
-	q = ['Debian_Buster_List.json', 'Debian_Bullseye_List.json', 'Debian_Bookworm_List.json']
-	urls = ['http://ftp.debian.org/debian/dists/buster/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/bullseye/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/bookworm/main/binary-s390x/Packages.gz']
+	q = ['Debian_Bullseye_List.json', 'Debian_Bookworm_List.json']
+	urls = ['http://ftp.debian.org/debian/dists/bullseye/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/bookworm/main/binary-s390x/Packages.gz']
 	file_name = [f'{DATA_FILE_LOCATION}/{x}' for x in q]
 	for i in range(len(q)):
 		try:
@@ -50,10 +50,8 @@ def debian():
 
 def opensuse():
 	source_data = [[f"https://download.opensuse.org/ports/zsystems/tumbleweed/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']], 
-		[f"https://download.opensuse.org/distribution/leap/15.3/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']], 
-		[f"https://download.opensuse.org/distribution/leap/15.4/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']],
 		[f"https://download.opensuse.org/distribution/leap/15.5/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']]]
-	q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_3.json', 'OpenSUSE_Leap_15_4.json', 'OpenSUSE_Leap_15_5.json']
+	q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_5.json']
 	regex_pattern = r"-(.*?)-"
 	for i in range(len(source_data)):
 		opensuse_list= []
