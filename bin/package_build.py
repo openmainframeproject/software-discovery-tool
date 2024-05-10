@@ -361,6 +361,9 @@ if __name__ == "__main__":
 	if re.match(r'.*\.json', file):
 		print(f"Extracting {file} from PDS data ... ")
 		pds(file)
+	elif file == 'Debian' or file == 'debian':
+		print(f"Extracting {file} data ... ")
+		debian()
 	elif file == 'Clef' or file == 'clef':
 		print(f"Extracting {file} data ... ")
 		clefos()
@@ -382,6 +385,7 @@ if __name__ == "__main__":
 	else:
 		print(
 			"Usage:\n./package_build <exact_file_name.json>\n\t\t\t[if data is from PDS]"
+			"\n./package_build.py debian\n\t\t\t[if data is from Debian]"
 			"\n./package_build.py clef\n\t\t\t[if data is from ClefOS]"
 			"\n./package_build.py opensuse\n\t\t\t[if data is from OpenSUSE]"
 			"\n./package_build.py fedora\n\t\t\t[if data is from Fedora]"
