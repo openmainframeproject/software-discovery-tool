@@ -113,7 +113,7 @@ def clefos():
 
 def fedora():
 	global DATA,DATA_FILE_LOCATION
-	sources = [34, 35, 36, 37, 38]
+	sources = [38, 39, 40]
 	pkg_reg = r'<a href="(.*)\.rpm"'
 	dirs = '0123456789abcdefghijklmnopqrstuvwxyz'
 	for i in range(len(sources)):
@@ -261,7 +261,7 @@ def getIBMValidatedSoftwareList(data,oskey):
 	return swlist
 
 def getIBMValidatedOpenSourceList(oskey):
-	src_url =  "https://www.ibm.com/community/z/open-source-software/output/json/"
+	src_url =  "https://community.ibm.com/zsystems/api/oss/json"
 	try:
 		req = requests.get(src_url)
 		data = req.content
@@ -361,9 +361,6 @@ if __name__ == "__main__":
 	if re.match(r'.*\.json', file):
 		print(f"Extracting {file} from PDS data ... ")
 		pds(file)
-	elif file == 'Debian' or file == 'debian':
-		print(f"Extracting {file} data ... ")
-		debian()
 	elif file == 'Clef' or file == 'clef':
 		print(f"Extracting {file} data ... ")
 		clefos()
@@ -385,7 +382,6 @@ if __name__ == "__main__":
 	else:
 		print(
 			"Usage:\n./package_build <exact_file_name.json>\n\t\t\t[if data is from PDS]"
-			"\n./package_build.py debian\n\t\t\t[if data is from Debian]"
 			"\n./package_build.py clef\n\t\t\t[if data is from ClefOS]"
 			"\n./package_build.py opensuse\n\t\t\t[if data is from OpenSUSE]"
 			"\n./package_build.py fedora\n\t\t\t[if data is from Fedora]"

@@ -20,11 +20,9 @@ SUPPORTED_DISTROS = {
   'Leap 15.5': 'OpenSUSE_Leap_15_5'
 },
 'Fedora': {
-	'Fedora 34': 'Fedora_34_List',
-	'Fedora 35': 'Fedora_35_List',
-	'Fedora 36': 'Fedora_36_List',
-	'Fedora 37': 'Fedora_37_List',
-	'Fedora 38': 'Fedora_38_List'
+	'Fedora 38': 'Fedora_38_List',
+	'Fedora 39': 'Fedora_39_List',
+	'Fedora 40': 'Fedora_40_List'
 },
 'SUSE Package Hub SLES': {
 },
