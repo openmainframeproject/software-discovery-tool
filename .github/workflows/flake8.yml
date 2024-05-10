@@ -20,7 +20,7 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install --upgrade pip
-        pyhton3 -m pip install flake8;
+        python3 -m pip install flake8;
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
