@@ -333,22 +333,40 @@ def getIBMValidatedOpenSourceList(oskey):
 
 
 def zOSOpenTools():
-	url = "https://api.github.com/users/ZOSOpenTools/repos"
-	try:
-		req = requests.get(url)
-		git_data = json.loads(req.content)
-		if req.status_code == 404:
-			raise Exception("404 File not found")
-	except Exception as e:
-		print("Couldn't pull. Error: ",str(e))
-	
-	zOS_list = []
-	for repo in git_data:
-		repo_info = {"packageName":repo["name"],"description":repo["description"],"version":""}
-		zOS_list.append(repo_info)
-	
-	with open('ZOSOpenTools.json','w') as file:
-		json.dump(zOS_list,file,indent=2)
+    url = "https://api.github.com/users/ZOSOpenTools/repos"
+    repos = []
+    page = 1
+    per_page = 100
+
+    while True:
+        params = {'page': page, 'per_page': per_page}
+        response = requests.get(url, params=params)
+        
+        if response.status_code == 200:
+            repos.extend(response.json())
+            if 'next' in response.links:
+                page += 1
+            else:
+                break
+        else:
+            print("Failed to fetch repositories:", response.status_code)
+            break
+    
+    zOS_list = []
+    for repo in repos:
+        repo_info = {"packageName": repo["name"], "description": repo["description"], "version": ""}
+        zOS_list.append(repo_info)
+
+    directory = './distro_data/'
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    file_path = os.path.join(directory, 'ZOSOpenTools.json')
+
+    with open(file_path, 'w') as file:
+        json.dump(zOS_list, file, indent=2)
+
+    return zOS_list
 
 def pds(q):
 	global DATA,DATA_FILE_LOCATION
