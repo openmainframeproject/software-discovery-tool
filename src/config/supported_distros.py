@@ -1,6 +1,6 @@
 SUPPORTED_DISTROS = {
 'IBM z/OS ™': {
-	'z/OS Miscellaneous Software': 'ZOS_Software_List'
+	'z/OS Miscellaneous Software': 'ZOS_Software_List',
 	'z/OS Rocket Software': 'ZOS_Rocket_Software.json',
 	'z/OS Open Mainframe Project': 'ZOS_OMP.json',
 	'z/OS from IBM-Z-zOS': 'IBM_Z_zOS.json'
