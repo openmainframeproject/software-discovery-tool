@@ -1,0 +1,27 @@
+---
+name: Submodule Updates
+
+on: workflow_dispatch
+jobs:
+  build:
+    name: Submodule update
+    runs-on: ubuntu-latest
+    env:
+      PARENT_REPOSITORY: 'openmainframeproject/software-discovery-tool'
+      CHECKOUT_BRANCH: 'submodules-update'
+      PR_AGAINST_BRANCH: 'main'
+      OWNER: 'openmainframeproject'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: run action
+        id: run_action
+        uses: releasehub-com/github-action-create-pr-parent-submodule@v1
+        with:
+          github_token: ${{ secrets.SDT_PAT_PUSH }}
+          parent_repository: ${{ env.PARENT_REPOSITORY }}
+          checkout_branch: ${{ env.CHECKOUT_BRANCH}}
+          pr_against_branch: ${{ env.PR_AGAINST_BRANCH }}
+          owner: ${{ env.OWNER }}
