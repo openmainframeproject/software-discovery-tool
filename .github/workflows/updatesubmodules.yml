@@ -7,10 +7,10 @@ jobs:
     name: Submodule update
     runs-on: ubuntu-latest
     env:
-      PARENT_REPOSITORY: 'rachejazz/software-discovery-tool'
+      PARENT_REPOSITORY: 'openmainframeproject/software-discovery-tool'
       CHECKOUT_BRANCH: 'auto-submodules'
       PR_AGAINST_BRANCH: 'master'
-      OWNER: 'rachejazz'
+      OWNER: 'openmainframeproject'
 
     steps:
       - name: Checkout Code
