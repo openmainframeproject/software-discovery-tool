@@ -174,9 +174,9 @@ _**NOTE:**_
 * For enhanced security, it's recommended to grant the software-discovery-tool user (sdtreaduser) only read (SELECT) permissions on the required database. This adheres to the principle of least privilege and minimizes the impact if the user credentials are compromised.
 * This read-only user will be used by the tool to read the databases. Any updates to the database will still need to use your root/administrative user.
 
-#### Update src/classes/package_search.py with credentials set above
+#### Create a .env file in the root of the project with credentials set above (see .env.example)
 
-The "CHANGE_ME" password above should have been changed, and this should be adjusted in your src/classes/package_search.py file.
+See `.env.example` and create a `.env` file in `/opt/software-discovery-tool/`, replacing the value of `DB_PASSWORD` with your own.
 
 #### Run the script to populate the database, when prompted by the script for a user and password, use the root account and password you set above.
 
