@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PARENT_REPOSITORY: 'openmainframeproject/software-discovery-tool'
-      CHECKOUT_BRANCH: 'submodules-update'
+      CHECKOUT_BRANCH: 'auto-submodules'
       PR_AGAINST_BRANCH: 'main'
       OWNER: 'openmainframeproject'
 
