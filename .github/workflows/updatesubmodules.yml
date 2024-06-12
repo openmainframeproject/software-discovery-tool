@@ -2,11 +2,6 @@
 name: Submodule Updates
 
 on: workflow_dispatch
-inputs:
-  label:
-    description: 'auto Submodule update'
-    required: false
-    default: 'data submodule update'
 jobs:
   build:
     name: Submodule update
