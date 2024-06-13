@@ -36,6 +36,10 @@ _**NOTE:**_
         sudo git clone https://github.com/openmainframeproject/software-discovery-tool.git
         cd software-discovery-tool
 
+#### Copy the `supported_distros.py.example` file to `supported_distros.py`:
+
+     cp src/config/supported_distros.py.example src/config/supported_distros.py 
+
 Note: In case software-discovery-tool code is already checked out, do the following for latest updates
 
         cd /opt/software-discovery-tool
