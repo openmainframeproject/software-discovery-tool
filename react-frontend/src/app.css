@@ -276,7 +276,7 @@ input:focus {
   position: relative;
 }
 
-.supported-for-1 {
+.supported-text {
   color: var(--black);
   font-family: var(--font-family-outfit);
   font-size: var(--font-size-xs);
@@ -284,6 +284,7 @@ input:focus {
   letter-spacing: 0;
   line-height: 27.5px;
   margin-top: -1px;
+  margin-bottom: 10px;
   position: relative;
   width: 1179px;
 }
@@ -545,6 +546,12 @@ input:focus {
     white-space: nowrap;
   }
   
+.carousel-image {
+  width :260px;
+  height: 200px;
+  
+}
+
 
 /* 
 .dropbtn {

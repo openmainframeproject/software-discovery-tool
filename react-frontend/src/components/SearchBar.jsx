@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import omfLogo from "../../images/openmainframe-logo.png";
+import omfLogo from "../images/openmainframe-logo.png";
 
 function SearchBar({ setResults }) {
   const [input, setInput] = useState("");
