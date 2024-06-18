@@ -31,7 +31,7 @@ function SearchBar({ setResults }) {
   return (
     <div className="search-bar-wrapper">
       <div className="omf-logo">
-        <img className="image-11" src={omfLogo} alt="image 11" />
+        <img className="image-11" src={omfLogo} alt="image_11" />
       </div>
       <div className="searchbox">
         <input

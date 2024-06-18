@@ -20,7 +20,7 @@ function HeroSection() {
             system In One Place.
           </p>
         </div>
-        <img className="hero-image" src={heroPic} alt="hero image" />
+        <img className="hero-image" src={heroPic} alt="hero_image" />
       </div>
       <div className="middle-section">
         <img
