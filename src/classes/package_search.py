@@ -7,12 +7,15 @@ import pymysql
 import math
 from config import DATA_FILE_LOCATION, DISABLE_PAGINATION, MAX_RECORDS_TO_CONCAT, LOGGER, MAX_RECORDS_TO_SEND, CACHE_SIZE
 from config.supported_distros import SUPPORTED_DISTROS
+from dotenv import load_dotenv
 
-# Default user credentials
-HOST = "localhost"
-USER = 'sdtAdmin'
-PASSWORD = "admin1234"
-DB_NAME = 'sdtDB'
+load_dotenv()  # Load environment variables from the .env file
+
+# User credentials
+HOST = os.environ.get('DB_HOST')
+USER = os.environ.get('DB_USER')
+PASSWORD = os.environ.get('DB_PASSWORD')
+DB_NAME = os.environ.get('DB_NAME')
 
 class PackageSearch:
     package_data = {}

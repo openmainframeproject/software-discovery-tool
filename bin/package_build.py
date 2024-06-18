@@ -17,8 +17,8 @@ def purify(dirty):
 
 def debian():
 	global DATA, DATA_FILE_LOCATION
-	q = ['Debian_Buster_List.json', 'Debian_Bullseye_List.json', 'Debian_Bookworm_List.json']
-	urls = ['http://ftp.debian.org/debian/dists/buster/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/bullseye/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/bookworm/main/binary-s390x/Packages.gz']
+	q = ['Debian_Bullseye_List.json', 'Debian_Bookworm_List.json']
+	urls = ['http://ftp.debian.org/debian/dists/bullseye/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/bookworm/main/binary-s390x/Packages.gz']
 	file_name = [f'{DATA_FILE_LOCATION}/{x}' for x in q]
 	for i in range(len(q)):
 		try:
@@ -50,10 +50,8 @@ def debian():
 
 def opensuse():
 	source_data = [[f"https://download.opensuse.org/ports/zsystems/tumbleweed/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']], 
-		[f"https://download.opensuse.org/distribution/leap/15.3/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']], 
-		[f"https://download.opensuse.org/distribution/leap/15.4/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']],
 		[f"https://download.opensuse.org/distribution/leap/15.5/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']]]
-	q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_3.json', 'OpenSUSE_Leap_15_4.json', 'OpenSUSE_Leap_15_5.json']
+	q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_5.json']
 	regex_pattern = r"-(.*?)-"
 	for i in range(len(source_data)):
 		opensuse_list= []
@@ -115,29 +113,34 @@ def clefos():
 
 def fedora():
 	global DATA,DATA_FILE_LOCATION
-	sources = [34, 35, 36, 37, 38]
+	sources = [38, 39, 40]
 	pkg_reg = r'<a href="(.*)\.rpm"'
-	dirs = '023456789abcdefghijklmnopqrstuvwxyz'
+	dirs = '0123456789abcdefghijklmnopqrstuvwxyz'
 	for i in range(len(sources)):
 		results = []
 		q = f'Fedora_{sources[i]}_List.json'
 		file_name = f'{DATA_FILE_LOCATION}/{q}'
 		current_link = f'https://dl.fedoraproject.org/pub/fedora-secondary/releases/{sources[i]}/Everything/s390x/os/Packages/'
 		archived_link = f'https://archives.fedoraproject.org/pub/archive/fedora-secondary/releases/{sources[i]}/Everything/s390x/os/Packages/'
-		req = requests.get(current_link)
-		if req.status_code == 404:
-			print(f'Fedora {sources[i]} has been moved to archive')
-			current_link = archived_link
-		for each in range(len(dirs)):
-			link = f"{current_link}{dirs[each]}/"
-			try:
+		try:
+			req = requests.get(current_link)
+			if req.status_code == 404:
+				current_link = archived_link
+				req = requests.get(current_link)
+				if req.status_code == 404:
+					raise Exception(f"For Fedora {sources[i]}: Current link and Archive link both are down")
+				else: 
+					print(f'Fedora {sources[i]} has been moved to archive')
+		except Exception as e:
+			print("Couldn't pull. Error: ",str(e))
+		else:
+			for each in range(len(dirs)):
+				link = f"{current_link}{dirs[each]}/"
 				req = requests.get(link)
 				data = req.text
 				if req.status_code == 404:
-					raise Exception(f"404 Directory {dirs[each]} not found")
-			except Exception as e:
-				print("Couldn't pull. Error: ",str(e))
-			else:
+					print(f"404 Directory {dirs[each]} not found")
+					continue
 				ref_data = re.findall(pkg_reg, data)
 				results.extend(ref_data)
 		DATA = open(file_name, 'w')
@@ -154,7 +157,6 @@ def fedora():
 def almaLinux():
 	global DATA,DATA_FILE_LOCATION
 	sources = [9]
-	results = []
 	pkg_reg = r'<a href="(.*)\.rpm"'
 	for i in range(len(sources)):
 		results = []
@@ -259,7 +261,7 @@ def getIBMValidatedSoftwareList(data,oskey):
 	return swlist
 
 def getIBMValidatedOpenSourceList(oskey):
-	src_url =  "https://www.ibm.com/community/z/open-source-software/output/json/"
+	src_url =  "https://community.ibm.com/zsystems/api/oss/json"
 	try:
 		req = requests.get(src_url)
 		data = req.content

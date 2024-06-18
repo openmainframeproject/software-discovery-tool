@@ -32,10 +32,9 @@
             <li>openSUSE Leap 15.3</li>
             <li>openSUSE Leap 15.4</li>
             <li>openSUSE Leap 15.5</li>
-            <li>Fedora 34</li>
-            <li>Fedora 35</li>
-            <li>Fedora 36</li>
-            <li>Fedora 37</li>
+            <li>Fedora 38</li>
+            <li>Fedora 39</li>
+            <li>Fedora 40</li>
             <li>IBM Validated List for RHEL 8</li>
             <li>IBM Validated List for RHEL 9</li>
             <li>IBM Validated List for SLES 12</li>
@@ -50,10 +49,26 @@
         Where can I find more details about packages available for various distros?
       </div>
       <div class="list-group-item" ng-show="questionState(3)">
-        <p>More details of packages can be obtained directly from following links provided by respective distros.</p>
+        <h3>Linux</h3>
         <ul>
-          <li><a href="https://www.debian.org/distrib/packages" target="blank">Debian 10 "buster"</a>. In this link, under the section <b>Search the contents of packages</b> select the Architecture as s390x from the dropdown to search for packages.</li>
-          <li><a href="https://software.opensuse.org/" target="blank">OpenSUSE</a>.</li>
+          <li><strong>IBM Z and LinuxONE Container Registry</strong>: A collection of Linux-based software containerized for the IBM Z architecture, and maintained by IBM. Details: <a href="https://ibm.github.io/ibm-z-oss-hub/main/main.html">https://ibm.github.io/ibm-z-oss-hub/main/main.html</a></li>
+          <li><strong>IBM Z Validated</strong>: A list of Linux-based software that is regularly reviewed by the open source ecosystem team at IBM as building for s390x, with build instructions included, where applicable. They span support for various versions of RHEL, SUSE, and Ubuntu. Details: <a href="https://www.ibm.com/community/z/open-source-software/">https://www.ibm.com/community/z/open-source-software/</a></li>
+          <li>The following are Linux distributions and the list of software is extracted from the public package lists for s390x, details of which are listed below.</li>
+             <ul><li><strong>Alma Linux</strong>: <a href="https://wiki.almalinux.org/repos/AlmaLinux.html">https://wiki.almalinux.org/repos/AlmaLinux.html</a></li>
+             <li><strong>ClefOS</strong>: <a href="https://www.sinenomine.net/offerings/linux/ClefOS">https://www.sinenomine.net/offerings/linux/ClefOS</a></li>
+             <li><strong>Debian</strong>: <a href="https://www.debian.org/distrib/packages">https://www.debian.org/distrib/packages</a></li>
+             <li><strong>Fedora</strong>: <a href="https://packages.fedoraproject.org/">https://packages.fedoraproject.org/</a></li>
+             <li><strong>OpenSUSE</strong>: <a href="https://en.opensuse.org/Package_repositories">https://en.opensuse.org/Package_repositories</a></li>
+             <li><strong>Rocky Linux</strong>: <a href="https://wiki.rockylinux.org/rocky/repo/">https://wiki.rockylinux.org/rocky/repo/</a></li></ul>
+          <li>The following are Linux distribution whose data is pulled from the <a href="https://github.com/Linux-on-ibm-z/PDS/">PDS project</a>, which is maintained by the open source ecosystem porting team at IBM.</li>
+             <ul><li><strong>RHEL (Red Hat Enterprise Linux)</strong></li>
+             <li><strong>SUSE Package Hub SLES</strong></li>
+             <li><strong>Suse Linux Enterprise Server</strong></li>
+             <li><strong>Ubuntu</strong></li></ul>
+        </ul>
+        <h3>z/OS</h3>
+        <ul>
+          <li><strong>IBM z/OS</strong> (General): This is a collection of manually curated open source software that has been discovered for z/OS, but doesn’t neatly fit into any other category or source. In the future, this will be split out into more specific areas.</li>
         </ul>
       </div>
       <div class="list-group-item list-group-item-info ng-class:{'active': questionState(4), 'glyphicon-minus':questionState(4), 'glyphicon-plus':!questionState(4)};"  ng-click="clickQuestion(4)">
