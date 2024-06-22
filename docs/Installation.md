@@ -17,7 +17,7 @@ _**NOTE:**_
 
         sudo apt-get update
         sudo apt-get install -y python3 python3-pip gcc git python3-dev libssl-dev libffi-dev cron python3-lxml apache2 libapache2-mod-wsgi-py3
-        sudo pip3 install cffi cryptography Flask launchpadlib simplejson requests pytest
+        sudo pip3 install cffi cryptography Flask launchpadlib simplejson requests pytest python-dotenv
 
 * For SLES (12 SP1, 12 SP2, 12 SP3):
 
@@ -38,7 +38,7 @@ _**NOTE:**_
 
 #### Copy the `supported_distros.py.example` file to `supported_distros.py`:
 
-     cp src/config/supported_distros.py.example src/config/supported_distros.py 
+     sudo cp src/config/supported_distros.py.example src/config/supported_distros.py
 
 Note: In case software-discovery-tool code is already checked out, do the following for latest updates
 
@@ -101,11 +101,7 @@ Note: In case software-discovery-tool code is already checked out, do the follow
  openmainframeproject/software-discovery-tool-data contains all OMP created json files. To add the data files, we will use `git submodule`
 - map the submodule directory with the directory path and update the directory:
 ```
-git submodule update --init --recursive --remote
-```
-- since we cloned a new repo as root just now, give the permissions to `apache` user like we did before:
-```
-sudo chown -R apache:apache /opt/software-discovery-tool/distro_data
+sudo -u apache git submodule update --init --recursive --remote
 ```
 
 #### Updating Data Directory
@@ -119,7 +115,10 @@ sudo -u apache git pull <upstream remote> <default branch> --recurse-submodules
 sudo -u apache git submodule update --recursive --remote
 ```
 
-#### Using data from PDS
+#### Bringing in additional data: PDS
+
+The data directory we cloned above only brings in sources maintained by this project. Notably it does not include SUSE Linux Enterprise Server, Red Hat Enterprise Linux, or Ubuntu. Instead, these sources are maintained by the Package Distro Search tool (abbreviated as PDS). In order to bring in those data sources, you will need to do that directly, as follows.
+
 For example, taking RHEL_8_Package_List.json
 - Usage help will be displayed:
 ```
@@ -137,7 +136,7 @@ Example:
 ```
 Example of extracting the RHEL_8_Package_List.json from PDS repo:
 ```
-./package_build.py RHEL_8_Package_List.json
+sudo -u apache ./bin/package_build.py RHEL_8_Package_List.json
 Extracting RHEL_8_Package_List.json from PDS data ...
 Thanks for using SDT!
 ```
@@ -148,9 +147,9 @@ Thanks for using SDT!
 	```
 	sudo -u apache ./bin/package_build.py RHEL_8_Package_List.json
 	```
-Now to know how to update the `src/config/supported_distros.py` to reflect the new json files in the UI, follow steps mentioned in
-Step 2 of
-[Adding_new_distros](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Adding_new_distros.md#step-2-update-the-supported_distros-variable-in-configuration-file-sdt_basesrcconfigconfigpy)
+#### Update Supported Distros list
+
+The `src/config/supported_distros.py` must now be updated to reflect the new json files that have been brought in order for them to be reflected in the UI. We started with a sample file back in Step 2, so that's a good starting place. For more details about the formatting and expectations of this file, follow steps mentioned in Step 2 of [Adding_new_distros](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Adding_new_distros.md#step-2-update-the-supported_distros-variable-in-configuration-file-sdt_basesrcconfigconfigpy)
 
 ### Step 6: Install and populate the SQL database
 * For Ubuntu (18.04, 20.04, 22.04):
