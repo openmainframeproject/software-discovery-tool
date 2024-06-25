@@ -50,8 +50,9 @@ def debian():
 
 def opensuse():
 	source_data = [[f"https://download.opensuse.org/ports/zsystems/tumbleweed/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']], 
-		[f"https://download.opensuse.org/distribution/leap/15.5/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']]]
-	q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_5.json']
+		[f"https://download.opensuse.org/distribution/leap/15.5/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']],
+		[f"https://download.opensuse.org/distribution/leap/15.6/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']]]
+	q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_5.json', 'OpenSUSE_Leap_15_6.json']
 	regex_pattern = r"-(.*?)-"
 	for i in range(len(source_data)):
 		opensuse_list= []
