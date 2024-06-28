@@ -1,0 +1,14 @@
+/* Footer.css */
+.os-logos .slick-slide {
+    margin: 0 1px !important; /* Further reduce the margin */
+  }
+  
+  .slick-list {
+    overflow: hidden;
+  }
+  
+  .slick-track {
+    display: flex;
+    align-items: center;
+  }
+  

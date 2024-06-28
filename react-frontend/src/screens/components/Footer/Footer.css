@@ -1,0 +1,160 @@
+
+footer {
+    width: 100%;
+    position:sticky;
+    top:100%;
+    bottom: 0;
+    background-image: linear-gradient(to right, #130229, #000002);
+    color: #fff;
+    padding: 100px 0 30px;
+    /* border-top-right-radius: 80px; */
+    font-size: 13px;
+    line-height: 20px;
+    margin-top: -240px;
+  }
+  @media screen and (max-width: 1280px) {
+    footer{
+        margin-top: -50px;
+    }
+  }
+  .row {
+    width: 85%;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .col {
+    flex-basis: 25%;
+    padding: 10px;
+  }
+  .col:nth-child(2),.col:nth-child(3)
+  {
+      flex-basis:15%;
+  }
+  .logo {
+    width: 80px;
+    margin-bottom: 30px;
+  }
+  .col h3 {
+    width: fit-content;
+    margin-bottom: 40px;
+    position: relative;
+  }
+  .email-id {
+    width: fit-content;
+    border-bottom: 1px solid #ccc;
+    margin: 20px 0;
+  }
+  ul li {
+    list-style: none;
+    margin-bottom: 12px;
+  }
+  ul li a {
+    text-decoration: none;
+    color: #fff;
+  }
+  .newsletter {
+    padding-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 50px;
+  }
+  .newsletter .icon {
+    font-size: 18px;
+    margin-right: 10px;
+  }
+  .newsletter input {
+    width: 100%;
+    background: transparent;
+    color: #ccc;
+    border: 0;
+    outline: none;
+  }
+  .newsletter button {
+    background: transparent;
+    border: 0;
+    outline: none;
+    cursor: pointer;
+  }
+  .arrow {
+    font-size: 16px;
+    color: #ccc;
+  }
+  .social-icons{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size:15px;
+  }
+  
+  .social-icons a .social-icon
+  {
+      
+      width:40px;
+      height:40px;
+      padding:5px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 40px;
+      font-size:20px;
+      color: #000;
+      background-color: #fff;
+      margin-right: 15px;
+      cursor: pointer;
+  }
+  
+  hr{
+      width:90%;
+      border:0;
+      border-bottom:1px solid #ccc;
+      margin: 20px auto;
+  }
+  .copyright{
+      text-align:center;
+  }
+  .underline{
+      width:100%;
+      height:5px;
+      background-color: #767676;
+      border-radius: 3px;
+      position: absolute;
+      top:25px;
+      left:0;
+      overflow:hidden;
+  }
+  .underline span{
+      width:15px;
+      height:100%;
+      background-color: #fff;
+      border-radius: 3px;
+      position: absolute;
+      top: 0;
+      left:10px;
+      animation:moving 2s linear infinite;
+  }
+  @keyframes moving {
+      0%{
+          left: -20px;
+      }
+      100%{
+          left: 100%;
+      }
+  }
+  @media (max-width: 700px) {
+      footer {
+          bottom:unset;
+          font-size:15px;
+      }
+      .col {
+          flex-basis: 100%;
+        }
+        .col:nth-child(2),.col:nth-child(3)
+        {
+            flex-basis:100%;
+        }
+  }
+  
