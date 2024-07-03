@@ -1,5 +1,5 @@
 import React from 'react';
-import Slider from 'react-slick';
+import Slider from "react-slick";
 import ubuntu from '../../images/ubuntu.png'; 
 import opensuse from '../../images/opensuse.png'; 
 import debian from '../../images/debian.png';
@@ -9,8 +9,6 @@ import redhat from '../../images/redhat.png';
 import clefos from '../../images/clefos.png';
 import zos from '../../images/zos.png'; 
 import almalinux from '../../images/almalinux.png';
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import './Carousel.css';
 
 function Carousel() {
@@ -18,7 +16,7 @@ function Carousel() {
     dots: false,
     infinite: true,
     speed: 2000, 
-    slidesToShow: 4,
+    slidesToShow: 5,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 0,
