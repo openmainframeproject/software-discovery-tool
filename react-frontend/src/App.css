@@ -1,0 +1,597 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+@import url("https://fonts.googleapis.com/css?family=Poppins:700|Outfit:700");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --black: #000000;
+  --font-size-xxxs: 20px;
+  --font-size-m: 68px;
+  --font-size-s: 31px;
+  --font-size-xxs: 26px;
+  --font-size-xs: 27px;
+  --font-family-poppins: "Poppins", Helvetica;
+  --font-family-outfit: "Outfit", Helvetica;
+}
+
+* {
+  box-sizing: border-box;
+}
+body::-webkit-scrollbar{
+  display: none;
+}
+
+/* .search-list-container::-webkit-scrollbar{
+  display: none;
+} */
+
+.hidden,
+.hidden * {
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.page {
+  align-items: center;
+  background-color: #f5f5f5;
+  /* border: 1px solid; */
+  /* border-color: var(--black); */
+  display: flex;
+  flex-direction: column;
+  gap: 31px;
+  height: auto;
+  min-width: 1440px;
+  padding: 50px 30px;
+  position: relative;
+}
+
+.hero-section {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: center;
+  padding: 40px 0px;
+  position: relative;
+  width: 1179px;
+}
+
+.hero-image {
+  align-self: stretch;
+  flex: 1;
+  flex-grow: 1;
+  position: relative;
+  margin-top: 10px;
+}
+
+.headline {
+  align-items: flex-start;
+  align-self: stretch;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 5px;
+  padding: 10px 0px;
+  position: relative;
+}
+
+.medium-length-display {
+  align-self: stretch;
+  letter-spacing: 0;
+  line-height: 85px;
+  margin-top: -1px;
+  position: relative;
+}
+
+.outfit-bold-black-68px {
+  color: var(--black);
+  font-family: var(--font-family-outfit);
+  font-size: var(--font-size-m);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.discover-open-source {
+  color: var(--black);
+  font-family: var(--font-family-outfit);
+  font-size: var(--font-size-xxs);
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 27.5px;
+  position: relative;
+  width: fit-content;
+}
+
+.nav-section {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  position: relative;
+  width: 1181px;
+}
+
+.search-bar-wrapper {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 15px;
+  justify-content: center;
+  position: relative;
+  width: 1181px;
+}
+
+.search-button-container {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 20px;
+  position: relative;
+}
+
+.search-button-container-item {
+  cursor: pointer;
+  height: 43px;
+  position: relative;
+  background-color: #000000;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  width: 170px;
+}
+
+.search-button-container-item:hover {
+  box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2);
+}
+
+.text-inside-button {
+    color: #ffffff;
+    padding: 5px;
+    font-weight: bold;
+    font-family: var(--font-family-outfit);
+}
+
+.omf-logo {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 10px;
+  position: relative;
+}
+
+.image-11 {
+  height: 96px;
+  object-fit: cover;
+  position: relative;
+  width: 88px;
+}
+
+.searchbox {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-grow: 1;
+  gap: 10px;
+  position: relative;
+  padding: 10px;
+  border-radius: 10px;  
+  background-color: #ffffff;
+}
+
+input:focus {
+  outline: none;
+}
+
+.searchbox-input {
+  background-color: transparent;
+  border: 0;
+  color: var(--black);
+  flex: 1;
+  flex-grow: 1;
+  font-family: var(--font-family-poppins);
+  font-size: var(--font-size-xxxs);
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 27.5px;
+  margin-top: -1px;
+  padding: 0;
+  position: relative;
+}
+
+.searchbox-input::placeholder {
+  color: #00000099;
+}
+
+.navbar-wrapper {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 38px;
+  justify-content: center;
+  position: relative;
+  width: 1181px;
+}
+
+.landing-page .sdt {
+  gap: 10px;
+  position: relative;
+}
+
+.sdt-logo {
+  align-items: flex-start;
+  display: inline-flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+}
+
+.image-12 {
+  height: 83px;
+  position: relative;
+  width: 300px;
+}
+
+.navbar {
+  align-items: center;
+  align-self: stretch;
+  display: flex;
+  flex: 1;
+  flex-grow: 1;
+  gap: 38px;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.navbar-link {
+  letter-spacing: 0;
+  line-height: 27.5px;
+  position: relative;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.poppins-bold-black-20px {
+  color: var(--black);
+  font-family: var(--font-family-poppins);
+  font-size: var(--font-size-xxxs);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.support-section {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: -12.48px;
+  position: relative;
+  width: 1179px;
+}
+
+.supported-for {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 auto;
+  position: relative;
+}
+
+.supported-text {
+  color: var(--black);
+  font-family: var(--font-family-outfit);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 27.5px;
+  margin-top: -1px;
+  margin-bottom: 10px;
+  position: relative;
+  width: 1179px;
+}
+
+.os-logos {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  height: 136px;
+  position: relative;
+  width: 1179px;
+}
+
+.open-suse_-logo-1 {
+  align-self: center;
+  flex: 1;
+  flex-grow: 1;
+  position: relative;
+}
+
+.red_-hat_logo-1 {
+  align-self: center;
+  flex: 1;
+  flex-grow: 1;
+  position: relative;
+}
+
+.ibm-z_os-1 {
+  align-self: center;
+  flex: 1;
+  flex-grow: 1;
+  object-fit: cover;
+  position: relative;
+}
+
+.alma-linux_-icon_-logo-1 {
+  align-self: center;
+  flex: 1;
+  flex-grow: 1;
+  position: relative;
+}
+
+.logo-1 {
+  align-self: center;
+  flex: 1;
+  flex-grow: 1;
+  position: relative;
+}
+
+.x267px-fedora_logo-1 {
+  align-self: center;
+  flex: 1;
+  flex-grow: 1;
+  position: relative;
+}
+
+.rocky_-linux_logo-1 {
+  align-self: center;
+  flex: 1;
+  flex-grow: 1;
+  position: relative;
+}
+
+.debian_logo-1 {
+  align-self: center;
+  flex: 1;
+  flex-grow: 1;
+  position: relative;
+}
+
+.ubuntu-logo-2022-1 {
+  align-self: center;
+  flex: 1;
+  flex-grow: 1;
+  position: relative;
+}
+
+.middle-section {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  height: 567.48px;
+  justify-content: center;
+  mix-blend-mode: multiply;
+  padding: 40px 0px;
+  position: relative;
+  width: 1175px;
+}
+
+.sdt-tagline {
+  align-items: center;
+  align-self: stretch;
+  display: flex;
+  flex: 1;
+  flex-grow: 1;
+  justify-content: center;
+  width: 100%;
+}
+
+.valign-text-middle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.matches-developers-w {
+  letter-spacing: 0;
+  line-height: 74.8px;
+  position: relative;
+  text-align: center;
+  width: fit-content;
+}
+
+.openmainframeproject-color-1 {
+  align-self: stretch;
+  flex: 1;
+  flex-grow: 1;
+  margin-left: -0.09px;
+  margin-right: -0.09px;
+  margin-top: -0.35px;
+  position: relative;
+  width: 100%;
+}
+
+
+
+
+.search-list-container {
+  display: flex;
+  flex-direction: column;
+  width: 1179px;
+  height: 648px;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  overflow-y: auto;
+}
+
+.search-list {
+    display: flex;
+    width: 1179px;
+    align-items: center;
+    padding: 25px;
+    position: relative;
+    border-bottom-width: 3px;
+    border-bottom-style: solid;
+    border-color: #a89f9f;
+  }
+  
+  .search-list .name-desc {
+    display: flex;
+    flex-direction: column;
+    height: 97px;
+    align-items: flex-start;
+    gap: 5px;
+    flex-grow: 1;
+    position: relative;
+    flex: 1;
+  }
+  
+  .search-list .name {
+    align-self: stretch;
+    margin-top: -1px;
+    font-family: "Outfit-SemiBold", Helvetica;
+    font-weight: 600;
+    color: #000000e6;
+    font-size: 25px;
+    letter-spacing: 0;
+    line-height: 20px;
+    position: relative;
+    flex: 1;
+  }
+  
+  .search-list .decription {
+    position: relative;
+    flex: 1;
+    align-self: stretch;
+    font-family: "Outfit-Regular", Helvetica;
+    font-weight: 400;
+    color: #00000099;
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 18px;
+  }
+  
+  .search-list .version-ostag {
+    display: flex;
+    flex-direction: column;
+    height: 97px;
+    align-items: flex-end;
+    justify-content: center;
+    position: relative;
+    flex: 1;
+    flex-grow: 1;
+  }
+  
+  .search-list .version-year-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    position: relative;
+    flex: 1;
+    align-self: stretch;
+    width: 100%;
+    flex-grow: 1;
+  }
+  
+  .search-list .text-wrapper {
+    position: relative;
+    width: fit-content;
+    font-family: "Fira Mono-Regular", Helvetica;
+    font-weight: 400;
+    color: #666666;
+    font-size: 14px;
+    text-align: right;
+    letter-spacing: 0;
+    line-height: 21px;
+    white-space: nowrap;
+  }
+  
+  .search-list .tag-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+    position: relative;
+    flex: 1;
+    align-self: stretch;
+    width: 100%;
+    flex-grow: 1;
+  }
+  
+  .search-list .tag {
+    display: flex;
+    width: 105px;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 10px;
+    position: relative;
+    background-color: #030303;
+    border-radius: 5px;
+  }
+  
+  .search-list .tagname {
+    position: relative;
+    flex: 1;
+    align-self: stretch;
+    margin-top: -1px;
+    font-family: "Outfit-SemiBold", Helvetica;
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 18px;
+    text-align: center;
+    letter-spacing: 0.4px;
+    line-height: 10px;
+    white-space: nowrap;
+  }
+  
+.carousel-image {
+  width :260px;
+  height: 200px;
+  
+}
+
+
+/* 
+.dropbtn {
+  background-color: #3498DB;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+  background-color: #2980B9;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown a:hover {background-color: #ddd;}
+
+.show {display: block;} */
