@@ -1,17 +1,16 @@
-import { useState } from "react";
-import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
+import SearchBar from "../components/SearchBar";
+
 import Carousel from "../components/Carousel/Carousel";
 // import SearchResults from "../components/SearchResults";
-// import { useState } from "react";
-// import Footer from "../components/Footer/Footer";
 
 function LandingPage() {
   // const [results, setResults] = useState([]);
   return (
-    <div className="landing-page screen">
+    <div className="page">
       {/* <Navbar setResults={setResults} /> */}
-      <Navbar />
+      <SearchBar/>
+
       <HeroSection />
       {/* <SearchResults results={results} /> */}
       <Carousel/>
