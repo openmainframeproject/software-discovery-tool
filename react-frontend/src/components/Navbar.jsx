@@ -1,13 +1,22 @@
-import NavTopSection from "./NavTopSection";
-import SearchBar from "./SearchBar";
+import React from 'react';
+import { Link } from 'react-router-dom'
+import sdtLogo from "../images/sdt-logo.png";
 
-function Navbar({ setResults }) {
+function NavBar() {
   return (
-    <div className="nav-section">
-      <NavTopSection />
-      <SearchBar setResults={setResults} />
+    <div className="navbar-wrapper">
+      <div className="sdt-logo sdt">
+        <img className="image-12" src={sdtLogo} alt="Software Discovery Tool Logo" />
+      </div>
+      <div className="navbar">
+        <Link to="/" className="navbar-link poppins-bold-black-20px">Home</Link>
+        <Link to="/faq" className="navbar-link poppins-bold-black-20px">FAQ</Link>
+        <Link to="/blog" className="navbar-link poppins-bold-black-20px">Blog</Link>
+        <Link to="/contact" className="navbar-link poppins-bold-black-20px">Contact</Link>
+        <a href="/documentation" className="navbar-link poppins-bold-black-20px" target="_blank" rel="noopener noreferrer">Documentation</a>
+      </div>
     </div>
   );
 }
 
-export default Navbar;
+export default NavBar;
