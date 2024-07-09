@@ -59,7 +59,7 @@ def searchPackages():
 
 
 # Logic to start flask server if executed via command line.
-if _name_ == '_main_':
+if __name__ == '__main__':
 
     if DEBUG_LEVEL == logging.DEBUG:
         app.debug = True
