@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template, json, Response, make_response
+from flask_cors import CORS
 import logging
 
 from config import server_host, server_port
@@ -7,6 +8,7 @@ from classes import PackageSearch
 
 
 app = Flask(__name__)
+CORS(app)
 # Ensure that the required JSON data file are pre-loaded in memory at the time of server start.
 package_search = PackageSearch.load()
 
@@ -26,6 +28,7 @@ def getSupportedDistros():
     package_search = PackageSearch.load()
     json_data = json.dumps(package_search.getSupportedDistros())
     resp = Response(json_data,mimetype="application/json")
+    resp.headers.set('Access-Control-Allow-Origin',"*")
     resp.headers.set('Cache-Control','no-cache, no-store, must-revalidate')
     resp.headers.set('Pragma','no-cache')
     resp.headers.set('Expires','0')
@@ -48,6 +51,7 @@ def searchPackages():
         
         json_data = package_search.searchSQLPackages(search_term,exact_match,search_bit_flag,page_number)
         resp = Response(json_data,mimetype="application/json")
+        resp.headers.set('Access-Control-Allow-Origin',"*")
         resp.headers.set('Cache-Control','no-cache, no-store, must-revalidate')
         resp.headers.set('Pragma','no-cache')
         resp.headers.set('Expires','0')
@@ -55,6 +59,13 @@ def searchPackages():
     except Exception as ex:
         LOGGER.error('Error in searchPackages with search parameters: %s', str(ex))
 
+@app.route("/sdt/data")
+def get_data():
+    return {
+        'Name':"geek",
+        "Age":"22",
+        "programming":"python"
+        }
 
 # Logic to start flask server if executed via command line.
 if __name__ == '__main__':
@@ -63,4 +74,3 @@ if __name__ == '__main__':
         app.debug = True
 
     app.run(host=server_host, port=server_port)
-
