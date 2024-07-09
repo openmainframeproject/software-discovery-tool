@@ -28,7 +28,6 @@ def getSupportedDistros():
     package_search = PackageSearch.load()
     json_data = json.dumps(package_search.getSupportedDistros())
     resp = Response(json_data,mimetype="application/json")
-    resp.headers.set('Access-Control-Allow-Origin',"*")
     resp.headers.set('Cache-Control','no-cache, no-store, must-revalidate')
     resp.headers.set('Pragma','no-cache')
     resp.headers.set('Expires','0')
@@ -51,7 +50,6 @@ def searchPackages():
         
         json_data = package_search.searchSQLPackages(search_term,exact_match,search_bit_flag,page_number)
         resp = Response(json_data,mimetype="application/json")
-        resp.headers.set('Access-Control-Allow-Origin',"*")
         resp.headers.set('Cache-Control','no-cache, no-store, must-revalidate')
         resp.headers.set('Pragma','no-cache')
         resp.headers.set('Expires','0')
@@ -59,16 +57,9 @@ def searchPackages():
     except Exception as ex:
         LOGGER.error('Error in searchPackages with search parameters: %s', str(ex))
 
-@app.route("/sdt/data")
-def get_data():
-    return {
-        'Name':"geek",
-        "Age":"22",
-        "programming":"python"
-        }
 
 # Logic to start flask server if executed via command line.
-if __name__ == '__main__':
+if _name_ == '_main_':
 
     if DEBUG_LEVEL == logging.DEBUG:
         app.debug = True
