@@ -53,83 +53,11 @@ class PackageSearch:
         return cls.DISTRO_BIT_MAP
 
     @classmethod
-    def loadPackageData(cls):
-        '''
-        Returns list of Packages in software-discovery-tool
-        '''
-
-        LOGGER.debug('loadPackageData: In loadSupportedDistros')
-        distro_data_file = '%s/cached_data.json' % cls.getDataFilePath()
-        try:
-            json_data = json.load(open(distro_data_file))           
-        except:
-            LOGGER.warn('loadPackageData: Loading cached distros data failed generating from scratch')
-            LOGGER.debug('loadPackageData: start writing distros data')
-            json_data = cls.preparePackageData()
-            cached_file = open(distro_data_file, 'w')
-            cached_file.write(json.dumps(json_data, indent=2, separators=(',', ': ')))
-            cached_file.close()
-            LOGGER.debug('loadPackageData: end writing distros data')
-
-        LOGGER.debug('loadPackageData: Loading supported distros data')
-
-        return json_data
-
-    @classmethod
-    def preparePackageData(cls):
-        data_dir = cls.getDataFilePath()
-        package_info = [];
-        package_data = {};
-        cachedPackage = {}
-        
-        for distroName in list(SUPPORTED_DISTROS.keys()):
-            for distroVersion in sorted(SUPPORTED_DISTROS[distroName].keys()):
-                distro_file = SUPPORTED_DISTROS[distroName][distroVersion]
-            
-                package_info = json.load(open('%s/%s' % (data_dir, distro_file)))
-                distro_file_name = distro_file                  
-                
-                for pkg in package_info:
-                    try:
-                        pkg_key = pkg["packageName"] + '_' + pkg["version"]
-                    except Exception as ex:
-                        LOGGER.error('preparePackageData: key not found for package %s' % str(ex))
-                    if pkg_key not in package_data:
-                        cachedPackage = {}
-                        cachedPackage["P"] = pkg["packageName"]
-                        cachedPackage["S"] = cachedPackage["P"].lower().upper()
-                        cachedPackage["V"] = pkg["version"]
-                        if "description" in pkg:
-                            cachedPackage["D"] = pkg["description"]
-                        try:
-                            cachedPackage["B"] = cls.DISTRO_BIT_MAP[distroName][distroVersion]
-                        except Exception as e:
-                            raise #This occurrs only if there is a problem with how SUPPORTED_DISTROS is configured in config py
-
-                        cachedPackage[distroName] = [distroVersion]
-                        package_data[pkg_key] = cachedPackage
-                    else:
-                        if distroName not in package_data[pkg_key]:
-                            package_data[pkg_key][distroName] = [distroVersion]
-                            package_data[pkg_key]['B'] += cls.DISTRO_BIT_MAP[distroName][distroVersion]
-                        else:
-                            if distroVersion not in package_data[pkg_key][distroName]:
-                                package_data[pkg_key][distroName].append(distroVersion)
-                                package_data[pkg_key]['B'] += cls.DISTRO_BIT_MAP[distroName][distroVersion]
-                                
-        json_data = list(package_data.values())
-
-        return json_data
-
-    @classmethod
     def get_instance(cls):
         LOGGER.debug('get_instance: In get_instance')
         if not cls.INSTANCE:
             cls.INSTANCE = PackageSearch()
             cls.INSTANCE.DISTRO_BIT_MAP = cls.loadSupportedDistros()
-            cls.INSTANCE.package_data = cls.loadPackageData()
-            cls.INSTANCE.local_cache = {}
-            cls.INSTANCE.cache_keys = []
             LOGGER.debug('get_instance: Creating singleton instance in get_instance')
         return cls.INSTANCE
 
@@ -276,10 +204,10 @@ class PackageSearch:
         for table in tables:
             if exact_match==True:
                 LOGGER.debug("Exact Match")
-                query = f"SELECT packageName,description,version,osName FROM {table} where packageName = %s"
+                query = f"SELECT packageName,description,version,osName FROM {table.split('.json')[0]} where packageName = %s"
             else:
                 LOGGER.debug("NOT EXACT MATCH")
-                query = f"SELECT packageName,description,version,osName FROM {table} where packageName REGEXP %s"
+                query = f"SELECT packageName,description,version,osName FROM {table.split('.json')[0]} where packageName REGEXP %s"
             curr.execute(query,(term))
             rows = rows + curr.fetchall()
         total_length = len(rows)

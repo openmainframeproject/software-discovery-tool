@@ -4,14 +4,21 @@ import json
 import pymysql
 import sys
 import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from the .env file
 
 sys.path.append('/opt/software-discovery-tool/src/config')
 import supported_distros
 SUPPORTED_DISTROS = supported_distros.SUPPORTED_DISTROS
 SDT_BASE = '/opt/software-discovery-tool'
 DATA_FILE_LOCATION = '%s/distro_data/data_files' % SDT_BASE
-HOST = 'localhost'
-DB_NAME = 'sdtDB'
+
+HOST = os.environ.get('DB_HOST')
+USER = os.environ.get('DB_USER')
+PASSWORD = os.environ.get('DB_PASSWORD')
+DB_NAME = os.environ.get('DB_NAME')
+
 def connectdb(username,password,database):
     conn = pymysql.connect(host=HOST,user=username,password=password)
     cur = conn.cursor()
@@ -21,20 +28,12 @@ def connectdb(username,password,database):
     print("DB INITIATILIZED SUCCESSFULLY")
 
 def db_init():
-    username = ""
+    username = USER
+    password = PASSWORD
     table_name = ""
 
-    if len(sys.argv)==2 and sys.argv[1]=='root':
-        username = sys.argv[1]
-    elif len(sys.argv)==2:
-        username = input("Enter username to use for connecting to MariaDB server : ")
-        table_name = sys.argv[1]
-    elif len(sys.argv)==3 and sys.argv[1]=='root':
-        username = sys.argv[1]
-        table_name = sys.argv[2]    
-    else:
-        username = input("Enter username to use for connecting to MariaDB server : ")
-    password = input("Enter password for connecting to MariaDB server : ")
+    if password == "":
+        password = input("Enter password for connecting to MariaDB server : ")
     dbName = DB_NAME
 
     if table_name == "" or table_name == "all" or table_name == "All":
@@ -44,11 +43,9 @@ def db_init():
         create_one(dbName,username,password,table_name)
 
 def jsontosql(db,table,file,os,user,password):
-    filepath = f'{DATA_FILE_LOCATION}/{file}.json'
+    filepath = f'{DATA_FILE_LOCATION}/{file}'
     jsonFile = open(file=filepath)
-    #print(jsonFile)
     data = json.load(jsonFile)
-    #final_data = [dict(item, osName=os) for item in data]
     final_data = []
     for item in data :
         if item : 
@@ -101,8 +98,8 @@ def create_one(db,username,password,table_name):
             for distro in SUPPORTED_DISTROS[os]:
                 if SUPPORTED_DISTROS[os][distro] == table_name:
                     flag=False
-                    createTable(db,SUPPORTED_DISTROS[os][distro],username,password)
-                    jsontosql(db,SUPPORTED_DISTROS[os][distro],SUPPORTED_DISTROS[os][distro],distro,username,password)
+                    createTable(db,SUPPORTED_DISTROS[os][distro].split('.json')[0],username,password)
+                    jsontosql(db,SUPPORTED_DISTROS[os][distro].split('.json')[0],SUPPORTED_DISTROS[os][distro],distro,username,password)
     conn.close()
 
     if flag==False:
@@ -117,10 +114,10 @@ def initall(db,username,password):
             continue
         else:
             for distro in SUPPORTED_DISTROS[os_Key]:
-                path = f'{DATA_FILE_LOCATION}/{SUPPORTED_DISTROS[os_Key][distro]}.json'
+                path = f'{DATA_FILE_LOCATION}/{SUPPORTED_DISTROS[os_Key][distro]}'
                 if os.path.exists(path):
-                    createTable(db,SUPPORTED_DISTROS[os_Key][distro],username,password)
-                    jsontosql(db,SUPPORTED_DISTROS[os_Key][distro],SUPPORTED_DISTROS[os_Key][distro],distro,username,password)
+                    createTable(db,SUPPORTED_DISTROS[os_Key][distro].split('.json')[0],username,password)
+                    jsontosql(db,SUPPORTED_DISTROS[os_Key][distro].split('.json')[0],SUPPORTED_DISTROS[os_Key][distro],distro,username,password)
                     count = count+1 
                 else:
                     print(f"{SUPPORTED_DISTROS[os_Key][distro]} FILE DOESN'T EXIST")
