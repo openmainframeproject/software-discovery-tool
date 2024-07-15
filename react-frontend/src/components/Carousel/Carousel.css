@@ -1,0 +1,12 @@
+.os-logos .slick-slide {
+  margin: 0 1px !important; 
+}
+
+.slick-list {
+  overflow: hidden;
+}
+
+.slick-track {
+  display: flex;
+  align-items: center;
+}
