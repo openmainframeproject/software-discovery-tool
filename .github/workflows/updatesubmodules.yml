@@ -13,12 +13,12 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
         script: |
-          cd /opt/software-discovery-tool
+          cd ~/software-discovery-tool
           git checkout -b "$(date +%b%d)"
-          cd /opt/software-discovery-tool/distro_data
+          cd ~/software-discovery-tool/distro_data
           git checkout main
           git pull origin main
-          cd /opt/software-discovery-tool
+          cd ~/software-discovery-tool
           git remote remove git_update
           git remote add git_update https://${{ secrets.SDT_USER_PUSH }}:${{ secrets.SDT_PAT_PUSH }}@github.com/openmainframeproject/software-discovery-tool.git
           git commit -sam "Auto updated submodule references" && git push git_update "$(date +%b%d)" || echo "No changes to commit"
