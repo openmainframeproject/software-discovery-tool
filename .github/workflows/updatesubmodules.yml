@@ -1,27 +1,24 @@
----
-name: Submodule Updates
-
+name: Sync Submodules
 on: workflow_dispatch
 jobs:
-  build:
-    name: Submodule update
+
+  repo_sync:
+    name: Sync with Main repo
     runs-on: ubuntu-latest
-    env:
-      PARENT_REPOSITORY: 'openmainframeproject/software-discovery-tool'
-      CHECKOUT_BRANCH: 'auto-submodules'
-      PR_AGAINST_BRANCH: 'master'
-      OWNER: 'openmainframeproject'
-
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-
-      - name: run action
-        id: run_action
-        uses: releasehub-com/github-action-create-pr-parent-submodule@v1
-        with:
-          github_token: ${{ secrets.SDT_PAT_PUSH }}
-          parent_repository: ${{ env.PARENT_REPOSITORY }}
-          checkout_branch: ${{ env.CHECKOUT_BRANCH}}
-          pr_against_branch: ${{ env.PR_AGAINST_BRANCH }}
-          owner: ${{ env.OWNER }}
+    - name: ssh and git module update
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        script: |
+          cd ~/software-discovery-tool
+          git checkout -b "$(date +%b%d)"
+          cd ~/software-discovery-tool/distro_data
+          git checkout main
+          git pull origin main
+          cd ~/software-discovery-tool
+          git remote remove git_update
+          git remote add git_update https://${{ secrets.SDT_USER_PUSH }}:${{ secrets.SDT_PAT_PUSH }}@github.com/openmainframeproject/software-discovery-tool.git
+          git commit -sam "Auto updated submodule references" && git push git_update "$(date +%b%d)" || echo "No changes to commit"
