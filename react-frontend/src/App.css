@@ -19,13 +19,10 @@
 * {
   box-sizing: border-box;
 }
-body::-webkit-scrollbar{
+
+body::-webkit-scrollbar {
   display: none;
 }
-
-/* .search-list-container::-webkit-scrollbar{
-  display: none;
-} */
 
 .hidden,
 .hidden * {
@@ -36,8 +33,6 @@ body::-webkit-scrollbar{
 .page {
   align-items: center;
   background-color: #f5f5f5;
-  /* border: 1px solid; */
-  /* border-color: var(--black); */
   display: flex;
   flex-direction: column;
   gap: 31px;
@@ -122,7 +117,8 @@ body::-webkit-scrollbar{
   gap: 15px;
   justify-content: center;
   position: relative;
-  width: 1181px;
+  width: 100%;
+  max-width: 1200px; /* Adjust the max width if needed */
 }
 
 .search-button-container {
@@ -148,10 +144,10 @@ body::-webkit-scrollbar{
 }
 
 .text-inside-button {
-    color: #ffffff;
-    padding: 5px;
-    font-weight: bold;
-    font-family: var(--font-family-outfit);
+  color: #ffffff;
+  padding: 5px;
+  font-weight: bold;
+  font-family: var(--font-family-outfit);
 }
 
 .omf-logo {
@@ -177,7 +173,7 @@ body::-webkit-scrollbar{
   gap: 10px;
   position: relative;
   padding: 10px;
-  border-radius: 10px;  
+  border-radius: 10px;
   background-color: #ffffff;
 }
 
@@ -373,225 +369,81 @@ input:focus {
   gap: 22px;
   height: 567.48px;
   justify-content: center;
-  mix-blend-mode: multiply;
-  padding: 40px 0px;
+  margin: 12px;
   position: relative;
-  width: 1175px;
 }
 
-.sdt-tagline {
+.upper-section {
   align-items: center;
-  align-self: stretch;
   display: flex;
   flex: 1;
   flex-grow: 1;
+  gap: 10px;
+  height: 36px;
   justify-content: center;
-  width: 100%;
+  position: relative;
 }
 
-.valign-text-middle {
+.search-results {
+  background-color: #ffffff;
+  border-radius: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+  position: relative;
+  width: 100%;
+  padding: 10px;
+}
+
+.search-result-item {
+  align-items: center;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.matches-developers-w {
-  letter-spacing: 0;
-  line-height: 74.8px;
+  padding: 10px;
   position: relative;
-  text-align: center;
-  width: fit-content;
+  border-bottom: 1px solid #ddd;
 }
 
-.openmainframeproject-color-1 {
-  align-self: stretch;
-  flex: 1;
-  flex-grow: 1;
-  margin-left: -0.09px;
-  margin-right: -0.09px;
-  margin-top: -0.35px;
-  position: relative;
-  width: 100%;
+.search-result-item:hover {
+  background-color: #f0f0f0;
 }
-
-
-
 
 .search-list-container {
   display: flex;
   flex-direction: column;
-  width: 1179px;
-  height: 648px;
+  width: 100%; /* Ensure it takes full width */
+  max-width: 1200px; /* Adjust the max width if needed */
   align-items: center;
   gap: 20px;
   position: relative;
+  margin-top: 20px; /* Add some space below the search bar */
   overflow-y: auto;
+  padding: 0 15px; /* Add some padding for better layout */
 }
 
 .search-list {
-    display: flex;
-    width: 1179px;
-    align-items: center;
-    padding: 25px;
-    position: relative;
-    border-bottom-width: 3px;
-    border-bottom-style: solid;
-    border-color: #a89f9f;
-  }
-  
-  .search-list .name-desc {
-    display: flex;
-    flex-direction: column;
-    height: 97px;
-    align-items: flex-start;
-    gap: 5px;
-    flex-grow: 1;
-    position: relative;
-    flex: 1;
-  }
-  
-  .search-list .name {
-    align-self: stretch;
-    margin-top: -1px;
-    font-family: "Outfit-SemiBold", Helvetica;
-    font-weight: 600;
-    color: #000000e6;
-    font-size: 25px;
-    letter-spacing: 0;
-    line-height: 20px;
-    position: relative;
-    flex: 1;
-  }
-  
-  .search-list .decription {
-    position: relative;
-    flex: 1;
-    align-self: stretch;
-    font-family: "Outfit-Regular", Helvetica;
-    font-weight: 400;
-    color: #00000099;
-    font-size: 14px;
-    letter-spacing: 0;
-    line-height: 18px;
-  }
-  
-  .search-list .version-ostag {
-    display: flex;
-    flex-direction: column;
-    height: 97px;
-    align-items: flex-end;
-    justify-content: center;
-    position: relative;
-    flex: 1;
-    flex-grow: 1;
-  }
-  
-  .search-list .version-year-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 5px;
-    position: relative;
-    flex: 1;
-    align-self: stretch;
-    width: 100%;
-    flex-grow: 1;
-  }
-  
-  .search-list .text-wrapper {
-    position: relative;
-    width: fit-content;
-    font-family: "Fira Mono-Regular", Helvetica;
-    font-weight: 400;
-    color: #666666;
-    font-size: 14px;
-    text-align: right;
-    letter-spacing: 0;
-    line-height: 21px;
-    white-space: nowrap;
-  }
-  
-  .search-list .tag-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 20px;
-    position: relative;
-    flex: 1;
-    align-self: stretch;
-    width: 100%;
-    flex-grow: 1;
-  }
-  
-  .search-list .tag {
-    display: flex;
-    width: 105px;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 10px;
-    position: relative;
-    background-color: #030303;
-    border-radius: 5px;
-  }
-  
-  .search-list .tagname {
-    position: relative;
-    flex: 1;
-    align-self: stretch;
-    margin-top: -1px;
-    font-family: "Outfit-SemiBold", Helvetica;
-    font-weight: 600;
-    color: #ffffff;
-    font-size: 18px;
-    text-align: center;
-    letter-spacing: 0.4px;
-    line-height: 10px;
-    white-space: nowrap;
-  }
-  
-.carousel-image {
-  width :260px;
-  height: 200px;
-  
-}
-
-
-/* 
-.dropbtn {
-  background-color: #3498DB;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-}
-
-.dropbtn:hover, .dropbtn:focus {
-  background-color: #2980B9;
-}
-
-.dropdown {
+  display: flex;
+  width: 100%; /* Ensure it takes full width */
+  align-items: center;
+  padding: 25px;
   position: relative;
-  display: inline-block;
+  border-bottom-width: 3px;
+  border-bottom-style: solid;
+  border-color: #a89f9f;
 }
 
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  overflow: auto;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
+.result-name {
+  color: var(--black);
+  font-family: var(--font-family-poppins);
+  font-size: var(--font-size-xxxs);
+  font-weight: 700;
+  line-height: 27.5px;
+  position: relative;
 }
 
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
+.result-description {
+  color: var(--black);
+  font-family: var(--font-family-poppins);
+  font-size: var(--font-size-xxxs);
+  font-weight: 400;
+  line-height: 27.5px;
+  position: relative;
 }
-
-.dropdown a:hover {background-color: #ddd;}
-
-.show {display: block;} */
