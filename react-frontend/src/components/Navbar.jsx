@@ -4,7 +4,7 @@ import sdtLogo from "../images/sdt-logo.png";
 
 function NavBar() {
   return (
-    <div className="navbar-wrapper">
+    <div className="navbar-wrapper m-5">
       <div className="sdt-logo sdt">
         <img className="image-12" src={sdtLogo} alt="Software Discovery Tool Logo" />
       </div>

@@ -38,7 +38,7 @@ body::-webkit-scrollbar {
   gap: 31px;
   height: auto;
   min-width: 1440px;
-  padding: 50px 30px;
+  padding: 20px 30px;
   position: relative;
 }
 
@@ -118,7 +118,7 @@ body::-webkit-scrollbar {
   justify-content: center;
   position: relative;
   width: 100%;
-  max-width: 1200px; /* Adjust the max width if needed */
+  max-width: 1200px; 
 }
 
 .search-button-container {
@@ -643,3 +643,33 @@ input:focus {
 .page-item.next {
   display: none; /* Hide by default, shown conditionally in JS */
 }
+
+
+.os-checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,8 +1,7 @@
-// SearchBar.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import omfLogo from "../images/openmainframe-logo.png";
 import SearchResults from './SearchResults';
-import '../App.css'; // Import CSS for styling
+import '../App.css';
 
 function SearchBar() {
   const [input, setInput] = useState("");
@@ -10,11 +9,39 @@ function SearchBar() {
   const [results, setResults] = useState([]);
   const [resultsCount, setResultsCount] = useState(0);
   const [searchPerformed, setSearchPerformed] = useState(false);
-  const [itemsPerPage, setItemsPerPage] = useState(10); // State for items per page
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [osList, setOsList] = useState({});
+  const [selectedOS, setSelectedOS] = useState({});
+  const [selectAll, setSelectAll] = useState(false);
+
+  useEffect(() => {
+    fetchOSList();
+  }, []);
+
+  useEffect(() => {
+    // Update selectedOS based on selectAll checkbox
+    const updatedSelectedOS = Object.keys(osList).reduce((acc, os) => {
+      acc[os] = selectAll;
+      return acc;
+    }, {});
+    setSelectedOS(updatedSelectedOS);
+  }, [selectAll, osList]);
+
+  const fetchOSList = () => {
+    fetch("https://sdt.openmainframeproject.org/sdt/getSupportedDistros")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setOsList(data);
+      });
+  };
 
   const fetchData = (value, exact) => {
+    const selectedOSList = Object.keys(selectedOS).filter(key => selectedOS[key]);
+    const osFilters = selectedOSList.length ? `&os_filters=${selectedOSList.join(',')}` : '';
+
     fetch(
-      `https://sdt.openmainframeproject.org/sdt/searchPackages?search_term=${value}&exact_match=${exact}&search_bit_flag=4398046511103`
+      `https://sdt.openmainframeproject.org/sdt/searchPackages?search_term=${value}&exact_match=${exact}&search_bit_flag=4398046511103${osFilters}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -64,11 +91,45 @@ function SearchBar() {
   };
 
   const handleItemsPerPageChange = (e) => {
-    setItemsPerPage(Number(e.target.value)); // Update items per page based on dropdown selection
+    setItemsPerPage(Number(e.target.value));
+  };
+
+  const handleOSCheckboxChange = (os) => {
+    setSelectedOS(prev => ({ ...prev, [os]: !prev[os] }));
+  };
+
+  const handleSelectAllChange = () => {
+    setSelectAll(prev => !prev);
   };
 
   return (
     <div>
+      <div className="flex flex-wrap justify-start search-bar-wrapper">
+        <div className="os-checkbox-container">
+          <label>
+            <input
+              type="checkbox"
+              checked={selectAll}
+              onChange={handleSelectAllChange}
+              className="mr-2"
+            />
+            All
+          </label>
+        </div>
+        {Object.keys(osList).map((os, index) => (
+          <div key={index} className="os-checkbox-container">
+            <label>
+              <input
+                type="checkbox"
+                checked={selectedOS[os] || false}
+                onChange={() => handleOSCheckboxChange(os)}
+                className="mr-2"
+              />
+              {os}
+            </label>
+          </div>
+        ))}
+      </div>
       <div className="search-bar-wrapper">
         <div className="omf-logo">
           <img className="image-11" src={omfLogo} alt="OMF Logo" />
@@ -100,6 +161,7 @@ function SearchBar() {
           </button>
         </div>
       </div>
+
       <div className="flex justify-center mt-2">
         <label className="flex items-center">
           <input
