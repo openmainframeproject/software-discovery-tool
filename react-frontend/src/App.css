@@ -447,3 +447,199 @@ input:focus {
   line-height: 27.5px;
   position: relative;
 }
+
+
+
+
+
+
+.search-list-container {
+  padding: 10px;
+}
+
+.search-list {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.version-tags {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.version-tag {
+  background-color: #044FC0;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-weight: bold;
+}
+
+.content {
+  padding-right: 120px; /* Adjust this based on the width of the version tags */
+}
+
+.name {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.description {
+  margin-top: 5px;
+  font-size: 14px;
+  margin: 0;
+}
+.results-count {
+  color: #333; /* Dark grey color */
+  font-size: 28px;
+  margin-top: 10px;
+  margin-bottom: 2px;
+  text-align: left;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.page-item {
+  margin: 0 5px;
+}
+
+.page-link {
+  display: inline-block;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  color: #333;
+  text-decoration: none;
+}
+
+.page-link:hover {
+  background-color: #f0f0f0;
+}
+
+.active .page-link {
+  background-color: #044FC0;
+  color: white;
+  border-color: #044FC0;
+}
+
+/* App.css */
+
+/* Container for the entire search result list */
+.search-results-container {
+  padding: 20px;
+}
+
+/* Container for individual search result items */
+.search-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Adds space between each search result */
+}
+
+/* Individual search result item */
+.search-list {
+  position: relative;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  min-height: 60px; /* Ensures the box maintains a minimum height */
+}
+
+/* Container for version tags positioned at the top-right corner */
+.version-tags {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px; /* Adds space between version tags */
+}
+
+/* Individual version tag style */
+.version-tag {
+  background-color: #044fc0;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+/* Container for the name and description of the package */
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Aligns the content to the left */
+  max-width: calc(100% - 120px); /* Ensures content does not overlap with version tags */
+}
+
+/* Style for package name */
+.name {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+/* Style for package description */
+.description {
+  font-size: 14px;
+  color: #666;
+  max-width: 100%;
+  word-wrap: break-word; /* Ensures text wraps within the container */
+}
+
+/* Style for pagination wrapper */
+.pagination-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+/* Style for pagination container */
+.pagination {
+  display: flex;
+  list-style: none;
+  padding: 0;
+}
+
+/* Style for each page item */
+.page-item {
+  margin: 0 5px;
+}
+
+/* Style for each page link */
+.page-link {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #044fc0;
+}
+
+/* Style for active page */
+.active .page-link {
+  background-color: #044fc0;
+  color: white;
+  border-color: #044fc0;
+}
+
+/* Style for previous and next buttons */
+.page-item.previous,
+.page-item.next {
+  display: none; /* Hide by default, shown conditionally in JS */
+}

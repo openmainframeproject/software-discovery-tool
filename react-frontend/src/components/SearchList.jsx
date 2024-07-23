@@ -12,8 +12,10 @@ export const SearchList = ({ data }) => {
       </div>
       {data.map((item, index) => (
         <div key={index} className="search-result-item">
-          <div className="result-name">{item.name}</div>
+          <div className="result-name">{item.packageName}</div>
           <div className="result-description">{item.description}</div>
+          <div className="result-version">Version: {item.version}</div>
+          <div className="result-ostag">OSTag: {item.ostag}</div>
         </div>
       ))}
     </div>
