@@ -13,7 +13,7 @@ SUPPORTED_DISTROS = supported_distros.SUPPORTED_DISTROS
 SDT_BASE = '/opt/software-discovery-tool'
 DATA_FILE_LOCATION = '%s/distro_data/data_files' % SDT_BASE
 
-HOST = 'localhost'
+HOST = os.environ.get('DB_HOST')
 USER = ''
 PASSWORD = ''
 DB_NAME = os.environ.get('DB_NAME')
