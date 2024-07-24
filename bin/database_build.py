@@ -5,7 +5,7 @@ import pymysql
 import sys
 import os
 from dotenv import load_dotenv
-load_dotenv()  # Load environment variables from the .env file
+load_dotenv()  # Load database name from the .env file
 
 sys.path.append('/opt/software-discovery-tool/src/config')
 import supported_distros
@@ -42,7 +42,7 @@ def db_init():
         create_one(dbName,username,password,table_name)
 
 def jsontosql(db,table,file,os,user,password):
-    filepath = f'{DATA_FILE_LOCATION}/{file}'
+    filepath = f'{DATA_FILE_LOCATION}/{file}.json'
     jsonFile = open(file=filepath)
     data = json.load(jsonFile)
     final_data = []
@@ -97,8 +97,8 @@ def create_one(db,username,password,table_name):
             for distro in SUPPORTED_DISTROS[os]:
                 if SUPPORTED_DISTROS[os][distro] == table_name:
                     flag=False
-                    createTable(db,SUPPORTED_DISTROS[os][distro].split('.json')[0],username,password)
-                    jsontosql(db,SUPPORTED_DISTROS[os][distro].split('.json')[0],SUPPORTED_DISTROS[os][distro],distro,username,password)
+                    createTable(db,SUPPORTED_DISTROS[os][distro],username,password)
+                    jsontosql(db,SUPPORTED_DISTROS[os][distro],SUPPORTED_DISTROS[os][distro],distro,username,password)
     conn.close()
 
     if flag==False:
@@ -113,10 +113,10 @@ def initall(db,username,password):
             continue
         else:
             for distro in SUPPORTED_DISTROS[os_Key]:
-                path = f'{DATA_FILE_LOCATION}/{SUPPORTED_DISTROS[os_Key][distro]}'
+                path = f'{DATA_FILE_LOCATION}/{SUPPORTED_DISTROS[os_Key][distro]}.json'
                 if os.path.exists(path):
-                    createTable(db,SUPPORTED_DISTROS[os_Key][distro].split('.json')[0],username,password)
-                    jsontosql(db,SUPPORTED_DISTROS[os_Key][distro].split('.json')[0],SUPPORTED_DISTROS[os_Key][distro],distro,username,password)
+                    createTable(db,SUPPORTED_DISTROS[os_Key][distro],username,password)
+                    jsontosql(db,SUPPORTED_DISTROS[os_Key][distro],SUPPORTED_DISTROS[os_Key][distro],distro,username,password)
                     count = count+1 
                 else:
                     print(f"{SUPPORTED_DISTROS[os_Key][distro]} FILE DOESN'T EXIST")
