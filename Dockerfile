@@ -19,6 +19,7 @@ RUN git submodule update --init --recursive --remote
 RUN  mv src/config/supported_distros.py.example src/config/supported_distros.py && \
          mv .env.example .env
 
+RUN git fetch && git checkout remotes/origin/data-update-fixes
 RUN bash -c "echo 'export PYTHONPATH=/opt/software-discovery-tool/src/classes:/opt/software-discovery-tool/src/config:$PYTHONPATH' > /etc/profile.d/software-discovery-tool.sh"
 
 RUN cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/sites-available/sdt.conf && \
