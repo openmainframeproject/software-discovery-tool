@@ -5,7 +5,6 @@ import pymysql
 import sys
 import os
 from dotenv import load_dotenv
-
 load_dotenv()  # Load environment variables from the .env file
 
 sys.path.append('/opt/software-discovery-tool/src/config')
@@ -14,9 +13,9 @@ SUPPORTED_DISTROS = supported_distros.SUPPORTED_DISTROS
 SDT_BASE = '/opt/software-discovery-tool'
 DATA_FILE_LOCATION = '%s/distro_data/data_files' % SDT_BASE
 
-HOST = os.environ.get('DB_HOST')
-USER = os.environ.get('DB_USER')
-PASSWORD = os.environ.get('DB_PASSWORD')
+HOST = 'localhost'
+USER = ''
+PASSWORD = ''
 DB_NAME = os.environ.get('DB_NAME')
 
 def connectdb(username,password,database):
