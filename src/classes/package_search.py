@@ -19,8 +19,6 @@ DB_NAME = os.environ.get('DB_NAME')
 
 class PackageSearch:
     package_data = {}
-    local_cache ={}
-    cache_keys = []
     DISTRO_BIT_MAP = {}
     INSTANCE = None   
     
@@ -98,50 +96,9 @@ class PackageSearch:
         LOGGER.debug('searchPackages: search_packages_end_with : %s' % (search_packages_end_with))
         LOGGER.debug('searchPackages: search_anywhere_in_packages : %s' % (search_anywhere_in_packages))
         
-        cache_key = 'ck_%s_%s_%s' % (search_term, exact_match, search_bit_flag)
-        LOGGER.debug('searchPackages: Cache Key is : %s' % (cache_key))
-        
         search_term = search_term.replace('*', '')
         search_term_ucase = search_term.upper()
        
-        preliminary_results = {}
-        if( (cache_key in self.INSTANCE.local_cache) == False ):
-            LOGGER.debug('searchPackages: Not available in cache, so make fresh search')
-            LOGGER.debug(self.INSTANCE.package_data)
-            if (exact_match == True):
-                LOGGER.debug('searchPackages: Doing exact search')
-                preliminary_results = [s for s in self.INSTANCE.package_data if s['P'] == search_term and (s['B'] & search_bit_flag) > 0]
-            elif search_anywhere_in_packages:
-                LOGGER.debug('searchPackages: Doing Anywhere Search')
-                preliminary_results = [s for s in self.INSTANCE.package_data if search_term_ucase in s['S'] and (s['B'] & search_bit_flag) > 0]
-            elif search_packages_begin_with:
-                LOGGER.debug('searchPackages: Find names that begin with')
-                preliminary_results = [s for s in self.INSTANCE.package_data if str(s['S']).startswith(search_term_ucase) and (s['B'] & search_bit_flag) > 0]
-            elif search_packages_end_with:
-                LOGGER.debug('searchPackages: Find names that end with')
-                preliminary_results = [s for s in self.INSTANCE.package_data if str(s['S']).endswith(search_term_ucase) and (s['B'] & search_bit_flag) > 0]
-
-            final_results = copy.deepcopy(preliminary_results); #Deep Copy is required since we just need to remove the "S" field from returnable result 
-            for pkg in final_results:
-                del pkg['S']
-                
-            LOGGER.debug('searchPackages: Search Results Length : %s' % (len(final_results)))
-            
-            if(len(final_results) > MAX_RECORDS_TO_SEND): #This is a large result set so add it to cache
-                LOGGER.debug('searchPackages: Add results to cache')
-                if(len(list(self.INSTANCE.local_cache.keys())) >= CACHE_SIZE): #CACHE_SIZE is breached so remove oldest cached object
-                    #LOGGER.debug('searchPackages: Cache full. So remove the oldest item. Total of Cached Items: %s' % (len(self.INSTANCE.local_cache.keys()))
-                    self.INSTANCE.local_cache.pop(self.INSTANCE.cache_keys[0],None) #self.INSTANCE.cache_keys[0] has the Oldest Cache Key
-                    self.INSTANCE.cache_keys.remove(self.INSTANCE.cache_keys[0]) #Remoe the cache_key from cache_keys for it is removed from local_cache
-                
-                LOGGER.debug('searchPackages: Add new Key to cache_keys for indexing.')
-                self.INSTANCE.cache_keys.append(cache_key)     #append the new key to the list of cache_keys
-                self.INSTANCE.local_cache[cache_key] = final_results
-        else:
-            LOGGER.debug('searchPackages: Getting from cache')
-            final_results = self.INSTANCE.local_cache[cache_key];
-        
-        LOGGER.debug('searchPackages: Cache Keys: %s' %(json.dumps(self.INSTANCE.cache_keys)))
         totalLength = len(final_results)
         
         last_page = math.ceil(totalLength/float(MAX_RECORDS_TO_SEND))
@@ -204,10 +161,10 @@ class PackageSearch:
         for table in tables:
             if exact_match==True:
                 LOGGER.debug("Exact Match")
-                query = f"SELECT packageName,description,version,osName FROM {table.split('.json')[0]} where packageName = %s"
+                query = f"SELECT packageName,description,version,osName FROM {table} where packageName = %s"
             else:
                 LOGGER.debug("NOT EXACT MATCH")
-                query = f"SELECT packageName,description,version,osName FROM {table.split('.json')[0]} where packageName REGEXP %s"
+                query = f"SELECT packageName,description,version,osName FROM {table} where packageName REGEXP %s"
             curr.execute(query,(term))
             rows = rows + curr.fetchall()
         total_length = len(rows)
