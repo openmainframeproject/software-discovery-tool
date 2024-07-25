@@ -175,7 +175,10 @@ The `src/config/supported_distros.py` must now be updated to reflect the new jso
         MariaDB> quit
 _**NOTE:**_
 * For enhanced security, it's recommended to grant the software-discovery-tool user (sdtreaduser) only read (SELECT) permissions on the required database. This adheres to the principle of least privilege and minimizes the impact if the user credentials are compromised.
-* This read-only user will be used by the tool to read the databases. Any updates to the database will still need to use your root/administrative user.
+* When working with SDT, two separate users with distinct permission sets are used:
+![Diagram](../src/static/images/diagram.svg)
+	* [User for Read-only Database Access](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Installation.md#set-appropriate-folder-and-file-permission-on-optsoftware-discovery-tool-folder-for-apache) (Read-Only Permissions): This user is granted strictly read-only permissions over the entire project, including the database, for use when a user searches the database through the tool.
+   	* [User for Build Database Step](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Installation.md#run-the-script-to-populate-the-database-when-prompted-by-the-script-for-a-user-and-password-use-the-root-account-and-password-you-set-above) (All Privileges): This user is granted all privileges over the database for the 	`database_build` step below, allowing them to create new tables and drop old ones. This user's credentials should never be stored in a `.env` file, and customers must remember the password or set up a local system to manage it securely.
 
 #### Create a .env file in the root of the project with credentials set above (see .env.example)
 
