@@ -3,7 +3,7 @@ import omfLogo from "../images/openmainframe-logo.png";
 import SearchResults from './SearchResults';
 import '../App.css';
 
-function SearchBar() {
+function SearchBar({ onSearchPerformed }) {
   const [input, setInput] = useState("");
   const [searchDescription, setSearchDescription] = useState(true);
   const [results, setResults] = useState([]);
@@ -27,6 +27,10 @@ function SearchBar() {
     setSelectedOS(updatedSelectedOS);
   }, [selectAll, osList]);
 
+  useEffect(() => {
+    onSearchPerformed(searchPerformed);
+  }, [searchPerformed, onSearchPerformed]);
+
   const fetchOSList = () => {
     fetch("https://sdt.openmainframeproject.org/sdt/getSupportedDistros")
       .then((response) => response.json())
@@ -35,6 +39,7 @@ function SearchBar() {
         setOsList(data);
       });
   };
+  
 
   const fetchData = (value, exact) => {
     const selectedOSList = Object.keys(selectedOS).filter(key => selectedOS[key]);
@@ -45,7 +50,6 @@ function SearchBar() {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         const transformedResults = data.packages.map(pkg => ({
           packageName: pkg[0],
           description: pkg[1] || 'No description available',

@@ -1,0 +1,62 @@
+.navbar-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    border-radius: 20px;
+}
+
+.sdt-logo {
+    display: flex;
+    align-items: center;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.menu-icon {
+    display: none;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.navbar-links {
+    display: flex;
+    gap: 1rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.navbar-links a {
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .menu-icon {
+        display: block;
+    }
+
+    .navbar-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: -250px;
+        background-color: white;
+        border-top: 1px solid #ccc;
+        z-index: 1000;
+        width: 300px;
+    }
+
+    .navbar-links.active {
+        display: flex;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .navbar-link {
+        padding: 1rem;
+        text-align: center;
+    }
+}

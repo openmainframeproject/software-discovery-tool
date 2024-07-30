@@ -99,17 +99,6 @@ body::-webkit-scrollbar {
   width: fit-content;
 }
 
-.nav-section {
-  align-items: center;
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: column;
-  gap: 20px;
-  justify-content: center;
-  position: relative;
-  width: 1181px;
-}
-
 .search-bar-wrapper {
   align-items: center;
   display: flex;
@@ -201,16 +190,6 @@ input:focus {
   color: #00000099;
 }
 
-.navbar-wrapper {
-  align-items: center;
-  display: flex;
-  flex: 0 0 auto;
-  gap: 38px;
-  justify-content: center;
-  position: relative;
-  width: 1181px;
-}
-
 .landing-page .sdt {
   gap: 10px;
   position: relative;
@@ -227,25 +206,6 @@ input:focus {
   height: 83px;
   position: relative;
   width: 300px;
-}
-
-.navbar {
-  align-items: center;
-  align-self: stretch;
-  display: flex;
-  flex: 1;
-  flex-grow: 1;
-  gap: 38px;
-  justify-content: flex-end;
-  position: relative;
-}
-
-.navbar-link {
-  letter-spacing: 0;
-  line-height: 27.5px;
-  position: relative;
-  white-space: nowrap;
-  width: fit-content;
 }
 
 .poppins-bold-black-20px {
@@ -409,19 +369,19 @@ input:focus {
 .search-list-container {
   display: flex;
   flex-direction: column;
-  width: 100%; /* Ensure it takes full width */
-  max-width: 1200px; /* Adjust the max width if needed */
+  width: 100%;
+  max-width: 1200px;
   align-items: center;
   gap: 20px;
   position: relative;
-  margin-top: 20px; /* Add some space below the search bar */
+  margin-top: 20px;
   overflow-y: auto;
-  padding: 0 15px; /* Add some padding for better layout */
+  padding: 0 15px;
 }
 
 .search-list {
   display: flex;
-  width: 100%; /* Ensure it takes full width */
+  width: 100%;
   align-items: center;
   padding: 25px;
   position: relative;
@@ -650,26 +610,3 @@ input:focus {
   align-items: center;
   margin-right: 15px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

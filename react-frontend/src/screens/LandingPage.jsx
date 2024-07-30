@@ -1,20 +1,20 @@
+import React, { useState } from 'react';
 import HeroSection from "../components/HeroSection";
 import SearchBar from "../components/SearchBar";
-
 import Carousel from "../components/Carousel/Carousel";
-// import SearchResults from "../components/SearchResults";
 
 function LandingPage() {
-  // const [results, setResults] = useState([]);
+  const [searchPerformed, setSearchPerformed] = useState(false);
+
+  const handleSearchPerformed = (performed) => {
+    setSearchPerformed(performed);
+  };
+
   return (
     <div className="page">
-      {/* <Navbar setResults={setResults} /> */}
-      <SearchBar/>
-
-      <HeroSection />
-      {/* <SearchResults results={results} /> */}
-      <Carousel/>
-      {/* <Footer /> */}
+      <SearchBar onSearchPerformed={handleSearchPerformed} />
+      {!searchPerformed && <HeroSection />}
+      {!searchPerformed && <Carousel />}
     </div>
   );
 }
