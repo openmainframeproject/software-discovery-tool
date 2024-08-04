@@ -246,4 +246,20 @@ In case any of the parameters are updated, the server has to be restarted:
 
     #### Start the Flask server as below
 
-        sudo service software-discovery-tool start
+###  Step 9: Start React (frontend) server
+
+#### Ensure Node.js and npm are installed
+
+    # Make sure you have Node.js and npm installed. You can download them from [here](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+
+#### Change to the react-frontend directory
+
+    cd react-frontend
+
+#### Install the required npm packages
+
+    npm i
+
+#### Start the react frontend application
+
+    npm run start
