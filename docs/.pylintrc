@@ -1,0 +1,8 @@
+[MASTER]
+ignore = .git,__pycache__,docs/source/conf.py,old,build,dist
+
+[MESSAGES CONTROL]
+disable = C0111,C0103,W0612
+
+[FORMAT]
+max-line-length=88
