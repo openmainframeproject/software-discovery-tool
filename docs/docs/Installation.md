@@ -56,7 +56,6 @@ Note: In case software-discovery-tool code is already checked out, do the follow
 
         sudo chown -R apache:apache /opt/software-discovery-tool/
 
-
     #### Start/Restart Apache service
 
         sudo apachectl restart
