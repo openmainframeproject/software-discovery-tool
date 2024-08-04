@@ -42,17 +42,15 @@ Note: In case software-discovery-tool code is already checked out, do the follow
 
     #### Copy the apache configuration file from `/opt/software-discovery-tool/src/config/sdt.conf` into respective apache configuration folder as below
 
-        sudo cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/sites-available/sdt.conf
-        sudo mv /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/z-000-default.conf
+* For Ubuntu (18.04, 20.04, 22.04):
+
+            sudo cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/sites-available/sdt.conf
+            sudo mv /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/z-000-default.conf
 
     #### Create new user and group for apache
 
         sudo useradd apache
         sudo groupadd apache
-
-    #### Enable authorization module in apache configuration(Only for SLES 12 SP1, 12 SP2, 12 SP3)
-
-        sudo a2enmod mod_access_compat
 
     #### Set appropriate folder and file permission on /opt/software-discovery-tool/ folder for apache
 
@@ -156,7 +154,7 @@ We can check if the server is up and running by going to following URL :
 
 ```http://server_ip_or_fully_qualified_domain_name:port_number/sdt``` <br />
 
-(Alternatively, you can check with unit testing) <br />
+(Alternatively, you can check with unittesting) <br />
 ```cd software-discovery-tool/src/tests``` <br />
 
 If you run `pytest` as your logged user, it may give errors/warnings since you have given user `apache` ownership.
@@ -208,3 +206,21 @@ In case any of the parameters are updated, the server has to be restarted:
     #### Start/Restart Apache service
 
         sudo apachectl restart
+
+###  Step 9: Start React (frontend) server
+
+#### Ensure Node.js and npm are installed
+
+    # Make sure you have Node.js and npm installed. You can download them from [here](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+
+#### Change to the react-frontend directory
+
+    cd react-frontend
+
+#### Install the required npm packages
+
+    npm i
+
+#### Start the react frontend application
+
+    npm run start
