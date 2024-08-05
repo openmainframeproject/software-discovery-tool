@@ -28,3 +28,12 @@ Welcome to software-discovery-tool's documentation!
 
  
    Adding_new_distros
+
+.. toctree::
+   :name: Data_sources
+   :caption: Data_sources
+   :maxdepth: 1
+   :hidden:
+
+ 
+   Data_sources
