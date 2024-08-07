@@ -144,15 +144,22 @@ def fedora():
 					continue
 				ref_data = re.findall(pkg_reg, data)
 				results.extend(ref_data)
-		DATA = open(file_name, 'w')
-		DATA.write('[\n')
-		for each in results:
-			each = each.replace('.s390x', '').replace('.noarch', '')
-			each = re.sub(r'\.fc\d\d', '', each)
-			pkg = re.search(r'([\w+\-]+)-([\w\-\.]+)', each)
-			DATA.write('{"packageName": "'+pkg.group(1)+'","version": "'+pkg.group(2)+'"},\n')
-		DATA.write('{}\n]')
-		DATA.close()
+		with open(f'{DATA_FILE_LOCATION}/{q}', 'w') as DATA:
+			DATA.write('[\n')
+			for filename in results:
+				archIndex = filename.rfind('.')
+				relIndex = filename[:archIndex].rfind('-')
+				rel = filename[relIndex+1:archIndex].split('.')[0]
+				verIndex = filename[:relIndex].rfind('-')
+				ver = filename[verIndex+1:relIndex]
+				epochIndex = filename.find(':')
+				if epochIndex == -1:
+					version = ver + '-' + rel
+				else:
+					version = ver + '-' + rel + filename[:epochIndex]
+				name = filename[epochIndex + 1:verIndex]
+				DATA.write(f'{{"packageName": "{name}","version": "{version}"}},\n')
+			DATA.write('{}\n]')
 		print(f"Saved!\nfilename: {q}")
 
 def almaLinux():
