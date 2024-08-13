@@ -333,6 +333,42 @@ def getIBMValidatedOpenSourceList(oskey):
 			print("Couldn't fetch appropriate package for given command.")
 
 
+def zOSOpenTools():
+    url = "https://api.github.com/users/ZOSOpenTools/repos"
+    repos = []
+    page = 1
+    per_page = 100
+
+    while True:
+        params = {'page': page, 'per_page': per_page}
+        response = requests.get(url, params=params)
+        
+        if response.status_code == 200:
+            repos.extend(response.json())
+            if 'next' in response.links:
+                page += 1
+            else:
+                break
+        else:
+            print("Failed to fetch repositories:", response.status_code)
+            break
+    
+    zOS_list = []
+    for repo in repos:
+        repo_info = {"packageName": repo["name"], "description": repo["description"], "version": ""}
+        zOS_list.append(repo_info)
+
+    directory = './distro_data/'
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    file_path = os.path.join(directory, 'ZOSOpenTools.json')
+
+    with open(file_path, 'w') as file:
+        json.dump(zOS_list, file, indent=2)
+
+    return zOS_list
+
 def pds(q):
 	global DATA,DATA_FILE_LOCATION
 	file_name = f'{DATA_FILE_LOCATION}/{q}'
@@ -383,6 +419,9 @@ if __name__ == "__main__":
 	elif file == 'IBM-Validated' or file == 'ibm-validated':
 		print(f"Extracting {file} data ... ")
 		getIBMValidatedOpenSourceList(oskey)
+	elif file == 'ZOSOpenTools' or file == 'zosopentools':
+		print(f"Extracting data for {file} ... ")
+		zOSOpenTools()
 	else:
 		print(
 			"Usage:\n./package_build <exact_file_name.json>\n\t\t\t[if data is from PDS]"
@@ -393,6 +432,7 @@ if __name__ == "__main__":
 			"\n./package_build.py almalinux\n\t\t\t[if data is from AlmaLinux]"
 			"\n./package_build.py rockylinux\n\t\t\t[if data is from RockyLinux]"
 			"\n./package_build.py ibm-validated\n\t\t\t[if data is from IBM Validated Open Source List]"
+			"\n./package_build.py zosopentools\n\t\t\t[if data is from ZOS Open Tools list]"
 			"\n./package_build.py\n\t\t\t[for displaying this help]\n"
 			"Example:\n./package_build.py RHEL_8_Package_List.json\n./package_build.py debian")
 	
