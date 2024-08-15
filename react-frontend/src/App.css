@@ -19,6 +19,9 @@
 * {
   box-sizing: border-box;
 }
+body {
+  overflow-x: hidden; 
+}
 
 body::-webkit-scrollbar {
   display: none;
@@ -35,21 +38,22 @@ body::-webkit-scrollbar {
   background-color: #f5f5f5;
   display: flex;
   flex-direction: column;
-  gap: 31px;
+  gap: 5px;
   height: auto;
-  min-width: 1440px;
-  padding: 20px 30px;
+  width: 100%;
+  /*min-width: 1440px;*/
+  padding: 0 30px;
   position: relative;
+  max-width: 100%;
 }
-
 .hero-section {
   align-items: center;
   display: flex;
   flex: 0 0 auto;
   justify-content: center;
-  padding: 40px 0px;
+  padding: 0;
   position: relative;
-  width: 1179px;
+  max-width: 100%; 
 }
 
 .hero-image {
@@ -57,7 +61,24 @@ body::-webkit-scrollbar {
   flex: 1;
   flex-grow: 1;
   position: relative;
-  margin-top: 10px;
+}
+
+@media (max-width: 1024px) {
+  .hero-image {
+    width: 80%;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-image {
+    width: 80%;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-image {
+    width: 90%;
+  }
 }
 
 .headline {
@@ -78,6 +99,28 @@ body::-webkit-scrollbar {
   line-height: 85px;
   margin-top: -1px;
   position: relative;
+  overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+  .medium-length-display {
+    font-size: 3rem; 
+    line-height: 1.2;
+  }
+}
+
+@media (max-width: 768px) {
+  .medium-length-display {
+    font-size: 2.5rem; 
+    line-height: 1.1;
+  }
+}
+
+@media (max-width: 480px) {
+  .medium-length-display {
+    font-size: 2rem; 
+    line-height: 1;
+  }
 }
 
 .outfit-bold-black-68px {
@@ -88,6 +131,24 @@ body::-webkit-scrollbar {
   font-weight: 700;
 }
 
+@media (max-width: 1024px) {
+  .outfit-bold-black-68px {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .outfit-bold-black-68px {
+    font-size: 2rem; 
+  }
+}
+
+@media (max-width: 480px) {
+  .outfit-bold-black-68px {
+    font-size: 1.75rem; 
+  }
+}
+
 .discover-open-source {
   color: var(--black);
   font-family: var(--font-family-outfit);
@@ -96,7 +157,28 @@ body::-webkit-scrollbar {
   letter-spacing: 0;
   line-height: 27.5px;
   position: relative;
-  width: fit-content;
+  width: 100%;
+  overflow: hidden;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+@media (max-width: 1024px) {
+  .discover-open-source {
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .discover-open-source {
+    font-size: 1rem; 
+  }
+}
+
+@media (max-width: 480px) {
+  .discover-open-source {
+    font-size: 0.875rem; 
+  }
 }
 
 .search-bar-wrapper {
@@ -107,7 +189,8 @@ body::-webkit-scrollbar {
   justify-content: center;
   position: relative;
   width: 100%;
-  max-width: 1200px; 
+  max-width: 100%;
+  padding: 0 1rem; /* Add some padding for smaller screens */
 }
 
 .search-button-container {
@@ -139,31 +222,17 @@ body::-webkit-scrollbar {
   font-family: var(--font-family-outfit);
 }
 
-.omf-logo {
-  align-items: center;
-  display: inline-flex;
-  flex: 0 0 auto;
-  gap: 10px;
-  position: relative;
-}
-
-.image-11 {
-  height: 96px;
-  object-fit: cover;
-  position: relative;
-  width: 88px;
-}
-
 .searchbox {
   align-items: center;
   display: flex;
   flex: 1;
-  flex-grow: 1;
   gap: 10px;
   position: relative;
   padding: 10px;
   border-radius: 10px;
   background-color: #ffffff;
+  width: 100%;
+  max-width: 100%;
 }
 
 input:focus {
@@ -175,19 +244,48 @@ input:focus {
   border: 0;
   color: var(--black);
   flex: 1;
-  flex-grow: 1;
   font-family: var(--font-family-poppins);
   font-size: var(--font-size-xxxs);
   font-weight: 700;
-  letter-spacing: 0;
   line-height: 27.5px;
-  margin-top: -1px;
   padding: 0;
   position: relative;
 }
 
 .searchbox-input::placeholder {
   color: #00000099;
+}
+
+@media (max-width: 768px) {
+  .search-bar-wrapper {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .search-button-container {
+    width: 100%; 
+    justify-content: center;
+  }
+
+  .search-button-container-item {
+    width: 100%; 
+    height: 50px;
+  }
+
+  .searchbox {
+    width: 100%; 
+    padding: 8px;
+  }
+
+  .searchbox-input {
+    font-size: 14px; 
+  }
+}
+.image-11 {
+  height: 96px;
+  object-fit: cover;
+  position: relative;
+  width: 88px;
 }
 
 .landing-page .sdt {
@@ -217,15 +315,17 @@ input:focus {
 }
 
 .support-section {
+  height: auto; 
+  padding: 20px 0; 
+  box-sizing: border-box;
   align-items: center;
   display: flex;
-  flex: 0 0 auto;
   flex-direction: column;
   gap: 10px;
   justify-content: center;
   margin-bottom: -12.48px;
   position: relative;
-  width: 1179px;
+  width: 100%;
 }
 
 .supported-for {
@@ -235,6 +335,7 @@ input:focus {
   position: relative;
 }
 
+
 .supported-text {
   color: var(--black);
   font-family: var(--font-family-outfit);
@@ -242,11 +343,30 @@ input:focus {
   font-weight: 700;
   letter-spacing: 0;
   line-height: 27.5px;
-  margin-top: -1px;
+  margin-top: 20px;
   margin-bottom: 10px;
   position: relative;
-  width: 1179px;
+  width: 100%; 
 }
+
+@media (max-width: 1024px) {
+  .supported-text {
+    font-size: calc(var(--font-size-xs) - 2px); 
+  }
+}
+
+@media (max-width: 768px) {
+  .supported-text {
+    font-size: calc(var(--font-size-xs) - 4px); 
+  }
+}
+
+@media (max-width: 480px) {
+  .supported-text {
+    font-size: calc(var(--font-size-xs) - 6px); 
+  }
+}
+
 
 .os-logos {
   align-items: center;
@@ -327,11 +447,12 @@ input:focus {
   display: flex;
   flex-direction: column;
   gap: 22px;
-  height: 567.48px;
+  height: 200px;
   justify-content: center;
   margin: 12px;
   position: relative;
 }
+
 
 .upper-section {
   align-items: center;
@@ -408,11 +529,6 @@ input:focus {
   position: relative;
 }
 
-
-
-
-
-
 .search-list-container {
   padding: 10px;
 }
@@ -443,7 +559,7 @@ input:focus {
 }
 
 .content {
-  padding-right: 120px; /* Adjust this based on the width of the version tags */
+  padding-right: 120px; 
 }
 
 .name {
@@ -458,7 +574,7 @@ input:focus {
   margin: 0;
 }
 .results-count {
-  color: #333; /* Dark grey color */
+  color: #333;
   font-size: 28px;
   margin-top: 10px;
   margin-bottom: 2px;
@@ -493,21 +609,15 @@ input:focus {
   border-color: #044FC0;
 }
 
-/* App.css */
-
-/* Container for the entire search result list */
 .search-results-container {
-  padding: 20px;
+  padding: 5px;
 }
-
-/* Container for individual search result items */
 .search-list-container {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Adds space between each search result */
+  gap: 20px;
 }
 
-/* Individual search result item */
 .search-list {
   position: relative;
   padding: 20px;
@@ -517,20 +627,17 @@ input:focus {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  min-height: 60px; /* Ensures the box maintains a minimum height */
+  min-height: 60px; 
 }
 
-/* Container for version tags positioned at the top-right corner */
 .version-tags {
   position: absolute;
   top: 10px;
   right: 10px;
   display: flex;
   flex-wrap: wrap;
-  gap: 5px; /* Adds space between version tags */
+  gap: 5px; 
 }
-
-/* Individual version tag style */
 .version-tag {
   background-color: #044fc0;
   color: white;
@@ -539,15 +646,13 @@ input:focus {
   font-size: 12px;
 }
 
-/* Container for the name and description of the package */
 .content {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Aligns the content to the left */
-  max-width: calc(100% - 120px); /* Ensures content does not overlap with version tags */
+  align-items: flex-start; 
+  max-width: calc(100% - 120px); 
 }
 
-/* Style for package name */
 .name {
   font-weight: bold;
   font-size: 16px;
@@ -555,34 +660,29 @@ input:focus {
   color: #333;
 }
 
-/* Style for package description */
 .description {
   font-size: 14px;
   color: #666;
   max-width: 100%;
-  word-wrap: break-word; /* Ensures text wraps within the container */
+  word-wrap: break-word; 
 }
 
-/* Style for pagination wrapper */
 .pagination-wrapper {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
 }
 
-/* Style for pagination container */
 .pagination {
   display: flex;
   list-style: none;
   padding: 0;
 }
 
-/* Style for each page item */
 .page-item {
   margin: 0 5px;
 }
 
-/* Style for each page link */
 .page-link {
   padding: 8px 12px;
   border: 1px solid #ccc;
@@ -591,17 +691,15 @@ input:focus {
   color: #044fc0;
 }
 
-/* Style for active page */
 .active .page-link {
   background-color: #044fc0;
   color: white;
   border-color: #044fc0;
 }
 
-/* Style for previous and next buttons */
 .page-item.previous,
 .page-item.next {
-  display: none; /* Hide by default, shown conditionally in JS */
+  display: none; 
 }
 
 
@@ -609,4 +707,39 @@ input:focus {
   display: flex;
   align-items: center;
   margin-right: 15px;
+}
+
+.refine-filters-container {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.refine-filters label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #333;
+}
+
+.refine-filters input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.refine-filters input[type="text"]:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.refine-filters label:not(:last-child) {
+  margin-bottom: 15px;
 }

@@ -22,21 +22,7 @@ function HeroSection() {
         </div>
         <img className="hero-image" src={heroPic} alt="hero_image" />
       </div>
-      <div className="middle-section">
-        <img
-          className="openmainframeproject-color-1"
-          src={openMainFrameLogo}
-          alt="openmainframeproject-color 1"
-        />
-        <div className="sdt-tagline sdt">
-          <p className="matches-developers-w valign-text-middle outfit-bold-black-68px">
-            Matches Developers With <br />
-            Best Open Source Software That
-            <br />
-            Meets Their Needs.
-          </p>
-        </div>
-      </div>
+     
     </div>
   );
 }
