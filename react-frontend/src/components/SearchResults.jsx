@@ -1,21 +1,32 @@
-// SearchResults.jsx
 import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'; // Import the icon
-import '../App.css'; // Import CSS for styling
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import '../App.css'; 
 
-function SearchResults({ results, showDesc, itemsPerPage }) {
+function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed }) {
   const [currentPage, setCurrentPage] = useState(0);
   const [paginatedResults, setPaginatedResults] = useState([]);
+  const [refinePackageName, setRefinePackageName] = useState('');
+
+  const filterResults = () => {
+    if (!Array.isArray(results)) return [];
+    
+    return results.filter((result) => {
+      const nameMatch = result.packageName.toLowerCase().includes(refinePackageName.toLowerCase());
+      const versionMatch = result.version.toLowerCase().includes(refinePackageName.toLowerCase());
+      return nameMatch || versionMatch;
+    });
+  };
 
   useEffect(() => {
+    const filteredResults = filterResults();
     const start = currentPage * itemsPerPage;
     const end = start + itemsPerPage;
-    setPaginatedResults(results.slice(start, end));
-  }, [currentPage, results, itemsPerPage]); // Add itemsPerPage to the dependency array
+    setPaginatedResults(filteredResults.slice(start, end));
+  }, [currentPage, itemsPerPage, refinePackageName, results]);
 
   useEffect(() => {
-    setCurrentPage(0); // Reset to first page when itemsPerPage changes or new results are fetched
+    setCurrentPage(0);
   }, [itemsPerPage, results]);
 
   const handlePageChange = (selectedPage) => {
@@ -29,11 +40,27 @@ function SearchResults({ results, showDesc, itemsPerPage }) {
     });
   };
 
-  // Determine if pagination should be displayed
-  const shouldShowPagination = results.length > itemsPerPage;
+  const shouldShowPagination = filterResults().length > itemsPerPage;
 
   return (
     <div className="search-results-container">
+  
+      {searchPerformed && (
+        <div className="refine-filters-container">
+          <div className="refine-filters">
+            <label>
+              Refine package name/version:
+              <input
+                type="text"
+                value={refinePackageName}
+                onChange={(e) => setRefinePackageName(e.target.value)}
+                placeholder="Enter package name or version"
+              />
+            </label>
+          </div>
+        </div>
+      )}
+
       <div className="search-list-container">
         {paginatedResults.map((result, index) => (
           <div key={index} className="search-list">
@@ -46,15 +73,14 @@ function SearchResults({ results, showDesc, itemsPerPage }) {
             </div>
             <div className="content">
               <div className="name">{result.packageName}</div>
-              {showDesc ? (
+              {showDesc && (
                 <div className="description">{result.description}</div>
-              ) : (
-                ""
               )}
             </div>
           </div>
         ))}
       </div>
+
       {shouldShowPagination && (
         <div className="pagination-and-scroll-wrapper flex justify-between items-center mt-4">
           <div className="pagination-wrapper">
@@ -62,7 +88,7 @@ function SearchResults({ results, showDesc, itemsPerPage }) {
               previousLabel={'previous'}
               nextLabel={'next'}
               breakLabel={'...'}
-              pageCount={Math.ceil(results.length / itemsPerPage)}
+              pageCount={Math.ceil(filterResults().length / itemsPerPage)}
               marginPagesDisplayed={2}
               pageRangeDisplayed={5}
               onPageChange={handlePageChange}

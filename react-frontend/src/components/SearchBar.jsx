@@ -209,7 +209,7 @@ function SearchBar({ onSearchPerformed }) {
           </label>
         </div>
       )}
-      <SearchResults results={results} showDesc={searchDescription} itemsPerPage={itemsPerPage} />
+      <SearchResults results={results} showDesc={searchDescription} itemsPerPage={itemsPerPage} searchPerformed={searchPerformed} />
     </div>
   );
 }
