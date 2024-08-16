@@ -39,15 +39,29 @@ function SearchBar({ onSearchPerformed }) {
         setOsList(data);
       });
   };
-  
+
+  const generateSearchBitFlag = () => {
+    let searchBitFlag = 0;
+
+    Object.keys(selectedOS).forEach((os, index) => {
+      if (selectedOS[os]) {
+        searchBitFlag |= (1 << index);
+      }
+    });
+    return searchBitFlag;
+  };
 
   const fetchData = (value, exact) => {
     const selectedOSList = Object.keys(selectedOS).filter(key => selectedOS[key]);
     const osFilters = selectedOSList.length ? `&os_filters=${selectedOSList.join(',')}` : '';
 
-    fetch(
-      `https://sdt.openmainframeproject.org/sdt/searchPackages?search_term=${value}&exact_match=${exact}&search_bit_flag=4398046511103${osFilters}`
-    )
+    const searchBitFlag = generateSearchBitFlag();
+
+    const apiUrl = `https://sdt.openmainframeproject.org/sdt/searchPackages?search_term=${value}&exact_match=${exact}&search_bit_flag=${searchBitFlag}${osFilters}`;
+    
+    console.log("Fetch URL:", apiUrl); 
+
+    fetch(apiUrl)
       .then((response) => response.json())
       .then((data) => {
         const transformedResults = data.packages.map(pkg => ({
