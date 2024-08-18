@@ -487,29 +487,90 @@ input:focus {
   background-color: #f0f0f0;
 }
 
+
 .search-list-container {
   display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 1200px;
-  align-items: center;
+  flex-wrap: wrap;
   gap: 20px;
-  position: relative;
-  margin-top: 20px;
-  overflow-y: auto;
-  padding: 0 15px;
+  justify-content: center;
 }
 
 .search-list {
-  display: flex;
+  flex: 1 1 100%;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  max-width: 100%;
   width: 100%;
-  align-items: center;
-  padding: 25px;
-  position: relative;
-  border-bottom-width: 3px;
-  border-bottom-style: solid;
-  border-color: #a89f9f;
 }
+
+@media (min-width: 600px) {
+  .search-list {
+    flex: 1 1 48%;
+  }
+}
+
+@media (min-width: 900px) {
+  .search-list {
+    flex: 1 1 31%;
+  }
+}
+
+.version-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.version-tag {
+  background-color: #e1e1e1;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.content {
+  margin-top: 10px;
+}
+
+
+.pagination-and-scroll-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+
+@media (min-width: 640px) { 
+  .pagination-and-scroll-wrapper {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .pagination-wrapper {
+    text-align: left;
+    width: auto;
+    margin-bottom: 0;
+  }
+}
+
+.pagination-wrapper {
+  width: 100%; 
+  text-align: center; 
+  margin-bottom: 16px; 
+}
+
+.scroll-to-top {
+  margin-left: 0;
+  margin-top: 16px;
+}
+
+@media (min-width: 640px) {
+  .scroll-to-top {
+    margin-left: 16px; 
+    margin-top: 0;
+  }
+}
+
 
 .result-name {
   color: var(--black);
@@ -610,7 +671,8 @@ input:focus {
 }
 
 .search-results-container {
-  padding: 5px;
+  width: 100%;
+  padding: 20px;
 }
 .search-list-container {
   display: flex;
@@ -711,10 +773,8 @@ input:focus {
 
 .refine-filters-container {
   margin-bottom: 20px;
-  padding: 10px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  text-align: center;
 }
 
 .refine-filters label {
@@ -724,15 +784,12 @@ input:focus {
   color: #333;
 }
 
-.refine-filters input[type="text"] {
+.refine-filters input {
   width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
+  max-width: 400px;
+  padding: 10px;
+  margin-top: 10px;
   box-sizing: border-box;
-  transition: border-color 0.3s ease;
 }
 
 .refine-filters input[type="text"]:focus {

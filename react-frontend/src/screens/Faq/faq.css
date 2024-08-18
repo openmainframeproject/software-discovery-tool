@@ -1,21 +1,43 @@
 .main-faq {
-  width: 85vw;
-  padding: 50px;
+  width: 90%; 
+  max-width: 1200px; 
+  padding: 20px; 
   background-color: rgb(255, 255, 255);
   border-radius: 10px;
   box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px,
     rgba(17, 17, 26, 0.1) 0px 8px 8px;
+  margin: auto;
 }
 
 .faq-heading {
   text-align: center;
   text-transform: capitalize;
-  font-size: 32px;
+  font-size: 2rem; 
   font-weight: 500;
-  letter-spacing: 5;
-  word-spacing: 5px;
+  letter-spacing: 1px;
   margin-bottom: 20px;
   color: #2c3148;
+}
+
+@media (max-width: 768px) {
+  .main-faq {
+    width: 95%; 
+    padding: 15px;
+  }
+
+  .faq-heading {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-faq {
+    padding: 10px;
+  }
+
+  .faq-heading {
+    font-size: 1.25rem,
+  }
 }
 
 .main-heading {
@@ -33,21 +55,22 @@
   word-spacing: 1px;
   letter-spacing: 1px;
   font-weight: 600;
-  font-size: 18px;
+  font-size: 1.125rem;
 }
 
 .main-heading p {
   cursor: pointer;
-  border-radius: 50%;
+  border-radius: 0;
   box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px,
     rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
   background: #fff;
   padding: 2px;
+  position: absolute;
 }
 
 .answers {
-  padding: 25px;
-  font-size: 15px;
+  padding: 20px;
+  font-size: 1rem; 
   word-spacing: 2px;
   font-weight: 400;
   line-height: 1.7;
@@ -55,4 +78,18 @@
   box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px,
     rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
   color: #000;
+}
+
+@media (max-width: 768px) {
+  .answers {
+    padding: 15px;
+    font-size: 0.875rem; 
+  }
+}
+
+@media (max-width: 480px) {
+  .answers {
+    padding: 10px;
+    font-size: 0.75rem;
+  }
 }

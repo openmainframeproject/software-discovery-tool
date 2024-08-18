@@ -122,32 +122,6 @@ function SearchBar({ onSearchPerformed }) {
 
   return (
     <div>
-      <div className="flex flex-wrap justify-start search-bar-wrapper">
-        <div className="os-checkbox-container">
-          <label>
-            <input
-              type="checkbox"
-              checked={selectAll}
-              onChange={handleSelectAllChange}
-              className="mr-2"
-            />
-            All
-          </label>
-        </div>
-        {Object.keys(osList).map((os, index) => (
-          <div key={index} className="os-checkbox-container">
-            <label>
-              <input
-                type="checkbox"
-                checked={selectedOS[os] || false}
-                onChange={() => handleOSCheckboxChange(os)}
-                className="mr-2"
-              />
-              {os}
-            </label>
-          </div>
-        ))}
-      </div>
       <div className="search-bar-wrapper">
         <div className="omf-logo">
           <img className="image-11" src={omfLogo} alt="OMF Logo" />
@@ -180,6 +154,33 @@ function SearchBar({ onSearchPerformed }) {
         </div>
       </div>
 
+      <div className="flex flex-wrap justify-center os-checkbox-wrapper mt-4">
+        <div className="os-checkbox-container">
+          <label>
+            <input
+              type="checkbox"
+              checked={selectAll}
+              onChange={handleSelectAllChange}
+              className="mr-2"
+            />
+            All
+          </label>
+        </div>
+        {Object.keys(osList).map((os, index) => (
+          <div key={index} className="os-checkbox-container">
+            <label>
+              <input
+                type="checkbox"
+                checked={selectedOS[os] || false}
+                onChange={() => handleOSCheckboxChange(os)}
+                className="mr-2"
+              />
+              {os}
+            </label>
+          </div>
+        ))}
+      </div>
+
       <div className="flex justify-center mt-2">
         <label className="flex items-center">
           <input
@@ -191,10 +192,13 @@ function SearchBar({ onSearchPerformed }) {
           Search Description
         </label>
       </div>
+
       <div className="text-center mt-2 font-bold">
         Enter the name of the package or at least three characters to enable pattern search. Wildcard ('*') can be used either before or after the search keywords.
       </div>
+
       <div className="results-count mt-4">
+      <div className="results-count text-center sm:text-left">
         {searchPerformed ? (
           resultsCount > 0 ? (
             `${resultsCount} package${resultsCount !== 1 ? 's' : ''} found`
@@ -206,13 +210,13 @@ function SearchBar({ onSearchPerformed }) {
         )}
       </div>
       {resultsCount > 0 && (
-        <div className="records-per-page mt-2 text-left">
-          <label>
+        <div className="records-per-page mt-2 flex justify-center sm:justify-start items-center">
+          <label className="text-sm">
             Records per page:
             <select
               value={itemsPerPage}
               onChange={handleItemsPerPageChange}
-              className="ml-2"
+              className="ml-2 p-1 border rounded text-sm"
             >
               {[5, 10, 20, 30, 40, 50].map((count) => (
                 <option key={count} value={count}>
@@ -223,6 +227,7 @@ function SearchBar({ onSearchPerformed }) {
           </label>
         </div>
       )}
+      </div>
       <SearchResults results={results} showDesc={searchDescription} itemsPerPage={itemsPerPage} searchPerformed={searchPerformed} />
     </div>
   );

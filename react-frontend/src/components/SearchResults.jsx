@@ -80,40 +80,40 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed }
           </div>
         ))}
       </div>
-
       {shouldShowPagination && (
-        <div className="pagination-and-scroll-wrapper flex justify-between items-center mt-4">
-          <div className="pagination-wrapper">
-            <ReactPaginate
-              previousLabel={'previous'}
-              nextLabel={'next'}
-              breakLabel={'...'}
-              pageCount={Math.ceil(filterResults().length / itemsPerPage)}
-              marginPagesDisplayed={2}
-              pageRangeDisplayed={5}
-              onPageChange={handlePageChange}
-              containerClassName={'pagination'}
-              pageClassName={'page-item'}
-              pageLinkClassName={'page-link'}
-              previousClassName={'page-item'}
-              previousLinkClassName={'page-link'}
-              nextClassName={'page-item'}
-              nextLinkClassName={'page-link'}
-              breakClassName={'page-item'}
-              breakLinkClassName={'page-link'}
-              activeClassName={'active'}
-            />
-          </div>
-          <button
-            onClick={handleScrollToTop}
-            className="scroll-to-top flex items-center bg-customBlue text-white py-1 px-3 rounded ml-4 hover:bg-blue-700"
-            style={{ display: 'flex', alignItems: 'center' }}
-          >
-            <ArrowUpwardIcon className="mr-1" />
-            <span>Scroll to Top</span>
-          </button>
-        </div>
-      )}
+  <div className="pagination-and-scroll-wrapper flex flex-col items-center sm:flex-row sm:justify-between mt-4">
+    <div className="pagination-wrapper w-full sm:w-auto text-center sm:text-left mb-4 sm:mb-0">
+      <ReactPaginate
+        previousLabel={'Previous'}
+        nextLabel={'Next'}
+        breakLabel={'...'}
+        pageCount={Math.ceil(filterResults().length / itemsPerPage)}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={5}
+        onPageChange={handlePageChange}
+        containerClassName={'pagination'}
+        pageClassName={'page-item'}
+        pageLinkClassName={'page-link'}
+        previousClassName={'page-item'}
+        previousLinkClassName={'page-link'}
+        nextClassName={'page-item'}
+        nextLinkClassName={'page-link'}
+        breakClassName={'page-item'}
+        breakLinkClassName={'page-link'}
+        activeClassName={'active'}
+      />
+    </div>
+    <button
+      onClick={handleScrollToTop}
+      className="scroll-to-top flex items-center bg-customBlue text-white py-1 px-3 rounded hover:bg-blue-700"
+      style={{ display: 'flex', alignItems: 'center' }}
+    >
+      <ArrowUpwardIcon className="mr-1" />
+      <span>Scroll to Top</span>
+    </button>
+  </div>
+)}
+
     </div>
   );
 }
