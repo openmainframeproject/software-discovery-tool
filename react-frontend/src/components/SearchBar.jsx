@@ -210,23 +210,26 @@ function SearchBar({ onSearchPerformed }) {
         )}
       </div>
       {resultsCount > 0 && (
-        <div className="records-per-page mt-2 flex justify-center sm:justify-start items-center">
-          <label className="text-sm">
-            Records per page:
-            <select
-              value={itemsPerPage}
-              onChange={handleItemsPerPageChange}
-              className="ml-2 p-1 border rounded text-sm"
-            >
-              {[5, 10, 20, 30, 40, 50].map((count) => (
-                <option key={count} value={count}>
-                  {count}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-      )}
+  <div className="records-per-page mt-2 flex justify-center sm:justify-start items-center">
+    <label className="text-sm">
+      Records per page:
+      <select
+        value={itemsPerPage}
+        onChange={handleItemsPerPageChange}
+        className="ml-2 p-1 border rounded text-sm"
+      >
+        {[5, 10, 20, 30, 40, 50]
+          .filter((count) => count <= resultsCount) // Filter options based on resultsCount
+          .map((count) => (
+            <option key={count} value={count}>
+              {count}
+            </option>
+          ))}
+      </select>
+    </label>
+  </div>
+)}
+
       </div>
       <SearchResults results={results} showDesc={searchDescription} itemsPerPage={itemsPerPage} searchPerformed={searchPerformed} />
     </div>
