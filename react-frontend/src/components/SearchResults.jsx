@@ -7,14 +7,22 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed }
   const [currentPage, setCurrentPage] = useState(0);
   const [paginatedResults, setPaginatedResults] = useState([]);
   const [refinePackageName, setRefinePackageName] = useState('');
+  const [selectedDistribution, setSelectedDistribution] = useState('All');
+  const [distributions, setDistributions] = useState([]);
 
   const filterResults = () => {
     if (!Array.isArray(results)) return [];
-    return results.filter((result) => {
+    const filteredByName = results.filter((result) => {
       const nameMatch = result.packageName.toLowerCase().includes(refinePackageName.toLowerCase());
       const versionMatch = result.version.toLowerCase().includes(refinePackageName.toLowerCase());
       return nameMatch || versionMatch;
     });
+
+    if (selectedDistribution === 'All') {
+      return filteredByName;
+    } else {
+      return filteredByName.filter(result => result.ostag === selectedDistribution);
+    }
   };
 
   useEffect(() => {
@@ -22,11 +30,29 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed }
     const start = currentPage * itemsPerPage;
     const end = start + itemsPerPage;
     setPaginatedResults(filteredResults.slice(start, end));
-  }, [currentPage, itemsPerPage, refinePackageName, results]);
+  }, [currentPage, itemsPerPage, refinePackageName, results, selectedDistribution]);
 
   useEffect(() => {
     setCurrentPage(0);
-  }, [itemsPerPage, results]);
+  }, [itemsPerPage, results, selectedDistribution]);
+
+  useEffect(() => {
+    console.log('Results data for distributions:', results);
+    const uniqueDistributions = getDistributions();
+    setDistributions(uniqueDistributions);
+  }, [results]);
+
+  const getDistributions = () => {
+    if (results.length === 0) return [];
+
+    // Log the first item to understand its structure
+    console.log('First result item:', results[0]);
+
+    const distributionSet = new Set(results.map(result => result.ostag).filter(Boolean));
+    console.log('Distributions extracted:', Array.from(distributionSet));
+
+    return ['All', ...Array.from(distributionSet)];
+  };
 
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
@@ -37,6 +63,10 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed }
       top: 0,
       behavior: 'smooth',
     });
+  };
+
+  const handleDistributionChange = (e) => {
+    setSelectedDistribution(e.target.value);
   };
 
   const shouldShowPagination = filterResults().length > itemsPerPage;
@@ -54,6 +84,21 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed }
                 onChange={(e) => setRefinePackageName(e.target.value)}
                 placeholder="Enter package name or version"
               />
+            </label>
+          </div>
+          <div className="refine-filters">
+            <label>
+              Distribution:
+              <select
+                value={selectedDistribution}
+                onChange={handleDistributionChange}
+              >
+                {distributions.map((dist, index) => (
+                  <option key={index} value={dist}>
+                    {dist}
+                  </option>
+                ))}
+              </select>
             </label>
           </div>
         </div>
