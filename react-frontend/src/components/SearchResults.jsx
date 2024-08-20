@@ -10,18 +10,45 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed }
   const [selectedDistribution, setSelectedDistribution] = useState('All');
   const [distributions, setDistributions] = useState([]);
 
+  useEffect(() => {
+    fetchDistributions();
+  }, []);
+
+  const fetchDistributions = async () => {
+    try {
+      const response = await fetch('https://sdt.openmainframeproject.org/sdt/getSupportedDistros');
+      const data = await response.json();
+
+      const childDistributions = Object.keys(data).flatMap(parent => 
+        Object.keys(data[parent])
+      );
+
+      setDistributions(['All', ...childDistributions]);
+    } catch (error) {
+      console.error('Error fetching distributions:', error);
+    }
+  };
+
   const filterResults = () => {
     if (!Array.isArray(results)) return [];
+
     const filteredByName = results.filter((result) => {
       const nameMatch = result.packageName.toLowerCase().includes(refinePackageName.toLowerCase());
       const versionMatch = result.version.toLowerCase().includes(refinePackageName.toLowerCase());
       return nameMatch || versionMatch;
     });
 
+    console.log("Selected Distribution:", selectedDistribution);
+
     if (selectedDistribution === 'All') {
       return filteredByName;
     } else {
-      return filteredByName.filter(result => result.ostag === selectedDistribution);
+      const filteredByDistribution = filteredByName.filter(result => {
+        const matchesDistribution = result.ostag === selectedDistribution;
+        console.log(`Matching ${result.packageName} to ${selectedDistribution}: ${matchesDistribution}`);
+        return matchesDistribution;
+      });
+      return filteredByDistribution;
     }
   };
 
@@ -31,28 +58,6 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed }
     const end = start + itemsPerPage;
     setPaginatedResults(filteredResults.slice(start, end));
   }, [currentPage, itemsPerPage, refinePackageName, results, selectedDistribution]);
-
-  useEffect(() => {
-    setCurrentPage(0);
-  }, [itemsPerPage, results, selectedDistribution]);
-
-  useEffect(() => {
-    console.log('Results data for distributions:', results);
-    const uniqueDistributions = getDistributions();
-    setDistributions(uniqueDistributions);
-  }, [results]);
-
-  const getDistributions = () => {
-    if (results.length === 0) return [];
-
-    // Log the first item to understand its structure
-    console.log('First result item:', results[0]);
-
-    const distributionSet = new Set(results.map(result => result.ostag).filter(Boolean));
-    console.log('Distributions extracted:', Array.from(distributionSet));
-
-    return ['All', ...Array.from(distributionSet)];
-  };
 
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
@@ -67,6 +72,7 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed }
 
   const handleDistributionChange = (e) => {
     setSelectedDistribution(e.target.value);
+    console.log('New Distribution Selected:', e.target.value);
   };
 
   const shouldShowPagination = filterResults().length > itemsPerPage;
