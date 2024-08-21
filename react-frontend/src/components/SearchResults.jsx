@@ -9,10 +9,20 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed }
   const [refinePackageName, setRefinePackageName] = useState('');
   const [selectedDistribution, setSelectedDistribution] = useState('All');
   const [distributions, setDistributions] = useState([]);
+  const [distributionCounts, setDistributionCounts] = useState({});
+  const [matchingCounts, setMatchingCounts] = useState({});
 
   useEffect(() => {
     fetchDistributions();
   }, []);
+
+  useEffect(() => {
+    calculatePackageCounts();
+    calculateMatchingCounts();
+    if (searchPerformed) {
+      setSelectedDistribution('All'); 
+    }
+  }, [results, refinePackageName, searchPerformed]);
 
   const fetchDistributions = async () => {
     try {
@@ -29,6 +39,38 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed }
     }
   };
 
+  const calculatePackageCounts = () => {
+    const counts = results.reduce((acc, result) => {
+      const ostag = result.ostag || 'Unknown';
+      if (!acc[ostag]) acc[ostag] = 0;
+      acc[ostag]++;
+      return acc;
+    }, {});
+
+    counts['All'] = results.length;
+
+    setDistributionCounts(counts);
+  };
+
+  const calculateMatchingCounts = () => {
+    const filteredByName = results.filter((result) => {
+      const nameMatch = result.packageName.toLowerCase().includes(refinePackageName.toLowerCase());
+      const versionMatch = result.version.toLowerCase().includes(refinePackageName.toLowerCase());
+      return nameMatch || versionMatch;
+    });
+
+    const counts = filteredByName.reduce((acc, result) => {
+      const ostag = result.ostag || 'Unknown';
+      if (!acc[ostag]) acc[ostag] = 0;
+      acc[ostag]++;
+      return acc;
+    }, {});
+
+    counts['All'] = filteredByName.length;
+
+    setMatchingCounts(counts);
+  };
+
   const filterResults = () => {
     if (!Array.isArray(results)) return [];
 
@@ -38,17 +80,10 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed }
       return nameMatch || versionMatch;
     });
 
-    console.log("Selected Distribution:", selectedDistribution);
-
     if (selectedDistribution === 'All') {
       return filteredByName;
     } else {
-      const filteredByDistribution = filteredByName.filter(result => {
-        const matchesDistribution = result.ostag === selectedDistribution;
-        console.log(`Matching ${result.packageName} to ${selectedDistribution}: ${matchesDistribution}`);
-        return matchesDistribution;
-      });
-      return filteredByDistribution;
+      return filteredByName.filter(result => result.ostag === selectedDistribution);
     }
   };
 
@@ -72,7 +107,6 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed }
 
   const handleDistributionChange = (e) => {
     setSelectedDistribution(e.target.value);
-    console.log('New Distribution Selected:', e.target.value);
   };
 
   const shouldShowPagination = filterResults().length > itemsPerPage;
@@ -98,10 +132,11 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed }
               <select
                 value={selectedDistribution}
                 onChange={handleDistributionChange}
+                style={{ marginLeft: '10px', borderRadius: '15px' }}
               >
                 {distributions.map((dist, index) => (
                   <option key={index} value={dist}>
-                    {dist}
+                    {dist} ({matchingCounts[dist] || 0}/{distributionCounts[dist] || 0})
                   </option>
                 ))}
               </select>
