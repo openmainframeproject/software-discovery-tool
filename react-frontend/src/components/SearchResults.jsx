@@ -7,14 +7,84 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed }
   const [currentPage, setCurrentPage] = useState(0);
   const [paginatedResults, setPaginatedResults] = useState([]);
   const [refinePackageName, setRefinePackageName] = useState('');
+  const [selectedDistribution, setSelectedDistribution] = useState('All');
+  const [distributions, setDistributions] = useState([]);
+  const [distributionCounts, setDistributionCounts] = useState({});
+  const [matchingCounts, setMatchingCounts] = useState({});
 
-  const filterResults = () => {
-    if (!Array.isArray(results)) return [];
-    return results.filter((result) => {
+  useEffect(() => {
+    fetchDistributions();
+  }, []);
+
+  useEffect(() => {
+    calculatePackageCounts();
+    calculateMatchingCounts();
+    if (searchPerformed) {
+      setSelectedDistribution('All'); 
+    }
+  }, [results, refinePackageName, searchPerformed]);
+
+  const fetchDistributions = async () => {
+    try {
+      const response = await fetch('https://sdt.openmainframeproject.org/sdt/getSupportedDistros');
+      const data = await response.json();
+
+      const childDistributions = Object.keys(data).flatMap(parent => 
+        Object.keys(data[parent])
+      );
+
+      setDistributions(['All', ...childDistributions]);
+    } catch (error) {
+      console.error('Error fetching distributions:', error);
+    }
+  };
+
+  const calculatePackageCounts = () => {
+    const counts = results.reduce((acc, result) => {
+      const ostag = result.ostag || 'Unknown';
+      if (!acc[ostag]) acc[ostag] = 0;
+      acc[ostag]++;
+      return acc;
+    }, {});
+
+    counts['All'] = results.length;
+
+    setDistributionCounts(counts);
+  };
+
+  const calculateMatchingCounts = () => {
+    const filteredByName = results.filter((result) => {
       const nameMatch = result.packageName.toLowerCase().includes(refinePackageName.toLowerCase());
       const versionMatch = result.version.toLowerCase().includes(refinePackageName.toLowerCase());
       return nameMatch || versionMatch;
     });
+
+    const counts = filteredByName.reduce((acc, result) => {
+      const ostag = result.ostag || 'Unknown';
+      if (!acc[ostag]) acc[ostag] = 0;
+      acc[ostag]++;
+      return acc;
+    }, {});
+
+    counts['All'] = filteredByName.length;
+
+    setMatchingCounts(counts);
+  };
+
+  const filterResults = () => {
+    if (!Array.isArray(results)) return [];
+
+    const filteredByName = results.filter((result) => {
+      const nameMatch = result.packageName.toLowerCase().includes(refinePackageName.toLowerCase());
+      const versionMatch = result.version.toLowerCase().includes(refinePackageName.toLowerCase());
+      return nameMatch || versionMatch;
+    });
+
+    if (selectedDistribution === 'All') {
+      return filteredByName;
+    } else {
+      return filteredByName.filter(result => result.ostag === selectedDistribution);
+    }
   };
 
   useEffect(() => {
@@ -22,11 +92,7 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed }
     const start = currentPage * itemsPerPage;
     const end = start + itemsPerPage;
     setPaginatedResults(filteredResults.slice(start, end));
-  }, [currentPage, itemsPerPage, refinePackageName, results]);
-
-  useEffect(() => {
-    setCurrentPage(0);
-  }, [itemsPerPage, results]);
+  }, [currentPage, itemsPerPage, refinePackageName, results, selectedDistribution]);
 
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
@@ -37,6 +103,10 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed }
       top: 0,
       behavior: 'smooth',
     });
+  };
+
+  const handleDistributionChange = (e) => {
+    setSelectedDistribution(e.target.value);
   };
 
   const shouldShowPagination = filterResults().length > itemsPerPage;
@@ -54,6 +124,22 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed }
                 onChange={(e) => setRefinePackageName(e.target.value)}
                 placeholder="Enter package name or version"
               />
+            </label>
+          </div>
+          <div className="refine-filters">
+            <label>
+              Distribution:
+              <select
+                value={selectedDistribution}
+                onChange={handleDistributionChange}
+                style={{ marginLeft: '10px', borderRadius: '15px' }}
+              >
+                {distributions.map((dist, index) => (
+                  <option key={index} value={dist}>
+                    {dist} ({matchingCounts[dist] || 0}/{distributionCounts[dist] || 0})
+                  </option>
+                ))}
+              </select>
             </label>
           </div>
         </div>
