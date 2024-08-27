@@ -35,7 +35,6 @@ with open(os.path.join(ROOT_DIR, "requirements.txt")) as f:
 setup(name=NAME,
       version=version,
       description=DESCRIPTION,
-      long_description=long_description,
       long_description_content_type="text/markdown",
       author=AUTHOR,
       author_email=EMAIL,

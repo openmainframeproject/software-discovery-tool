@@ -118,14 +118,29 @@ Step 2 of
 
 #### Log in to MariaDB with the root account you set and create the read-only user (with a password, changed below) and database.
 
+        # Log in to MariaDB with the root account you set.
         mariadb -u root -p
-        MariaDB> GRANT SELECT ON sdtDB.* TO 'sdtreaduser'@localhost IDENTIFIED BY 'CHANGE_ME';
-        MariaDB> flush privileges;
-        MariaDB> quit
 
-#### Update src/classes/package_search.py with credentials set above
+        # Create the read-only user
+        MariaDB> CREATE USER 'sdtreaduser'@'localhost' IDENTIFIED BY 'SDTUSERPWD';  # Replace 'SDTUSERPWD' with the desired password. 
 
-The "CHANGE_ME" password above should have been changed, and this should be adjusted in your src/classes/package_search.py file.
+        # Grant permissions.
+        MariaDB> GRANT SELECT ON sdtDB.* TO 'sdtreaduser'@'localhost';
+
+        # Apply changes and exit.
+            MariaDB> flush privileges;
+            MariaDB> quit
+
+***NOTE:***
+- For enhanced security, it's recommended to grant the software-discovery-tool user (sdtreaduser) only read (SELECT) permissions on the required database. This adheres to the principle of least privilege and minimizes the impact if the user credentials are compromised.
+- When working with SDT, two separate users with distinct permission sets are used: Diagram
+        - [User for Read-only Database Access](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Installation.md#set-appropriate-folder-and-file-permission-on-optsoftware-discovery-tool-folder-for-apache) (Read-Only Permissions): This user is granted strictly read-only permissions over the entire project, including the database, for use when a user searches the database through the tool.
+        - [User for Build Database Step (All Privileges)](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Installation.md#run-the-script-to-populate-the-database-when-prompted-by-the-script-for-a-user-and-password-use-the-root-account-and-password-you-set-above): This user is granted all privileges over the database for the `database_build` step below, allowing them to create new tables and drop old ones. This user's credentials should never be stored in a `.env` file, and customers must remember the password or set up a local system to manage it securely.
+![Diagram](./static/diagram.svg)
+
+#### Create a .env file in the root of the project with credentials set above (see .env.example)
+
+See `.env.example` and create a `.env` file in `/opt/software-discovery-tool/`, replacing the value of `DB_PASSWORD` with your own.
 
 #### Run the script to populate the database, when prompted by the script for a user and password, use the root account and password you set above.
 
