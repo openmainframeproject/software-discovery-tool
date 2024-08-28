@@ -46,12 +46,11 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed, 
       acc[ostag]++;
       return acc;
     }, {});
-  
-    counts['All'] = totalResultsCount;
-  
+
+    counts['All'] = results.length;
+
     setDistributionCounts(counts);
   };
-  
 
   const calculateMatchingCounts = () => {
     const filteredByName = results.filter((result) => {
@@ -143,7 +142,6 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed, 
               </option>
             ))}
           </select>
-
             </label>
           </div>
         </div>

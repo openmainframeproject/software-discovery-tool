@@ -541,7 +541,7 @@ input:focus {
 @media (min-width: 640px) {
   .pagination-and-scroll-wrapper {
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: flex-end;
     align-items: center;
   }
 
@@ -574,6 +574,7 @@ input:focus {
   border-radius: 4px;
   cursor: pointer;
   height: 38px; 
+  margin-left: 5px;
 }
 
 .scroll-to-top:hover {
