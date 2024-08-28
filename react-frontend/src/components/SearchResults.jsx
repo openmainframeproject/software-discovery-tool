@@ -3,7 +3,7 @@ import ReactPaginate from 'react-paginate';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import '../App.css';
 
-function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed }) {
+function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed, totalResultsCount }) {
   const [currentPage, setCurrentPage] = useState(0);
   const [paginatedResults, setPaginatedResults] = useState([]);
   const [refinePackageName, setRefinePackageName] = useState('');
@@ -130,16 +130,18 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed }
             <label>
               Distribution:
               <select
-                value={selectedDistribution}
-                onChange={handleDistributionChange}
-                style={{ marginLeft: '10px', borderRadius: '15px' }}
+              value={selectedDistribution}
+              onChange={handleDistributionChange}
+              style={{ marginLeft: '10px', borderRadius: '15px' }}
               >
-                {distributions.map((dist, index) => (
-                  <option key={index} value={dist}>
-                    {dist} ({matchingCounts[dist] || 0}/{distributionCounts[dist] || 0})
-                  </option>
-                ))}
-              </select>
+              {distributions.map((dist, index) => (
+              <option key={index} value={dist}>
+                {dist === 'All' 
+                  ? `${dist} (${totalResultsCount}/${distributionCounts[dist] || 0})`
+                  : `${dist} (${matchingCounts[dist] || 0}/${distributionCounts[dist] || 0})`}
+              </option>
+            ))}
+          </select>
             </label>
           </div>
         </div>

@@ -13,13 +13,15 @@ function SearchBar({ onSearchPerformed }) {
   const [osList, setOsList] = useState({});
   const [selectedOS, setSelectedOS] = useState({});
   const [selectAll, setSelectAll] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [totalResultsCount, setTotalResultsCount] = useState(0);
+
 
   useEffect(() => {
     fetchOSList();
   }, []);
 
   useEffect(() => {
-    // Update selectedOS based on selectAll checkbox
     const updatedSelectedOS = Object.keys(osList).reduce((acc, os) => {
       acc[os] = selectAll;
       return acc;
@@ -42,25 +44,27 @@ function SearchBar({ onSearchPerformed }) {
 
   const generateSearchBitFlag = () => {
     let searchBitFlag = 0;
-
-    Object.keys(selectedOS).forEach((os, index) => {
-      if (selectedOS[os]) {
-        searchBitFlag |= (1 << index);
+    Object.entries(selectedOS).forEach(([os, selected], index) => {
+      if (selected) {
+        const osVersions = osList[os];
+        Object.values(osVersions).forEach(bitValue => {
+          searchBitFlag |= bitValue;
+        });
       }
     });
     return searchBitFlag;
   };
-
   const fetchData = (value, exact) => {
     const selectedOSList = Object.keys(selectedOS).filter(key => selectedOS[key]);
     const osFilters = selectedOSList.length ? `&os_filters=${selectedOSList.join(',')}` : '';
-
+  
     const searchBitFlag = generateSearchBitFlag();
-
+  
     const apiUrl = `https://sdt.openmainframeproject.org/sdt/searchPackages?search_term=${value}&exact_match=${exact}&search_bit_flag=${searchBitFlag}${osFilters}`;
     
-    console.log("Fetch URL:", apiUrl); 
-
+    console.log("Fetch URL:", apiUrl);
+    setLoading(true);
+  
     fetch(apiUrl)
       .then((response) => response.json())
       .then((data) => {
@@ -71,14 +75,18 @@ function SearchBar({ onSearchPerformed }) {
           ostag: pkg[3] || 'No OSTag information'
         }));
         setResults(transformedResults);
+        setTotalResultsCount(data.total_packages || transformedResults.length);
         setResultsCount(transformedResults.length);
         setSearchPerformed(true);
+        setLoading(false);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
         setSearchPerformed(true);
+        setLoading(false);
       });
   };
+  
 
   const handleChange = (value) => {
     setInput(value);
@@ -197,11 +205,11 @@ function SearchBar({ onSearchPerformed }) {
         Enter the name of the package or at least three characters to enable pattern search. Wildcard ('*') can be used either before or after the search keywords.
       </div>
 
-      <div className="results-count mt-4">
-      <div className="results-count text-center sm:text-left">
-        {searchPerformed ? (
-          resultsCount > 0 ? (
-            `${resultsCount} package${resultsCount !== 1 ? 's' : ''} found`
+     
+        <div className="results-count text-center sm:text-left">
+          {searchPerformed ? (
+          totalResultsCount > 0 ? (
+            `${totalResultsCount} package${totalResultsCount !== 1 ? 's' : ''} found`
           ) : (
             '0 packages found'
           )
@@ -209,29 +217,39 @@ function SearchBar({ onSearchPerformed }) {
           ''
         )}
       </div>
-      {resultsCount > 0 && (
-  <div className="records-per-page mt-2 flex justify-center sm:justify-start items-center">
-    <label className="text-sm">
-      Records per page:
-      <select
-        value={itemsPerPage}
-        onChange={handleItemsPerPageChange}
-        className="ml-2 p-1 border rounded text-sm"
-      >
-        {[5, 10, 20, 30, 40, 50]
-          .filter((count) => count <= resultsCount) // Filter options based on resultsCount
-          .map((count) => (
-            <option key={count} value={count}>
-              {count}
-            </option>
-          ))}
-      </select>
-    </label>
-  </div>
-)}
-
-      </div>
-      <SearchResults results={results} showDesc={searchDescription} itemsPerPage={itemsPerPage} searchPerformed={searchPerformed} />
+        {resultsCount > 0 && (
+          <div className="records-per-page mt-2 flex justify-center sm:justify-start items-center">
+            <label className="text-sm">
+              Records per page:
+              <select
+                value={itemsPerPage}
+                onChange={handleItemsPerPageChange}
+                className="ml-2 p-1 border rounded text-sm"
+              >
+                {[5, 10, 20, 30, 40, 50]
+                  .filter((count) => count <= resultsCount)
+                  .map((count) => (
+                    <option key={count} value={count}>
+                      {count}
+                    </option>
+                  ))}
+              </select>
+            </label>
+          </div>
+        )}
+      
+      {loading ? (
+        <div className="text-center mt-4">Loading...</div>
+      ) : (
+        <SearchResults 
+        results={results} 
+        showDesc={searchDescription} 
+        itemsPerPage={itemsPerPage} 
+        searchPerformed={searchPerformed} 
+        totalResultsCount={totalResultsCount} 
+      />
+      
+      )}
     </div>
   );
 }
