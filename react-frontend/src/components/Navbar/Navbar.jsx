@@ -14,7 +14,7 @@ function NavBar() {
   return (
     <div className="navbar-wrapper m-2">
       <div className="sdt-logo sdt">
-        <img className="image-12" src={sdtLogo} alt="Software Discovery Tool Logo" />
+        <Link to="/"><img className="image-12" src={sdtLogo} alt="Software Discovery Tool Logo" /></Link>
       </div>
       <div className="navbar">
         <div className="menu-icon" onClick={toggleMenu}>
