@@ -15,7 +15,8 @@ function SearchBar({ onSearchPerformed }) {
   const [selectAll, setSelectAll] = useState(false);
   const [loading, setLoading] = useState(false);
   const [totalResultsCount, setTotalResultsCount] = useState(0);
-
+  const [selectedParentDistributions, setSelectedParentDistributions] = useState([]);
+  const [noDistributionMessage, setNoDistributionMessage] = useState(false);
 
   useEffect(() => {
     fetchOSList();
@@ -33,6 +34,12 @@ function SearchBar({ onSearchPerformed }) {
     onSearchPerformed(searchPerformed);
   }, [searchPerformed, onSearchPerformed]);
 
+  useEffect(() => {
+    if (searchPerformed) {
+      setNoDistributionMessage(isNoDistributionSelected());
+    }
+  }, [selectedOS, searchPerformed]);
+
   const fetchOSList = () => {
     fetch("https://sdt.openmainframeproject.org/sdt/getSupportedDistros")
       .then((response) => response.json())
@@ -44,7 +51,7 @@ function SearchBar({ onSearchPerformed }) {
 
   const generateSearchBitFlag = () => {
     let searchBitFlag = 0;
-    Object.entries(selectedOS).forEach(([os, selected], index) => {
+    Object.entries(selectedOS).forEach(([os, selected]) => {
       if (selected) {
         const osVersions = osList[os];
         Object.values(osVersions).forEach(bitValue => {
@@ -54,17 +61,18 @@ function SearchBar({ onSearchPerformed }) {
     });
     return searchBitFlag;
   };
+
   const fetchData = (value, exact) => {
     const selectedOSList = Object.keys(selectedOS).filter(key => selectedOS[key]);
     const osFilters = selectedOSList.length ? `&os_filters=${selectedOSList.join(',')}` : '';
-  
+
     const searchBitFlag = generateSearchBitFlag();
-  
+
     const apiUrl = `https://sdt.openmainframeproject.org/sdt/searchPackages?search_term=${value}&exact_match=${exact}&search_bit_flag=${searchBitFlag}${osFilters}`;
     
     console.log("Fetch URL:", apiUrl);
     setLoading(true);
-  
+
     fetch(apiUrl)
       .then((response) => response.json())
       .then((data) => {
@@ -86,7 +94,6 @@ function SearchBar({ onSearchPerformed }) {
         setLoading(false);
       });
   };
-  
 
   const handleChange = (value) => {
     setInput(value);
@@ -121,11 +128,24 @@ function SearchBar({ onSearchPerformed }) {
   };
 
   const handleOSCheckboxChange = (os) => {
-    setSelectedOS(prev => ({ ...prev, [os]: !prev[os] }));
+    setSelectedOS(prev => {
+      const updated = { ...prev, [os]: !prev[os] };
+      const selectedParents = Object.keys(updated).filter(key => updated[key]);
+      setSelectedParentDistributions(selectedParents);
+      return updated;
+    });
   };
 
   const handleSelectAllChange = () => {
-    setSelectAll(prev => !prev);
+    setSelectAll(prev => {
+      const newSelectAll = !prev;
+      setSelectedParentDistributions(newSelectAll ? Object.keys(osList) : []);
+      return newSelectAll;
+    });
+  };
+
+  const isNoDistributionSelected = () => {
+    return !Object.values(selectedOS).some(selected => selected);
   };
 
   return (
@@ -189,6 +209,12 @@ function SearchBar({ onSearchPerformed }) {
         ))}
       </div>
 
+      {searchPerformed && noDistributionMessage && (
+        <div className="text-center text-red-500 mt-2">
+          No distribution selected
+        </div>
+      )}
+
       <div className="flex justify-center mt-2">
         <label className="flex items-center">
           <input
@@ -205,9 +231,8 @@ function SearchBar({ onSearchPerformed }) {
         Enter the name of the package or at least three characters to enable pattern search. Wildcard ('*') can be used either before or after the search keywords.
       </div>
 
-     
-        <div className="results-count text-center sm:text-left">
-          {searchPerformed ? (
+      <div className="results-count text-center sm:text-left">
+        {searchPerformed ? (
           totalResultsCount > 0 ? (
             `${totalResultsCount} package${totalResultsCount !== 1 ? 's' : ''} found`
           ) : (
@@ -217,38 +242,40 @@ function SearchBar({ onSearchPerformed }) {
           ''
         )}
       </div>
-        {resultsCount > 0 && (
-          <div className="records-per-page mt-2 flex justify-center sm:justify-start items-center">
-            <label className="text-sm">
-              Records per page:
-              <select
-                value={itemsPerPage}
-                onChange={handleItemsPerPageChange}
-                className="ml-2 p-1 border rounded text-sm"
-              >
-                {[5, 10, 20, 30, 40, 50]
-                  .filter((count) => count <= resultsCount)
-                  .map((count) => (
-                    <option key={count} value={count}>
-                      {count}
-                    </option>
-                  ))}
-              </select>
-            </label>
-          </div>
-        )}
-      
+
+      {resultsCount >= 5 && (
+        <div className="records-per-page mt-2 flex justify-center sm:justify-start items-center">
+          <label className="text-sm">
+            Records per page:
+            <select
+              value={itemsPerPage}
+              onChange={handleItemsPerPageChange}
+              className="ml-2 p-1 border rounded text-sm"
+            >
+              {[5, 10, 20, 30, 40, 50]
+                .filter((count) => count <= resultsCount)
+                .map((count) => (
+                  <option key={count} value={count}>
+                    {count}
+                  </option>
+                ))}
+            </select>
+          </label>
+        </div>
+      )}
+
       {loading ? (
         <div className="text-center mt-4">Loading...</div>
       ) : (
         <SearchResults 
-        results={results} 
-        showDesc={searchDescription} 
-        itemsPerPage={itemsPerPage} 
-        searchPerformed={searchPerformed} 
-        totalResultsCount={totalResultsCount} 
-      />
-      
+          results={results} 
+          showDesc={searchDescription} 
+          itemsPerPage={itemsPerPage} 
+          searchPerformed={searchPerformed} 
+          totalResultsCount={totalResultsCount}
+          selectedParentDistributions={selectedParentDistributions}
+          osList={osList}
+        />
       )}
     </div>
   );
