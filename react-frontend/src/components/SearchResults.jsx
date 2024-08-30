@@ -3,72 +3,30 @@ import ReactPaginate from 'react-paginate';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import '../App.css';
 
-function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed, totalResultsCount }) {
+function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed, totalResultsCount, selectedParentDistributions, osList }) {
   const [currentPage, setCurrentPage] = useState(0);
   const [paginatedResults, setPaginatedResults] = useState([]);
   const [refinePackageName, setRefinePackageName] = useState('');
   const [selectedDistribution, setSelectedDistribution] = useState('All');
-  const [distributions, setDistributions] = useState([]);
-  const [distributionCounts, setDistributionCounts] = useState({});
-  const [matchingCounts, setMatchingCounts] = useState({});
+  const [availableDistributions, setAvailableDistributions] = useState(['All']);
 
   useEffect(() => {
-    fetchDistributions();
-  }, []);
+    updateAvailableDistributions();
+  }, [selectedParentDistributions, osList]);
 
   useEffect(() => {
-    calculatePackageCounts();
-    calculateMatchingCounts();
-    if (searchPerformed) {
-      setSelectedDistribution('All'); 
+    updatePaginatedResults();
+  }, [currentPage, itemsPerPage, refinePackageName, results, selectedDistribution]);
+
+  const updateAvailableDistributions = () => {
+    const childDistributions = selectedParentDistributions.flatMap(parent => 
+      Object.keys(osList[parent] || {})
+    );
+    setAvailableDistributions(['All', ...new Set(childDistributions)]);
+    
+    if (!childDistributions.includes(selectedDistribution) && selectedDistribution !== 'All') {
+      setSelectedDistribution('All');
     }
-  }, [results, refinePackageName, searchPerformed]);
-
-  const fetchDistributions = async () => {
-    try {
-      const response = await fetch('https://sdt.openmainframeproject.org/sdt/getSupportedDistros');
-      const data = await response.json();
-
-      const childDistributions = Object.keys(data).flatMap(parent => 
-        Object.keys(data[parent])
-      );
-
-      setDistributions(['All', ...childDistributions]);
-    } catch (error) {
-      console.error('Error fetching distributions:', error);
-    }
-  };
-
-  const calculatePackageCounts = () => {
-    const counts = results.reduce((acc, result) => {
-      const ostag = result.ostag || 'Unknown';
-      if (!acc[ostag]) acc[ostag] = 0;
-      acc[ostag]++;
-      return acc;
-    }, {});
-
-    counts['All'] = results.length;
-
-    setDistributionCounts(counts);
-  };
-
-  const calculateMatchingCounts = () => {
-    const filteredByName = results.filter((result) => {
-      const nameMatch = result.packageName.toLowerCase().includes(refinePackageName.toLowerCase());
-      const versionMatch = result.version.toLowerCase().includes(refinePackageName.toLowerCase());
-      return nameMatch || versionMatch;
-    });
-
-    const counts = filteredByName.reduce((acc, result) => {
-      const ostag = result.ostag || 'Unknown';
-      if (!acc[ostag]) acc[ostag] = 0;
-      acc[ostag]++;
-      return acc;
-    }, {});
-
-    counts['All'] = filteredByName.length;
-
-    setMatchingCounts(counts);
   };
 
   const filterResults = () => {
@@ -83,16 +41,19 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed, 
     if (selectedDistribution === 'All') {
       return filteredByName;
     } else {
-      return filteredByName.filter(result => result.ostag === selectedDistribution);
+      return filteredByName.filter(result => {
+        const resultDistributions = result.ostag.split(',').map(tag => tag.trim());
+        return resultDistributions.includes(selectedDistribution);
+      });
     }
   };
 
-  useEffect(() => {
+  const updatePaginatedResults = () => {
     const filteredResults = filterResults();
     const start = currentPage * itemsPerPage;
     const end = start + itemsPerPage;
     setPaginatedResults(filteredResults.slice(start, end));
-  }, [currentPage, itemsPerPage, refinePackageName, results, selectedDistribution]);
+  };
 
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
@@ -107,6 +68,7 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed, 
 
   const handleDistributionChange = (e) => {
     setSelectedDistribution(e.target.value);
+    setCurrentPage(0); // Reset to first page when changing distribution
   };
 
   const shouldShowPagination = filterResults().length > itemsPerPage;
@@ -130,18 +92,16 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed, 
             <label>
               Distribution:
               <select
-              value={selectedDistribution}
-              onChange={handleDistributionChange}
-              style={{ marginLeft: '10px', borderRadius: '15px' }}
+                value={selectedDistribution}
+                onChange={handleDistributionChange}
+                style={{ marginLeft: '10px', borderRadius: '15px' }}
               >
-              {distributions.map((dist, index) => (
-              <option key={index} value={dist}>
-                {dist === 'All' 
-                  ? `${dist} (${totalResultsCount}/${distributionCounts[dist] || 0})`
-                  : `${dist} (${matchingCounts[dist] || 0}/${distributionCounts[dist] || 0})`}
-              </option>
-            ))}
-          </select>
+                {availableDistributions.map((dist, index) => (
+                  <option key={index} value={dist}>
+                    {dist}
+                  </option>
+                ))}
+              </select>
             </label>
           </div>
         </div>
