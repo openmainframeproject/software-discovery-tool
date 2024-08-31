@@ -225,6 +225,31 @@ In case any of the parameters are updated, the server has to be restarted:
 
     npm i
 
+#### Setting up the Environment Variables
+
+To configure the Flask server URL for your React application, follow these steps:
+
+1. **Locate the `.env.example` file:**
+
+    Inside the root directory of the project, you will find a file named `.env.example`. This file contains example environment variables required to run the application.
+
+    ```plaintext
+    REACT_APP_API_URL='http://localhost:80/sdt'
+    ```
+
+2. **Create a `.env` file:**
+
+    - Copy the `.env.example` file and rename it to `.env`.
+    - Open the newly created `.env` file and ensure it contains the following line:<br><br>
+
+    ```plaintext
+    REACT_APP_API_URL='http://localhost:80/sdt'
+    ```
+
+3. **Use the Environment Variable:**
+
+    The `REACT_APP_API_URL` variable is now set and will be used by your React application to communicate with the Flask server running at the specified URL.
+
 #### Start the react frontend application
 
     npm run start
