@@ -17,8 +17,8 @@ def purify(dirty):
 
 def debian():
 	global DATA, DATA_FILE_LOCATION
-	q = ['Debian_Buster_List.json', 'Debian_Bullseye_List.json', 'Debian_Bookworm_List.json']
-	urls = ['http://ftp.debian.org/debian/dists/buster/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/bullseye/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/bookworm/main/binary-s390x/Packages.gz']
+	q = ['Debian_Bullseye_List.json', 'Debian_Bookworm_List.json']
+	urls = ['http://ftp.debian.org/debian/dists/bullseye/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/bookworm/main/binary-s390x/Packages.gz']
 	file_name = [f'{DATA_FILE_LOCATION}/{x}' for x in q]
 	for i in range(len(q)):
 		try:
@@ -50,10 +50,9 @@ def debian():
 
 def opensuse():
 	source_data = [[f"https://download.opensuse.org/ports/zsystems/tumbleweed/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']], 
-		[f"https://download.opensuse.org/distribution/leap/15.3/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']], 
-		[f"https://download.opensuse.org/distribution/leap/15.4/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']],
-		[f"https://download.opensuse.org/distribution/leap/15.5/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']]]
-	q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_3.json', 'OpenSUSE_Leap_15_4.json', 'OpenSUSE_Leap_15_5.json']
+		[f"https://download.opensuse.org/distribution/leap/15.5/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']],
+		[f"https://download.opensuse.org/distribution/leap/15.6/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']]]
+	q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_5.json', 'OpenSUSE_Leap_15_6.json']
 	regex_pattern = r"-(.*?)-"
 	for i in range(len(source_data)):
 		opensuse_list= []
@@ -115,7 +114,7 @@ def clefos():
 
 def fedora():
 	global DATA,DATA_FILE_LOCATION
-	sources = [34, 35, 36, 37, 38]
+	sources = [38, 39, 40]
 	pkg_reg = r'<a href="(.*)\.rpm"'
 	dirs = '0123456789abcdefghijklmnopqrstuvwxyz'
 	for i in range(len(sources)):
@@ -263,7 +262,7 @@ def getIBMValidatedSoftwareList(data,oskey):
 	return swlist
 
 def getIBMValidatedOpenSourceList(oskey):
-	src_url =  "https://www.ibm.com/community/z/open-source-software/output/json/"
+	src_url =  "https://community.ibm.com/zsystems/api/oss/json"
 	try:
 		req = requests.get(src_url)
 		data = req.content

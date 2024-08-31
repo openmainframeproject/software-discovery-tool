@@ -1,0 +1,25 @@
+name: Sync Submodules
+on: workflow_dispatch
+jobs:
+
+  repo_sync:
+    name: Sync with Main repo
+    runs-on: ubuntu-latest
+    steps:
+    - name: ssh and git module update
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        script: |
+          cd ~/software-discovery-tool
+          git checkout master && git pull origin master
+          git checkout -b "$(date +%b%d)"
+          cd ~/software-discovery-tool/distro_data
+          git checkout main
+          git pull origin main
+          cd ~/software-discovery-tool
+          git remote remove git_update
+          git remote add git_update https://${{ secrets.SDT_USER_PUSH }}:${{ secrets.SDT_PAT_PUSH }}@github.com/openmainframeproject/software-discovery-tool.git
+          git commit -sam "Auto updated submodule references" && git push git_update "$(date +%b%d)" || echo "No changes to commit"

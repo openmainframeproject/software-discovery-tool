@@ -1,6 +1,6 @@
 # Steps for setting up software-discovery-tool application on server
 
-The instructions provided below specify the steps for SLES 11 SP4/12/12 SP1/12 SP2 and Ubuntu 18.04/20.04/22.04:
+The instructions provided below specify the steps for SLES 11 SP4/12/12 SP1/12 SP2 and Ubuntu 18.04/20.04/22.04. If you are using a different OS, install the listed dependencies using your OS's package manager. For the most reliable setup, consider using a virtual machine (VM) to create a sandboxed environment. This can minimize compatibility issues and avoids the need to create additional users on your primary system.
 
 _**NOTE:**_
 * make sure you are logged in as user with sudo permissions
@@ -17,7 +17,7 @@ _**NOTE:**_
 
         sudo apt-get update
         sudo apt-get install -y python3 python3-pip gcc git python3-dev libssl-dev libffi-dev cron python3-lxml apache2 libapache2-mod-wsgi-py3
-        sudo pip3 install cffi cryptography Flask launchpadlib simplejson requests pytest
+        sudo pip3 install cffi cryptography Flask launchpadlib simplejson requests pytest python-dotenv
 
 * For SLES (12 SP1, 12 SP2, 12 SP3):
 
@@ -35,6 +35,10 @@ _**NOTE:**_
         cd /opt/
         sudo git clone https://github.com/openmainframeproject/software-discovery-tool.git
         cd software-discovery-tool
+
+#### Copy the `supported_distros.py.example` file to `supported_distros.py`:
+
+     sudo cp src/config/supported_distros.py.example src/config/supported_distros.py
 
 Note: In case software-discovery-tool code is already checked out, do the following for latest updates
 
@@ -97,11 +101,7 @@ Note: In case software-discovery-tool code is already checked out, do the follow
  openmainframeproject/software-discovery-tool-data contains all OMP created json files. To add the data files, we will use `git submodule`
 - map the submodule directory with the directory path and update the directory:
 ```
-git submodule update --init --recursive --remote
-```
-- since we cloned a new repo as root just now, give the permissions to `apache` user like we did before:
-```
-sudo chown -R apache:apache /opt/software-discovery-tool/distro_data
+sudo -u apache git submodule update --init --recursive --remote
 ```
 
 #### Updating Data Directory
@@ -115,7 +115,10 @@ sudo -u apache git pull <upstream remote> <default branch> --recurse-submodules
 sudo -u apache git submodule update --recursive --remote
 ```
 
-#### Using data from PDS
+#### Bringing in additional data: PDS
+
+The data directory we cloned above only brings in sources maintained by this project. Notably it does not include SUSE Linux Enterprise Server, Red Hat Enterprise Linux, or Ubuntu. Instead, these sources are maintained by the Package Distro Search tool (abbreviated as PDS). In order to bring in those data sources, you will need to do that directly, as follows.
+
 For example, taking RHEL_8_Package_List.json
 - Usage help will be displayed:
 ```
@@ -133,7 +136,7 @@ Example:
 ```
 Example of extracting the RHEL_8_Package_List.json from PDS repo:
 ```
-./package_build.py RHEL_8_Package_List.json
+sudo -u apache ./bin/package_build.py RHEL_8_Package_List.json
 Extracting RHEL_8_Package_List.json from PDS data ...
 Thanks for using SDT!
 ```
@@ -144,9 +147,9 @@ Thanks for using SDT!
 	```
 	sudo -u apache ./bin/package_build.py RHEL_8_Package_List.json
 	```
-Now to know how to update the `src/config/supported_distros.py` to reflect the new json files in the UI, follow steps mentioned in
-Step 2 of
-[Adding_new_distros](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Adding_new_distros.md#step-2-update-the-supported_distros-variable-in-configuration-file-sdt_basesrcconfigconfigpy)
+#### Update Supported Distros list
+
+The `src/config/supported_distros.py` must now be updated to reflect the new json files that have been brought in order for them to be reflected in the UI. We started with a sample file back in Step 2, so that's a good starting place. For more details about the formatting and expectations of this file, follow steps mentioned in Step 2 of [Adding_new_distros](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Adding_new_distros.md#step-2-update-the-supported_distros-variable-in-configuration-file-sdt_basesrcconfigconfigpy)
 
 ### Step 6: Install and populate the SQL database
 * For Ubuntu (18.04, 20.04, 22.04):
@@ -158,14 +161,28 @@ Step 2 of
 
 #### Log in to MariaDB with the root account you set and create the read-only user (with a password, changed below) and database.
 
-        mariadb -u root -p
-        MariaDB> GRANT SELECT ON sdtDB.* TO 'sdtreaduser'@localhost IDENTIFIED BY 'CHANGE_ME';
+	# Log in to MariaDB with the root account you set.
+	mariadb -u root -p
+
+	# Create the read-only user
+	MariaDB> CREATE USER 'sdtreaduser'@'localhost' IDENTIFIED BY 'SDTUSERPWD';  # Replace 'SDTUSERPWD' with the desired password. 
+
+ 	# Grant permissions.
+	MariaDB> GRANT SELECT ON sdtDB.* TO 'sdtreaduser'@'localhost';
+ 
+ 	# Apply changes and exit.
         MariaDB> flush privileges;
         MariaDB> quit
+_**NOTE:**_
+* For enhanced security, it's recommended to grant the software-discovery-tool user (sdtreaduser) only read (SELECT) permissions on the required database. This adheres to the principle of least privilege and minimizes the impact if the user credentials are compromised.
+* When working with SDT, two separate users with distinct permission sets are used:
+![Diagram](../src/static/images/diagram.svg)
+	* [User for Read-only Database Access](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Installation.md#set-appropriate-folder-and-file-permission-on-optsoftware-discovery-tool-folder-for-apache) (Read-Only Permissions): This user is granted strictly read-only permissions over the entire project, including the database, for use when a user searches the database through the tool.
+   	* [User for Build Database Step](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Installation.md#run-the-script-to-populate-the-database-when-prompted-by-the-script-for-a-user-and-password-use-the-root-account-and-password-you-set-above) (All Privileges): This user is granted all privileges over the database for the 	`database_build` step below, allowing them to create new tables and drop old ones. This user's credentials should never be stored in a `.env` file, and customers must remember the password or set up a local system to manage it securely.
 
-#### Update src/classes/package_search.py with credentials set above
+#### Create a .env file in the root of the project with credentials set above (see .env.example)
 
-The "CHANGE_ME" password above should have been changed, and this should be adjusted in your src/classes/package_search.py file.
+See `.env.example` and create a `.env` file in `/opt/software-discovery-tool/`, replacing the value of `DB_PASSWORD` with your own.
 
 #### Run the script to populate the database, when prompted by the script for a user and password, use the root account and password you set above.
 
