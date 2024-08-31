@@ -41,7 +41,8 @@ function SearchBar({ onSearchPerformed }) {
   }, [selectedOS, searchPerformed]);
 
   const fetchOSList = () => {
-    fetch("https://sdt.openmainframeproject.org/sdt/getSupportedDistros")
+    console.log(`${process.env.REACT_APP_API_URL}/getSupportedDistros`)
+    fetch(`${process.env.REACT_APP_API_URL}/getSupportedDistros`)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -68,7 +69,7 @@ function SearchBar({ onSearchPerformed }) {
 
     const searchBitFlag = generateSearchBitFlag();
 
-    const apiUrl = `https://sdt.openmainframeproject.org/sdt/searchPackages?search_term=${value}&exact_match=${exact}&search_bit_flag=${searchBitFlag}${osFilters}`;
+    const apiUrl = `${process.env.REACT_APP_API_URL}/searchPackages?search_term=${value}&exact_match=${exact}&search_bit_flag=${searchBitFlag}${osFilters}`;
     
     console.log("Fetch URL:", apiUrl);
     setLoading(true);
