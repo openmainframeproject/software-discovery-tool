@@ -31,6 +31,7 @@ def db_init():
     password = PASSWORD
     table_name = ""
 
+    username = input("Enter privileged username to create/update SQL tables")
     if password == "":
         password = input("Enter password for connecting to MariaDB server : ")
     dbName = DB_NAME
