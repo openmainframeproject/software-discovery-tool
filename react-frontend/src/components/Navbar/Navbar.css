@@ -1,0 +1,82 @@
+.navbar-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  border-radius: 20px;
+  background-color: white;
+  position: relative;
+}
+
+.sdt-logo {
+  display: flex;
+  align-items: center;
+}
+
+.menu-icon {
+  display: none;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 1rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.navbar-links a {
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .navbar-wrapper {
+    padding: 0 1rem;
+    height: 50px; /* Reduced navbar height */
+  }
+
+  .sdt-logo img {
+    height: 40px; /* Reduced logo size */
+    width: auto;
+  }
+
+  .menu-icon {
+    display: block;
+  }
+
+  .navbar-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 50px; /* Adjusted based on reduced navbar height */
+    left: 0;
+    right: 0;
+    background-color: white;
+    border-top: 1px solid #ccc;
+    z-index: 1000;
+    width: 100%;
+  }
+
+  .navbar-links.active {
+    display: flex;
+  }
+
+  .navbar-link {
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .navbar-link:last-child {
+    border-bottom: none;
+  }
+
+  .menu-icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+.navbar-fixed-top {
+  border: 0;
+}
