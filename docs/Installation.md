@@ -58,11 +58,7 @@ Note: In case software-discovery-tool code is already checked out, do the follow
  openmainframeproject/software-discovery-tool-data contains all OMP created json files. To add the data files, we will use `git submodule`
 - map the submodule directory with the directory path and update the directory:
 ```
-git submodule update --init --recursive --remote
-```
-- since we cloned a new repo as root just now, give the permissions to `apache` user like we did before:
-```
-sudo chown -R apache:apache /opt/software-discovery-tool/distro_data
+sudo -u apache git submodule update --init --recursive --remote
 ```
 
 #### Updating Data Directory
@@ -76,7 +72,10 @@ sudo -u apache git pull <upstream remote> <default branch> --recurse-submodules
 sudo -u apache git submodule update --recursive --remote
 ```
 
-#### Using data from PDS
+#### Bringing in additional data: PDS
+
+The data directory we cloned above only brings in sources maintained by this project. Notably it does not include SUSE Linux Enterprise Server, Red Hat Enterprise Linux, or Ubuntu. Instead, these sources are maintained by the Package Distro Search tool (abbreviated as PDS). In order to bring in those data sources, you will need to do that directly, as follows.
+
 For example, taking RHEL_8_Package_List.json
 - Usage help will be displayed:
 ```
@@ -94,7 +93,7 @@ Example:
 ```
 Example of extracting the RHEL_8_Package_List.json from PDS repo:
 ```
-./package_build.py RHEL_8_Package_List.json
+sudo -u apache ./bin/package_build.py RHEL_8_Package_List.json
 Extracting RHEL_8_Package_List.json from PDS data ...
 Thanks for using SDT!
 ```
@@ -105,9 +104,11 @@ Thanks for using SDT!
 	```
 	sudo -u apache ./bin/package_build.py RHEL_8_Package_List.json
 	```
-Now to know how to update the `src/config/supported_distros.py` to reflect the new json files in the UI, follow steps mentioned in
-Step 2 of
-[Adding_new_distros](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Adding_new_distros.md#step-2-update-the-supported_distros-variable-in-configuration-file-sdt_basesrcconfigconfigpy)
+
+#### Update Supported Distros list
+
+The `src/config/supported_distros.py` must now be updated to reflect the new json files that have been brought in order for them to be reflected in the UI. We started with a sample file back in Step 2, so that's a good starting place. For more details about the formatting and expectations of this file, follow steps mentioned in Step 2 of [Adding_new_distros](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Adding_new_distros.md#step-2-update-the-supported_distros-variable-in-configuration-file-sdt_basesrcconfigconfigpy)
+
 
 ### Step 6: Install and populate the SQL database
 
@@ -215,15 +216,16 @@ In case any of the parameters are updated, the server has to be restarted:
 
 #### Ensure Node.js and npm are installed
 
-    # Make sure you have Node.js and npm installed. You can download them from [here](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+	sudo apt install npm
+ 
 
 #### Change to the react-frontend directory
 
-    cd react-frontend
+	cd react-frontend
 
 #### Install the required npm packages
 
-    npm i
+	sudo npm i
 
 #### Setting up the Environment Variables
 
@@ -252,4 +254,4 @@ To configure the Flask server URL for your React application, follow these steps
 
 #### Start the react frontend application
 
-    npm run start
+	sudo npm run start
