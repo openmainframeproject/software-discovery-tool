@@ -255,7 +255,7 @@ class PackageSearch:
             for distroVersion in sorted(SUPPORTED_DISTROS[distroName].keys()):
                 B = self.INSTANCE.DISTRO_BIT_MAP[distroName][distroVersion]
                 if B & search_bit>0:
-                    ans.append(SUPPORTED_DISTROS[distroName][distroVersion]) 
+                    ans.append(SUPPORTED_DISTROS[distroName][distroVersion][:-5]) # remove .json from table name 
         return ans
 
     def searchSQLPackages(self,term,exact_match,bit_flag,page_number):
