@@ -8,67 +8,77 @@ _**NOTE:**_
 * make sure you are logged in as user with sudo permissions
 
 ### Step 1: Install prerequisite
-
-        sudo apt-get update
-        sudo apt-get install -y python3 python3-pip gcc git python3-dev libssl-dev libffi-dev cron python3-lxml apache2 libapache2-mod-wsgi-py3
-        sudo pip3 install cffi cryptography Flask launchpadlib simplejson requests pytest
+```bash
+sudo apt-get update
+sudo apt-get install -y python3 python3-pip gcc git python3-dev libssl-dev libffi-dev cron python3-lxml apache2 libapache2-mod-wsgi-py3
+sudo pip3 install cffi cryptography Flask launchpadlib simplejson requests pytest
+```
 
 * if "/usr/local/bin" is not part of $PATH add it to the path:
-
-        echo $PATH
-        export PATH=/usr/local/bin:$PATH
-        sudo sh -c "echo 'export PATH=/usr/local/bin:$PATH' > /etc/profile.d/alternate_install_path.sh"
+  ```bash
+  echo $PATH
+  export PATH=/usr/local/bin:$PATH
+  sudo sh -c "echo 'export PATH=/usr/local/bin:$PATH' > /etc/profile.d/alternate_install_path.sh"
+  ```
 
 ###  Step 2: Checkout the source code, into /opt/ folder
-
-        cd /opt/
-        sudo git clone https://github.com/openmainframeproject/software-discovery-tool.git
-        cd software-discovery-tool
-
+```bash
+cd /opt/
+sudo git clone https://github.com/openmainframeproject/software-discovery-tool.git
+cd software-discovery-tool
+```
+        
 Note: In case software-discovery-tool code is already checked out, do the following for latest updates
-
-        cd /opt/software-discovery-tool
-        sudo git pull origin master
+```bash
+cd /opt/software-discovery-tool
+sudo git pull origin master
+```
 
 ###  Step 3: Set Environment variables
-
-        sudo sh -c "echo 'export PYTHONPATH=/opt/software-discovery-tool/src/classes:/opt/software-discovery-tool/src/config:$PYTHONPATH' > /etc/profile.d/software-discovery-tool.sh"
-
+```bash
+sudo sh -c "echo 'export PYTHONPATH=/opt/software-discovery-tool/src/classes:/opt/software-discovery-tool/src/config:$PYTHONPATH' > /etc/profile.d/software-discovery-tool.sh"
+```
+        
 ### Step 4: Install and configure software-discovery-tool
 
 #### Copy the apache configuration file from `/opt/software-discovery-tool/src/config/sdt.conf` into respective apache configuration folder as below
-
-        sudo cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/sites-available/sdt.conf
-        sudo mv /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/z-000-default.conf
+```bash
+sudo cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/sites-available/sdt.conf
+sudo mv /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/z-000-default.conf
+```
+        
 
 #### Create new user and group for apache
-
-        sudo useradd apache
-        sudo groupadd apache
-
+```bash
+sudo useradd apache
+sudo groupadd apache
+```
+        
 #### Set appropriate folder and file permission on /opt/software-discovery-tool/ folder for apache
-
-        sudo chown -R apache:apache /opt/software-discovery-tool/
+```bash
+sudo chown -R apache:apache /opt/software-discovery-tool/
+```
 
 #### Start/Restart Apache service
-
-        sudo apachectl restart
+```bash
+sudo apachectl restart
+```
 
 ### Step 5: Cloning Data Directory (Only First Time)
  openmainframeproject/software-discovery-tool-data contains all OMP created json files. To add the data files, we will use `git submodule`
 - map the submodule directory with the directory path and update the directory:
-```
+```bash
 sudo -u apache git submodule update --init --recursive --remote
 ```
 
 #### Updating Data Directory
 Everytime there's an upstream change in the submodule:
 - To update the data directory with the main repo with the remote changes:
-```
+```bash
 sudo -u apache git pull <upstream remote> <default branch> --recurse-submodules
 ```
 - To update ONLY the data directory keeping the main repo as it is:
-```
+```bash
 sudo -u apache git submodule update --recursive --remote
 ```
 
@@ -78,7 +88,7 @@ The data directory we cloned above only brings in sources maintained by this pro
 
 For example, taking RHEL_8_Package_List.json
 - Usage help will be displayed:
-```
+```bash
 cd /opt/software-discovery-tool/bin
 ./package_build.py
 Usage:
@@ -92,7 +102,7 @@ Example:
 ./package_build.py RHEL_8_Package_List.json
 ```
 Example of extracting the RHEL_8_Package_List.json from PDS repo:
-```
+```bash
 sudo -u apache ./bin/package_build.py RHEL_8_Package_List.json
 Extracting RHEL_8_Package_List.json from PDS data ...
 Thanks for using SDT!
@@ -101,7 +111,7 @@ Thanks for using SDT!
 - Make sure the json file exists in the PDS data directory.
 - Please keep in mind that the directory belongs to user `apache`, so in case of permission error,
 	run the chown cmd or directly use `package_build.py` as `apache` user like:
-	```
+	```bash
 	sudo -u apache ./bin/package_build.py RHEL_8_Package_List.json
 	```
 
@@ -113,24 +123,37 @@ The `src/config/supported_distros.py` must now be updated to reflect the new jso
 ### Step 6: Install and populate the SQL database
 
 #### Install dependencies and complete the secure installation. Remember the root password you set, you will need this in the future.
+```bash
+sudo apt install mariadb-server python3-pymysql
+sudo mysql_secure_installation
+```
 
-        sudo apt install mariadb-server python3-pymysql
-        sudo mysql_secure_installation
+***NOTE:***
+- If you encounter the following error when running `sudo mysql_secure_installation`:
+  ```bash
+  Enter current password for root (enter for none): 
+  ERROR 2002 (HY000): Can't connect to local server through socket '/run/mysqld/mysqld.sock' (2)
+  ```
+  It means the MariaDB service is not running. Start it with:
+  ```bash
+  sudo service mariadb start
+  ```
 
 #### Log in to MariaDB with the root account you set and create the read-only user (with a password, changed below) and database.
+```bash
+# Log in to MariaDB with the root account you set.
+mariadb -u root -p
 
-        # Log in to MariaDB with the root account you set.
-        mariadb -u root -p
+# Create the read-only user
+MariaDB> CREATE USER 'sdtreaduser'@'localhost' IDENTIFIED BY 'SDTUSERPWD';  # Replace 'SDTUSERPWD' with the desired password. 
 
-        # Create the read-only user
-        MariaDB> CREATE USER 'sdtreaduser'@'localhost' IDENTIFIED BY 'SDTUSERPWD';  # Replace 'SDTUSERPWD' with the desired password. 
+# Grant permissions.
+MariaDB> GRANT SELECT ON sdtDB.* TO 'sdtreaduser'@'localhost';
 
-        # Grant permissions.
-        MariaDB> GRANT SELECT ON sdtDB.* TO 'sdtreaduser'@'localhost';
-
-        # Apply changes and exit.
-            MariaDB> flush privileges;
-            MariaDB> quit
+# Apply changes and exit.
+MariaDB> flush privileges;
+MariaDB> quit
+```
 
 ***NOTE:***
 - For enhanced security, it's recommended to grant the software-discovery-tool user (sdtreaduser) only read (SELECT) permissions on the required database. This adheres to the principle of least privilege and minimizes the impact if the user credentials are compromised.
@@ -144,19 +167,29 @@ The `src/config/supported_distros.py` must now be updated to reflect the new jso
 See `.env.example` and create a `.env` file in `/opt/software-discovery-tool/`, replacing the value of `DB_PASSWORD` with your own.
 
 #### Run the script to populate the database, when prompted by the script for a user and password, use the root account and password you set above.
-
-        cd /opt/software-discovery-tool/bin/
-        ./database_build.py
-
+```bash
+cd /opt/software-discovery-tool/bin/
+./database_build.py
+```
+***NOTE:***
+- If you encounter the following error:
+  ```bash
+  pymysql.err.OperationalError: (1698, "Access denied for user 'root'@'localhost'")
+  ```
+  Then give access to root user using:
+  ```bash
+  mariadb -u root -p
+  MariaDB> ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD('password'); # Replace the 'password' with the root password you set while installing mariadb.
+  ```
 ###  Step 7: Verify that the software-discovery-tool server is up and running
  We now run the following commands to properly enable the config files of the software-discovery-tool server and then restart the apache server. 
-
-        sudo a2ensite z-000-default.conf
-        systemctl reload apache2
-        sudo a2ensite sdt.conf
-        systemctl reload apache2
-        sudo apachectl restart
-
+```bash
+sudo a2ensite z-000-default.conf
+systemctl reload apache2
+sudo a2ensite sdt.conf
+systemctl reload apache2
+sudo apachectl restart
+```
 We can check if the server is up and running by going to following URL :
 
 ```http://server_ip_or_fully_qualified_domain_name:port_number/sdt``` <br />
@@ -165,9 +198,9 @@ We can check if the server is up and running by going to following URL :
 ```cd software-discovery-tool/src/tests``` <br />
 
 If you run `pytest` as your logged user, it may give errors/warnings since you have given user `apache` ownership.
-
-		sudo -u apache pytest
-
+```bash
+sudo -u apache pytest
+```
 _**NOTE:**_ 
 
 * By default the port_number will be 80
@@ -209,24 +242,28 @@ _**NOTE:**_
 In case any of the parameters are updated, the server has to be restarted:
 
 #### Start/Restart Apache service
-
-        sudo apachectl restart
-
+```bash
+sudo apachectl restart
+```
 ###  Step 9: Start React (frontend) server
 
 #### Ensure Node.js and npm are installed
-
-	sudo apt install npm
- 
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+\. "$HOME/.nvm/nvm.sh"
+nvm install 22
+node -v # Should print "v22.20.0".
+npm -v # Should print "10.9.3".
+```
 
 #### Change to the react-frontend directory
-
-	cd react-frontend
-
+```bash
+cd react-frontend
+```
 #### Install the required npm packages
-
-	sudo npm i
-
+```bash
+npm install
+```
 #### Setting up the Environment Variables
 
 To configure the Flask server URL for your React application, follow these steps:
@@ -245,7 +282,7 @@ To configure the Flask server URL for your React application, follow these steps
     - Open the newly created `.env` file and ensure it contains the following line:<br><br>
 
     ```plaintext
-    REACT_APP_API_URL='http://localhost:80/sdt'
+    REACT_APP_API_URL='http://server_ip_or_fully_qualified_domain_name:80/sdt'
     ```
 
 3. **Use the Environment Variable:**
@@ -253,5 +290,6 @@ To configure the Flask server URL for your React application, follow these steps
     The `REACT_APP_API_URL` variable is now set and will be used by your React application to communicate with the Flask server running at the specified URL.
 
 #### Start the react frontend application
-
-	sudo npm run start
+```bash
+npm run start
+```
