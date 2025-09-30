@@ -44,7 +44,9 @@ def db_init():
         create_one(dbName,username,password,table_name)
 
 def jsontosql(db,table,file,os,user,password):
-    filepath = f'{DATA_FILE_LOCATION}/{file}.json'
+    if table.endswith('.json'):
+        table = table[:-5] # remove .json from table name
+    filepath = f'{DATA_FILE_LOCATION}/{file}'
     jsonFile = open(file=filepath)
     #print(jsonFile)
     data = json.load(jsonFile)
@@ -54,7 +56,10 @@ def jsontosql(db,table,file,os,user,password):
         if item : 
             row = dict(item, osName = os)
             final_data.append(row)
-    keyset = data[0].keys()
+    if data:
+        keyset = data[0].keys()
+    else:
+        keyset = []
     conn = pymysql.connect(host=HOST,user=user,password=password,database=db,autocommit=True)
     curr = conn.cursor()
     try:
@@ -73,6 +78,8 @@ def jsontosql(db,table,file,os,user,password):
     conn.close()
 
 def createTable(db,tblname,username,password):
+    if tblname.endswith('.json'):
+        tblname = tblname[:-5]
     conn = pymysql.connect(host=HOST,user=username,password=password,database=db)
     curr = conn.cursor()
     query = f"CREATE OR REPLACE TABLE {tblname} ("\
@@ -117,7 +124,7 @@ def initall(db,username,password):
             continue
         else:
             for distro in SUPPORTED_DISTROS[os_Key]:
-                path = f'{DATA_FILE_LOCATION}/{SUPPORTED_DISTROS[os_Key][distro]}.json'
+                path = f'{DATA_FILE_LOCATION}/{SUPPORTED_DISTROS[os_Key][distro]}'
                 if os.path.exists(path):
                     createTable(db,SUPPORTED_DISTROS[os_Key][distro],username,password)
                     jsontosql(db,SUPPORTED_DISTROS[os_Key][distro],SUPPORTED_DISTROS[os_Key][distro],distro,username,password)
