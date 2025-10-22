@@ -1,0 +1,653 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Contributing to the Software Discovery Tool" href="Contribute.html"><link rel="prev" title="Welcome to Software Discovery Tool’s Documentation" href="index.html">
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2025.09.25 -->
+        <title>Steps for setting up software-discovery-tool application on server - software-discovery-tool 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">software-discovery-tool 0.1 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  <span class="sidebar-brand-text">software-discovery-tool 0.1 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Steps for setting up software-discovery-tool application on server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Contribute.html">Contributing to the Software Discovery Tool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Contribute.html#contribution-process">Contribution Process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Contribute.html#note">Note</a></li>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data_sources.html">Software Discovery Tool Back-end Data Sources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data_sources.html#the-three-options">The three options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting / FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/Installation.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="steps-for-setting-up-software-discovery-tool-application-on-server">
+<h1>Steps for setting up software-discovery-tool application on server<a class="headerlink" href="#steps-for-setting-up-software-discovery-tool-application-on-server" title="Link to this heading">¶</a></h1>
+<p>The instructions provided below specify the steps for SLES 11 SP4/12/12 SP1/12 SP2 and Ubuntu 18.04/20.04/22.04. If you are using a different OS, install the listed dependencies using your OS’s package manager. For the most reliable setup, consider using a virtual machine (VM) to create a sandboxed environment. This can minimize compatibility issues and avoids the need to create additional users on your primary system.</p>
+<p><em><strong>NOTE:</strong></em></p>
+<ul class="simple">
+<li><p>make sure you are logged in as user with sudo permissions</p></li>
+</ul>
+<section id="step-1-install-prerequisite">
+<h2>Step 1: Install prerequisite<a class="headerlink" href="#step-1-install-prerequisite" title="Link to this heading">¶</a></h2>
+<ul>
+<li><p>For SLES (11 SP4, 12):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  sudo zypper install -y python python-setuptools gcc git libffi-devel python-devel openssl openssl-devel cronie python-xml pyxml tar wget aaa_base which w3m
+  sudo easy_install pip
+  sudo pip install &#39;cryptography==1.4&#39; Flask launchpadlib simplejson logging
+</pre></div>
+</div>
+</li>
+<li><p>For Ubuntu (18.04, 20.04, 22.04):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  sudo apt-get update
+  sudo apt-get install -y python3 python3-pip gcc git python3-dev libssl-dev libffi-dev cron python3-lxml apache2 libapache2-mod-wsgi-py3
+  sudo pip3 install cffi cryptography Flask launchpadlib simplejson requests pytest python-dotenv
+</pre></div>
+</div>
+</li>
+<li><p>For SLES (12 SP1, 12 SP2, 12 SP3):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  sudo zypper install -y python3 python3-pip python3-setuptools gcc git libffi-devel python3-devel openssl openssl-devel cronie python3-lxml tar wget aaa_base which w3m apache2 apache2-devel apache2-worker apache2-mod_wsgi-python3
+  sudo pip3 install cryptography launchpadlib simplejson Flask pytest
+</pre></div>
+</div>
+</li>
+<li><p>if “/usr/local/bin” is not part of $PATH add it to the path:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  echo $PATH
+  export PATH=/usr/local/bin:$PATH
+  sudo sh -c &quot;echo &#39;export PATH=/usr/local/bin:$PATH&#39; &gt; /etc/profile.d/alternate_install_path.sh&quot;
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="step-2-checkout-the-source-code-into-opt-folder">
+<h2>Step 2: Checkout the source code, into /opt/ folder<a class="headerlink" href="#step-2-checkout-the-source-code-into-opt-folder" title="Link to this heading">¶</a></h2>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    cd /opt/
+    sudo git clone https://github.com/openmainframeproject/software-discovery-tool.git
+    cd software-discovery-tool
+</pre></div>
+</div>
+<section id="copy-the-supported-distros-py-example-file-to-supported-distros-py">
+<h3>Copy the <code class="docutils literal notranslate"><span class="pre">supported_distros.py.example</span></code> file to <code class="docutils literal notranslate"><span class="pre">supported_distros.py</span></code>:<a class="headerlink" href="#copy-the-supported-distros-py-example-file-to-supported-distros-py" title="Link to this heading">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span> sudo cp src/config/supported_distros.py.example src/config/supported_distros.py
+</pre></div>
+</div>
+<p>Note: In case software-discovery-tool code is already checked out, do the following for latest updates</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    cd /opt/software-discovery-tool
+    sudo git pull origin master
+</pre></div>
+</div>
+</section>
+</section>
+<section id="step-3-set-environment-variables">
+<h2>Step 3: Set Environment variables<a class="headerlink" href="#step-3-set-environment-variables" title="Link to this heading">¶</a></h2>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    sudo sh -c &quot;echo &#39;export PYTHONPATH=/opt/software-discovery-tool/src/classes:/opt/software-discovery-tool/src/config:$PYTHONPATH&#39; &gt; /etc/profile.d/software-discovery-tool.sh&quot;
+</pre></div>
+</div>
+</section>
+<section id="step-4-install-and-configure-software-discovery-tool">
+<h2>Step 4: Install and configure software-discovery-tool<a class="headerlink" href="#step-4-install-and-configure-software-discovery-tool" title="Link to this heading">¶</a></h2>
+<ul>
+<li><p>SLES (11 SP4, 12):</p>
+<h4 class="rubric" id="copy-the-init-d-script-to-start-stop-restart-software-discovery-tool-application">Copy the init.d script to start/stop/restart software-discovery-tool application</h4>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  sudo chmod 755 -R /opt/software-discovery-tool/src/setup
+  cd /opt/software-discovery-tool/src/setup
+  sudo ./create_initid_script.sh
+</pre></div>
+</div>
+<h4 class="rubric" id="enable-software-discovery-tool-service">Enable software-discovery-tool service</h4>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  sudo systemctl reload software-discovery-tool
+</pre></div>
+</div>
+<h4 class="rubric" id="start-the-flask-server-as-below">Start the Flask server as below</h4>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  sudo service software-discovery-tool start
+</pre></div>
+</div>
+</li>
+<li><p>SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (18.04, 20.04, 22.04):</p>
+<h4 class="rubric" id="copy-the-apache-configuration-file-from-opt-software-discovery-tool-src-config-sdt-conf-into-respective-apache-configuration-folder-as-below">Copy the apache configuration file from <code class="docutils literal notranslate"><span class="pre">/opt/software-discovery-tool/src/config/sdt.conf</span></code> into respective apache configuration folder as below</h4>
+</li>
+<li><p>SLES (12 SP1, 12 SP2, 12 SP3):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>      sudo cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/conf.d/sdt.conf
+</pre></div>
+</div>
+</li>
+<li><p>For Ubuntu (18.04, 20.04, 22.04):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>      sudo cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/sites-available/sdt.conf
+      sudo mv /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/z-000-default.conf
+</pre></div>
+</div>
+<h4 class="rubric" id="create-new-user-and-group-for-apache">Create new user and group for apache</h4>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  sudo useradd apache
+  sudo groupadd apache
+</pre></div>
+</div>
+<h4 class="rubric" id="enable-authorization-module-in-apache-configuration-only-for-sles-12-sp1-12-sp2-12-sp3">Enable authorization module in apache configuration(Only for SLES 12 SP1, 12 SP2, 12 SP3)</h4>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  sudo a2enmod mod_access_compat
+</pre></div>
+</div>
+<h4 class="rubric" id="set-appropriate-folder-and-file-permission-on-opt-software-discovery-tool-folder-for-apache">Set appropriate folder and file permission on /opt/software-discovery-tool/ folder for apache</h4>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  sudo chown -R apache:apache /opt/software-discovery-tool/
+</pre></div>
+</div>
+<h4 class="rubric" id="start-restart-apache-service">Start/Restart Apache service</h4>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  sudo apachectl restart
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="step-5-cloning-data-directory-only-first-time">
+<h2>Step 5: Cloning Data Directory (Only First Time)<a class="headerlink" href="#step-5-cloning-data-directory-only-first-time" title="Link to this heading">¶</a></h2>
+<p>openmainframeproject/software-discovery-tool-data contains all OMP created json files. To add the data files, we will use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">submodule</span></code></p>
+<ul class="simple">
+<li><p>map the submodule directory with the directory path and update the directory:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="o">-</span><span class="n">u</span> <span class="n">apache</span> <span class="n">git</span> <span class="n">submodule</span> <span class="n">update</span> <span class="o">--</span><span class="n">init</span> <span class="o">--</span><span class="n">recursive</span> <span class="o">--</span><span class="n">remote</span>
+</pre></div>
+</div>
+<section id="updating-data-directory">
+<h3>Updating Data Directory<a class="headerlink" href="#updating-data-directory" title="Link to this heading">¶</a></h3>
+<p>Everytime there’s an upstream change in the submodule:</p>
+<ul class="simple">
+<li><p>To update the data directory with the main repo with the remote changes:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="o">-</span><span class="n">u</span> <span class="n">apache</span> <span class="n">git</span> <span class="n">pull</span> <span class="o">&lt;</span><span class="n">upstream</span> <span class="n">remote</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">default</span> <span class="n">branch</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">recurse</span><span class="o">-</span><span class="n">submodules</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>To update ONLY the data directory keeping the main repo as it is:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="o">-</span><span class="n">u</span> <span class="n">apache</span> <span class="n">git</span> <span class="n">submodule</span> <span class="n">update</span> <span class="o">--</span><span class="n">recursive</span> <span class="o">--</span><span class="n">remote</span>
+</pre></div>
+</div>
+</section>
+<section id="bringing-in-additional-data-pds">
+<h3>Bringing in additional data: PDS<a class="headerlink" href="#bringing-in-additional-data-pds" title="Link to this heading">¶</a></h3>
+<p>The data directory we cloned above only brings in sources maintained by this project. Notably it does not include SUSE Linux Enterprise Server, Red Hat Enterprise Linux, or Ubuntu. Instead, these sources are maintained by the Package Distro Search tool (abbreviated as PDS). In order to bring in those data sources, you will need to do that directly, as follows.</p>
+<p>For example, taking RHEL_8_Package_List.json</p>
+<ul class="simple">
+<li><p>Usage help will be displayed:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">software</span><span class="o">-</span><span class="n">discovery</span><span class="o">-</span><span class="n">tool</span><span class="o">/</span><span class="nb">bin</span>
+<span class="o">./</span><span class="n">package_build</span><span class="o">.</span><span class="n">py</span>
+<span class="n">Usage</span><span class="p">:</span>
+<span class="o">./</span><span class="n">package_build</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;</span><span class="n">exact_file_name</span><span class="o">.</span><span class="n">json</span><span class="o">&gt;</span>
+			<span class="p">[</span><span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kn">from</span><span class="w"> </span><span class="nn">PDS</span><span class="p">]</span>
+<span class="o">./</span><span class="n">package_build</span><span class="o">.</span><span class="n">py</span> <span class="n">debian</span>
+			<span class="p">[</span><span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Debian</span><span class="p">]</span>
+<span class="o">./</span><span class="n">package_build</span><span class="o">.</span><span class="n">py</span>
+			<span class="p">[</span><span class="k">for</span> <span class="n">displaying</span> <span class="n">this</span> <span class="n">help</span><span class="p">]</span>
+<span class="n">Example</span><span class="p">:</span>
+<span class="o">./</span><span class="n">package_build</span><span class="o">.</span><span class="n">py</span> <span class="n">RHEL_8_Package_List</span><span class="o">.</span><span class="n">json</span>
+</pre></div>
+</div>
+<p>Example of extracting the RHEL_8_Package_List.json from PDS repo:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>sudo -u apache ./bin/package_build.py RHEL_8_Package_List.json
+Extracting RHEL_8_Package_List.json from PDS data ...
+Thanks for using SDT!
+</pre></div>
+</div>
+<p><em><strong>NOTE:</strong></em></p>
+<ul>
+<li><p>Make sure the json file exists in the PDS data directory.</p></li>
+<li><p>Please keep in mind that the directory belongs to user <code class="docutils literal notranslate"><span class="pre">apache</span></code>, so in case of permission error,
+run the chown cmd or directly use <code class="docutils literal notranslate"><span class="pre">package_build.py</span></code> as <code class="docutils literal notranslate"><span class="pre">apache</span></code> user like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="o">-</span><span class="n">u</span> <span class="n">apache</span> <span class="o">./</span><span class="nb">bin</span><span class="o">/</span><span class="n">package_build</span><span class="o">.</span><span class="n">py</span> <span class="n">RHEL_8_Package_List</span><span class="o">.</span><span class="n">json</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="update-supported-distros-list">
+<h3>Update Supported Distros list<a class="headerlink" href="#update-supported-distros-list" title="Link to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">src/config/supported_distros.py</span></code> must now be updated to reflect the new json files that have been brought in order for them to be reflected in the UI. We started with a sample file back in Step 2, so that’s a good starting place. For more details about the formatting and expectations of this file, follow steps mentioned in Step 2 of <a class="reference external" href="https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Adding_new_distros.md#step-2-update-the-supported_distros-variable-in-configuration-file-sdt_basesrcconfigconfigpy">Adding_new_distros</a></p>
+</section>
+</section>
+<section id="step-6-install-and-populate-the-sql-database">
+<h2>Step 6: Install and populate the SQL database<a class="headerlink" href="#step-6-install-and-populate-the-sql-database" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>For Ubuntu (18.04, 20.04, 22.04):</p></li>
+</ul>
+<section id="install-dependencies-and-complete-the-secure-installation-remember-the-root-password-you-set-you-will-need-this-in-the-future">
+<h3>Install dependencies and complete the secure installation. Remember the root password you set, you will need this in the future.<a class="headerlink" href="#install-dependencies-and-complete-the-secure-installation-remember-the-root-password-you-set-you-will-need-this-in-the-future" title="Link to this heading">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    sudo apt install mariadb-server python3-pymysql
+    sudo mysql_secure_installation
+</pre></div>
+</div>
+</section>
+<section id="log-in-to-mariadb-with-the-root-account-you-set-and-create-the-read-only-user-with-a-password-changed-below-and-database">
+<h3>Log in to MariaDB with the root account you set and create the read-only user (with a password, changed below) and database.<a class="headerlink" href="#log-in-to-mariadb-with-the-root-account-you-set-and-create-the-read-only-user-with-a-password-changed-below-and-database" title="Link to this heading">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Log in to MariaDB with the root account you set.
+mariadb -u root -p
+
+# Create the read-only user
+MariaDB&gt; CREATE USER &#39;sdtreaduser&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;SDTUSERPWD&#39;;  # Replace &#39;SDTUSERPWD&#39; with the desired password. 
+
+# Grant permissions.
+MariaDB&gt; GRANT SELECT ON sdtDB.* TO &#39;sdtreaduser&#39;@&#39;localhost&#39;;
+
+# Apply changes and exit.
+    MariaDB&gt; flush privileges;
+    MariaDB&gt; quit
+</pre></div>
+</div>
+<p><em><strong>NOTE:</strong></em></p>
+<ul class="simple">
+<li><p>For enhanced security, it’s recommended to grant the software-discovery-tool user (sdtreaduser) only read (SELECT) permissions on the required database. This adheres to the principle of least privilege and minimizes the impact if the user credentials are compromised.</p></li>
+<li><p>When working with SDT, two separate users with distinct permission sets are used:
+<img alt="Diagram" src="_images/diagram.svg" /></p>
+<ul>
+<li><p><a class="reference external" href="https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Installation.md#set-appropriate-folder-and-file-permission-on-optsoftware-discovery-tool-folder-for-apache">User for Read-only Database Access</a> (Read-Only Permissions): This user is granted strictly read-only permissions over the entire project, including the database, for use when a user searches the database through the tool.</p></li>
+<li><p><a class="reference external" href="https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Installation.md#run-the-script-to-populate-the-database-when-prompted-by-the-script-for-a-user-and-password-use-the-root-account-and-password-you-set-above">User for Build Database Step</a> (All Privileges): This user is granted all privileges over the database for the 	<code class="docutils literal notranslate"><span class="pre">database_build</span></code> step below, allowing them to create new tables and drop old ones. This user’s credentials should never be stored in a <code class="docutils literal notranslate"><span class="pre">.env</span></code> file, and customers must remember the password or set up a local system to manage it securely.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="create-a-env-file-in-the-root-of-the-project-with-credentials-set-above-see-env-example">
+<h3>Create a .env file in the root of the project with credentials set above (see .env.example)<a class="headerlink" href="#create-a-env-file-in-the-root-of-the-project-with-credentials-set-above-see-env-example" title="Link to this heading">¶</a></h3>
+<p>See <code class="docutils literal notranslate"><span class="pre">.env.example</span></code> and create a <code class="docutils literal notranslate"><span class="pre">.env</span></code> file in <code class="docutils literal notranslate"><span class="pre">/opt/software-discovery-tool/</span></code>, replacing the value of <code class="docutils literal notranslate"><span class="pre">DB_PASSWORD</span></code> with your own.</p>
+</section>
+<section id="run-the-script-to-populate-the-database-when-prompted-by-the-script-for-a-user-and-password-use-the-root-account-and-password-you-set-above">
+<h3>Run the script to populate the database, when prompted by the script for a user and password, use the root account and password you set above.<a class="headerlink" href="#run-the-script-to-populate-the-database-when-prompted-by-the-script-for-a-user-and-password-use-the-root-account-and-password-you-set-above" title="Link to this heading">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    cd /opt/software-discovery-tool/bin/
+    ./database_build.py
+</pre></div>
+</div>
+</section>
+</section>
+<section id="step-7-verify-that-the-software-discovery-tool-server-is-up-and-running">
+<h2>Step 7: Verify that the software-discovery-tool server is up and running<a class="headerlink" href="#step-7-verify-that-the-software-discovery-tool-server-is-up-and-running" title="Link to this heading">¶</a></h2>
+<ul>
+<li><p>For Ubuntu (18.04, 20.04, 22.04):
+We now run the following commands to properly enable the config files of the software-discovery-tool server and then restart the apache server.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  sudo a2ensite z-000-default.conf
+  systemctl reload apache2
+  sudo a2ensite sdt.conf
+  systemctl reload apache2
+  sudo apachectl restart
+</pre></div>
+</div>
+</li>
+</ul>
+<p>We can check if the server is up and running by going to following URL :</p>
+<p><code class="docutils literal notranslate"><span class="pre">http://server_ip_or_fully_qualified_domain_name:port_number/sdt</span></code> <br /></p>
+<p>(Alternatively, you can check with unittesting) <br />
+<code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">software-discovery-tool/src/tests</span></code> <br /></p>
+<p>If you run <code class="docutils literal notranslate"><span class="pre">pytest</span></code> as your logged user, it may give errors/warnings since you have given user <code class="docutils literal notranslate"><span class="pre">apache</span></code> ownership.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>	sudo -u apache pytest
+</pre></div>
+</div>
+<p><em><strong>NOTE:</strong></em></p>
+<ul class="simple">
+<li><p>For SLES (11 SP4, 12) by default the port_number will be 5000</p></li>
+<li><p>For SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (18.04, 20.04, 22.04)  by default the port_number will be 80</p></li>
+</ul>
+</section>
+<section id="step-8-optional-custom-configuration">
+<h2>Step 8: (Optional) Custom configuration<a class="headerlink" href="#step-8-optional-custom-configuration" title="Link to this heading">¶</a></h2>
+<p>Following configuration settings can be managed in <code class="docutils literal notranslate"><span class="pre">/opt/software-discovery-tool/src/config/config.py</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    &lt;software-discovery-tool_BASE&gt; - Base location where software-discovery-tool is Installed/Cloned. Defaults to `/opt/software-discovery-tool/`
+
+    &lt;DATA_FILE_LOCATION&gt; - Location of folder containing all distribution specific JSON data
+    
+    &lt;LOG_FILE_LOCATION&gt; - Location of folder containing software-discovery-tool logs
+    
+    &lt;enable_proxy_authentication&gt; - Flag enabling/disabling proxy based network access
+    
+    &lt;proxy_user&gt; - Proxy server user name
+    
+    &lt;proxy_password&gt; - Proxy server password
+    
+    &lt;proxy_server&gt; - Proxy server IP/fully qualified domain name
+    
+    &lt;proxy_port&gt; - Proxy port number
+    
+    &lt;DEBUG_LEVEL&gt; - Set Debug levels for the application to log
+    
+    &lt;server_host&gt; - IP/fully qualified domain name of server where software-discovery-tool application will be deployed
+    
+    &lt;server_port&gt; - software-discovery-tool port on which application will be accessible to end users
+
+    &lt;SUPPORTED_DISTROS&gt; - Mapping of all the supported distros, new distros added need to be mapped here.
+
+    &lt;MAX_RECORDS_TO_SEND&gt; = Max number of records returned to the client. Defaults to 100
+
+    &lt;CACHE_SIZE&gt; - Number of searches to be cached. Default to 10
+</pre></div>
+</div>
+<p><em><strong>NOTE:</strong></em></p>
+<ul class="simple">
+<li><p>In order to add new distribution support refer <a class="reference internal" href="Adding_new_distros.html"><span class="std std-doc">here</span></a></p></li>
+</ul>
+<p>In case any of the parameters are updated, the server has to be restarted:</p>
+<ul>
+<li><p>SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (18.04, 20.04, 22.04):</p>
+<h4 class="rubric" id="id1">Start/Restart Apache service</h4>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  sudo apachectl restart
+</pre></div>
+</div>
+</li>
+<li><p>SLES (11 SP4, 12):</p>
+<h4 class="rubric" id="id2">Start the Flask server as below</h4>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  sudo service software-discovery-tool start
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="Contribute.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Contributing to the Software Discovery Tool</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Home</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, Aditya Raj
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Steps for setting up software-discovery-tool application on server</a><ul>
+<li><a class="reference internal" href="#step-1-install-prerequisite">Step 1: Install prerequisite</a></li>
+<li><a class="reference internal" href="#step-2-checkout-the-source-code-into-opt-folder">Step 2: Checkout the source code, into /opt/ folder</a><ul>
+<li><a class="reference internal" href="#copy-the-supported-distros-py-example-file-to-supported-distros-py">Copy the <code class="docutils literal notranslate"><span class="pre">supported_distros.py.example</span></code> file to <code class="docutils literal notranslate"><span class="pre">supported_distros.py</span></code>:</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#step-3-set-environment-variables">Step 3: Set Environment variables</a></li>
+<li><a class="reference internal" href="#step-4-install-and-configure-software-discovery-tool">Step 4: Install and configure software-discovery-tool</a></li>
+<li><a class="reference internal" href="#step-5-cloning-data-directory-only-first-time">Step 5: Cloning Data Directory (Only First Time)</a><ul>
+<li><a class="reference internal" href="#updating-data-directory">Updating Data Directory</a></li>
+<li><a class="reference internal" href="#bringing-in-additional-data-pds">Bringing in additional data: PDS</a></li>
+<li><a class="reference internal" href="#update-supported-distros-list">Update Supported Distros list</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#step-6-install-and-populate-the-sql-database">Step 6: Install and populate the SQL database</a><ul>
+<li><a class="reference internal" href="#install-dependencies-and-complete-the-secure-installation-remember-the-root-password-you-set-you-will-need-this-in-the-future">Install dependencies and complete the secure installation. Remember the root password you set, you will need this in the future.</a></li>
+<li><a class="reference internal" href="#log-in-to-mariadb-with-the-root-account-you-set-and-create-the-read-only-user-with-a-password-changed-below-and-database">Log in to MariaDB with the root account you set and create the read-only user (with a password, changed below) and database.</a></li>
+<li><a class="reference internal" href="#create-a-env-file-in-the-root-of-the-project-with-credentials-set-above-see-env-example">Create a .env file in the root of the project with credentials set above (see .env.example)</a></li>
+<li><a class="reference internal" href="#run-the-script-to-populate-the-database-when-prompted-by-the-script-for-a-user-and-password-use-the-root-account-and-password-you-set-above">Run the script to populate the database, when prompted by the script for a user and password, use the root account and password you set above.</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#step-7-verify-that-the-software-discovery-tool-server-is-up-and-running">Step 7: Verify that the software-discovery-tool server is up and running</a></li>
+<li><a class="reference internal" href="#step-8-optional-custom-configuration">Step 8: (Optional) Custom configuration</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=2709fde1"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>
