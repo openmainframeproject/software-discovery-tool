@@ -4,6 +4,7 @@ SUPPORTED_DISTROS = {
 	'z/OS Rocket Software': 'ZOS_Rocket_Software',
 	'z/OS Open Mainframe Project': 'ZOS_OMP',
 	'z/OS from IBM-Z-zOS': 'IBM_Z_zOS'
+	'z/OS from zopen community': 'zopencommunity'
 },
 'IBM Z and LinuxONE Container Registry': {
 	'Container Images for IBM Z and LinuxONE': 'IBMZ_container_registry'
