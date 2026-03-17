@@ -7,19 +7,21 @@ The instructions provided below specify the steps for Ubuntu 20.04/22.04/24.04:
 _**NOTE:**_
 * make sure you are logged in as user with sudo permissions
 
-### Step 1: Install prerequisite
+### Step 1: Install prerequisites
+
+System prerequisites
+
 ```bash
-sudo apt-get update
-sudo apt-get install -y python3 python3-pip gcc git python3-dev libssl-dev libffi-dev cron python3-lxml apache2 libapache2-mod-wsgi-py3
-sudo pip3 install cffi cryptography Flask launchpadlib simplejson requests pytest
+sudo apt update
+sudo apt dist-upgrade
+sudo apt install python3 gcc git python3-dev libssl-dev libffi-dev cron python3-lxml apache2
 ```
 
-* if "/usr/local/bin" is not part of $PATH add it to the path:
-  ```bash
-  echo $PATH
-  export PATH=/usr/local/bin:$PATH
-  sudo sh -c "echo 'export PATH=/usr/local/bin:$PATH' > /etc/profile.d/alternate_install_path.sh"
-  ```
+Python dependencies
+
+```bash
+sudo apt install libapache2-mod-wsgi-py3 python3-cffi python3-cryptography python3-flask python3-launchpadlib python3-simplejson python3-requests python3-pytest python3-flask-cors python3-dotenv
+```
 
 ###  Step 2: Checkout the source code, into /opt/ folder
 ```bash
@@ -41,22 +43,16 @@ sudo sh -c "echo 'export PYTHONPATH=/opt/software-discovery-tool/src/classes:/op
         
 ### Step 4: Install and configure software-discovery-tool
 
-#### Copy the apache configuration file from `/opt/software-discovery-tool/src/config/sdt.conf` into respective apache configuration folder as below
+#### Copy the Apache configuration file from `/opt/software-discovery-tool/src/config/sdt.conf` into respective Apache configuration folder as below
 ```bash
 sudo cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/sites-available/sdt.conf
 sudo mv /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/z-000-default.conf
 ```
         
 
-#### Create new user and group for apache
+#### Set appropriate folder and file permission on /opt/software-discovery-tool/ folder for the Apache user on Ubuntu: www-data
 ```bash
-sudo useradd apache
-sudo groupadd apache
-```
-        
-#### Set appropriate folder and file permission on /opt/software-discovery-tool/ folder for apache
-```bash
-sudo chown -R apache:apache /opt/software-discovery-tool/
+sudo chown -R www-data:www-data /opt/software-discovery-tool/
 ```
 
 #### Start/Restart Apache service
@@ -68,18 +64,18 @@ sudo apachectl restart
  openmainframeproject/software-discovery-tool-data contains all OMP created json files. To add the data files, we will use `git submodule`
 - map the submodule directory with the directory path and update the directory:
 ```bash
-sudo -u apache git submodule update --init --recursive --remote
+sudo -u www-data git submodule update --init --recursive --remote
 ```
 
 #### Updating Data Directory
 Everytime there's an upstream change in the submodule:
 - To update the data directory with the main repo with the remote changes:
 ```bash
-sudo -u apache git pull <upstream remote> <default branch> --recurse-submodules
+sudo -u www-data git pull <upstream remote> <default branch> --recurse-submodules
 ```
 - To update ONLY the data directory keeping the main repo as it is:
 ```bash
-sudo -u apache git submodule update --recursive --remote
+sudo -u www-data git submodule update --recursive --remote
 ```
 
 #### Bringing in additional data: PDS
@@ -103,22 +99,31 @@ Example:
 ```
 Example of extracting the RHEL_8_Package_List.json from PDS repo:
 ```bash
-sudo -u apache ./bin/package_build.py RHEL_8_Package_List.json
+sudo -u www-data ./bin/package_build.py RHEL_8_Package_List.json
 Extracting RHEL_8_Package_List.json from PDS data ...
 Thanks for using SDT!
 ```
  _**NOTE:**_
 - Make sure the json file exists in the PDS data directory.
-- Please keep in mind that the directory belongs to user `apache`, so in case of permission error,
-	run the chown cmd or directly use `package_build.py` as `apache` user like:
+- Please keep in mind that the directory belongs to user `www-data`, so in case of permission error,
+	run the chown cmd or directly use `package_build.py` as `www-data` user like:
 	```bash
-	sudo -u apache ./bin/package_build.py RHEL_8_Package_List.json
+	sudo -u www-data ./bin/package_build.py RHEL_8_Package_List.json
 	```
 
 #### Update Supported Distros list
 
-The `src/config/supported_distros.py` must now be updated to reflect the new json files that have been brought in order for them to be reflected in the UI. We started with a sample file back in Step 2, so that's a good starting place. For more details about the formatting and expectations of this file, follow steps mentioned in Step 2 of [Adding_new_distros](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Adding_new_distros.md#step-2-update-the-supported_distros-variable-in-configuration-file-sdt_basesrcconfigconfigpy)
+The `src/config/supported_distros.py` must now be created and updated to reflect the new json files that have been brought in from PDS.
 
+Copy in sample file provided with this repository.
+
+```bash
+sudo -u www-data cp src/config/supported_distros.py.example src/config/supported_distros.py
+```
+
+And then make edits to add the sources you retrieved from PDS.
+
+For more details about the formatting and expectations of this file, follow steps mentioned in Step 2 of [Adding_new_distros](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Adding_new_distros.md#step-2-update-the-supported_distros-variable-in-configuration-file-sdt_basesrcconfigconfigpy)
 
 ### Step 6: Install and populate the SQL database
 
@@ -127,6 +132,8 @@ The `src/config/supported_distros.py` must now be updated to reflect the new jso
 sudo apt install mariadb-server python3-pymysql
 sudo mysql_secure_installation
 ```
+
+During this process, you will set a root password to be used later, otherwise the defaults are fine.
 
 ***NOTE:***
 - If you encounter the following error when running `sudo mysql_secure_installation`:
@@ -156,7 +163,7 @@ MariaDB> quit
 ```
 
 ***NOTE:***
-- For enhanced security, it's recommended to grant the software-discovery-tool user (sdtreaduser) only read (SELECT) permissions on the required database. This adheres to the principle of least privilege and minimizes the impact if the user credentials are compromised.
+- For enhanced security, we've granted the software-discovery-tool user (sdtreaduser) only read (SELECT) permissions on the required database. This adheres to the principle of least privilege and minimizes the impact if the user credentials are compromised.
 - When working with SDT, two separate users with distinct permission sets are used: Diagram
         - [User for Read-only Database Access](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Installation.md#set-appropriate-folder-and-file-permission-on-optsoftware-discovery-tool-folder-for-apache) (Read-Only Permissions): This user is granted strictly read-only permissions over the entire project, including the database, for use when a user searches the database through the tool.
         - [User for Build Database Step (All Privileges)](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Installation.md#run-the-script-to-populate-the-database-when-prompted-by-the-script-for-a-user-and-password-use-the-root-account-and-password-you-set-above): This user is granted all privileges over the database for the `database_build` step below, allowing them to create new tables and drop old ones. This user's credentials should never be stored in a `.env` file, and customers must remember the password or set up a local system to manage it securely.
@@ -164,7 +171,11 @@ MariaDB> quit
 
 #### Create a .env file in the root of the project with credentials set above (see .env.example)
 
-See `.env.example` and create a `.env` file in `/opt/software-discovery-tool/`, replacing the value of `DB_PASSWORD` with your own.
+A sample `.env.example` is included in this respository. Copy that to your new `.env` file in `/opt/software-discovery-tool/` and the value of `DB_PASSWORD` with the password for your sdtreaduser.
+
+```bash
+sudo -u www-data cp .env.example .env
+```
 
 #### Run the script to populate the database, when prompted by the script for a user and password, use the root account and password you set above.
 ```bash
@@ -182,12 +193,11 @@ cd /opt/software-discovery-tool/bin/
   MariaDB> ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD('password'); # Replace the 'password' with the root password you set while installing mariadb.
   ```
 ###  Step 7: Verify that the software-discovery-tool server is up and running
- We now run the following commands to properly enable the config files of the software-discovery-tool server and then restart the apache server. 
+ We now run the following commands to properly enable the config files of the software-discovery-tool server and then restart the Apache server. 
 ```bash
 sudo a2ensite z-000-default.conf
-systemctl reload apache2
 sudo a2ensite sdt.conf
-systemctl reload apache2
+sudo systemctl reload apache2
 sudo apachectl restart
 ```
 We can check if the server is up and running by going to following URL :
@@ -197,9 +207,9 @@ We can check if the server is up and running by going to following URL :
 (Alternatively, you can check with unittesting) <br />
 ```cd software-discovery-tool/src/tests``` <br />
 
-If you run `pytest` as your logged user, it may give errors/warnings since you have given user `apache` ownership.
+If you run `pytest` as your logged user, it may give errors/warnings since you have given user `www-data` ownership.
 ```bash
-sudo -u apache pytest
+sudo -u www-data pytest
 ```
 _**NOTE:**_ 
 
@@ -247,22 +257,25 @@ sudo apachectl restart
 ```
 ###  Step 9: Start React (frontend) server
 
-#### Ensure Node.js and npm are installed
+#### Install npm
 ```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-\. "$HOME/.nvm/nvm.sh"
-nvm install 22
-node -v # Should print "v22.20.0".
-npm -v # Should print "10.9.3".
+sudo apt install npm
 ```
 
 #### Change to the react-frontend directory
 ```bash
 cd react-frontend
 ```
+
+#### Create the npm cache directory
+```bash
+sudo mkdir /var/www/.npm
+sudo chown -R www-data:www-data "/var/www/.npm"
+```
+
 #### Install the required npm packages
 ```bash
-npm install
+sudo -u www-data npm install
 ```
 #### Setting up the Environment Variables
 
@@ -278,7 +291,12 @@ To configure the Flask server URL for your React application, follow these steps
 
 2. **Create a `.env` file:**
 
-    - Copy the `.env.example` file and rename it to `.env`.
+    - Copy the `.env.example` file and rename it to `.env`:
+
+```bash
+sudo -u www-data cp .env.example .env
+```
+
     - Open the newly created `.env` file and ensure it contains the following line:<br><br>
 
     ```plaintext
@@ -291,5 +309,7 @@ To configure the Flask server URL for your React application, follow these steps
 
 #### Start the react frontend application
 ```bash
-npm run start
+sudo -u www-data npm run start
 ```
+
+You can now navigate to the frontend via port 3000 in your web browser.
