@@ -1,28 +1,17 @@
-# Steps for setting up software-discovery-tool application on server
+# Installation
 
-The instructions provided below specify the steps for SLES 11 SP4/12/12 SP1/12 SP2 and Ubuntu 18.04/20.04/22.04. If you are using a different OS, install the listed dependencies using your OS's package manager. For the most reliable setup, consider using a virtual machine (VM) to create a sandboxed environment. This can minimize compatibility issues and avoids the need to create additional users on your primary system.
+## Steps for setting up software-discovery-tool application on server
+
+The instructions provided below specify the steps for Ubuntu 20.04/22.04/24.04:
 
 _**NOTE:**_
 * make sure you are logged in as user with sudo permissions
 
 ### Step 1: Install prerequisite
 
-* For SLES (11 SP4, 12):
-
-        sudo zypper install -y python python-setuptools gcc git libffi-devel python-devel openssl openssl-devel cronie python-xml pyxml tar wget aaa_base which w3m
-        sudo easy_install pip
-        sudo pip install 'cryptography==1.4' Flask launchpadlib simplejson logging
-
-* For Ubuntu (18.04, 20.04, 22.04):
-
         sudo apt-get update
         sudo apt-get install -y python3 python3-pip gcc git python3-dev libssl-dev libffi-dev cron python3-lxml apache2 libapache2-mod-wsgi-py3
-        sudo pip3 install cffi cryptography Flask launchpadlib simplejson requests pytest python-dotenv
-
-* For SLES (12 SP1, 12 SP2, 12 SP3):
-
-        sudo zypper install -y python3 python3-pip python3-setuptools gcc git libffi-devel python3-devel openssl openssl-devel cronie python3-lxml tar wget aaa_base which w3m apache2 apache2-devel apache2-worker apache2-mod_wsgi-python3
-        sudo pip3 install cryptography launchpadlib simplejson Flask pytest
+        sudo pip3 install cffi cryptography Flask launchpadlib simplejson requests pytest
 
 * if "/usr/local/bin" is not part of $PATH add it to the path:
 
@@ -36,10 +25,6 @@ _**NOTE:**_
         sudo git clone https://github.com/openmainframeproject/software-discovery-tool.git
         cd software-discovery-tool
 
-#### Copy the `supported_distros.py.example` file to `supported_distros.py`:
-
-     sudo cp src/config/supported_distros.py.example src/config/supported_distros.py
-
 Note: In case software-discovery-tool code is already checked out, do the following for latest updates
 
         cd /opt/software-discovery-tool
@@ -51,49 +36,21 @@ Note: In case software-discovery-tool code is already checked out, do the follow
 
 ### Step 4: Install and configure software-discovery-tool
 
-* SLES (11 SP4, 12):
+#### Copy the apache configuration file from `/opt/software-discovery-tool/src/config/sdt.conf` into respective apache configuration folder as below
 
-    #### Copy the init.d script to start/stop/restart software-discovery-tool application
+        sudo cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/sites-available/sdt.conf
+        sudo mv /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/z-000-default.conf
 
-        sudo chmod 755 -R /opt/software-discovery-tool/src/setup
-        cd /opt/software-discovery-tool/src/setup
-        sudo ./create_initid_script.sh
-
-    #### Enable software-discovery-tool service
-
-        sudo systemctl reload software-discovery-tool
-
-    #### Start the Flask server as below
-
-        sudo service software-discovery-tool start
-
-* SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (18.04, 20.04, 22.04):
-
-    #### Copy the apache configuration file from `/opt/software-discovery-tool/src/config/sdt.conf` into respective apache configuration folder as below
-* SLES (12 SP1, 12 SP2, 12 SP3):
-
-            sudo cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/conf.d/sdt.conf
-
-* For Ubuntu (18.04, 20.04, 22.04):
-
-            sudo cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/sites-available/sdt.conf
-            sudo mv /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/z-000-default.conf
-
-    #### Create new user and group for apache
+#### Create new user and group for apache
 
         sudo useradd apache
         sudo groupadd apache
 
-    #### Enable authorization module in apache configuration(Only for SLES 12 SP1, 12 SP2, 12 SP3)
-
-        sudo a2enmod mod_access_compat
-
-    #### Set appropriate folder and file permission on /opt/software-discovery-tool/ folder for apache
+#### Set appropriate folder and file permission on /opt/software-discovery-tool/ folder for apache
 
         sudo chown -R apache:apache /opt/software-discovery-tool/
 
-
-    #### Start/Restart Apache service
+#### Start/Restart Apache service
 
         sudo apachectl restart
 
@@ -147,12 +104,13 @@ Thanks for using SDT!
 	```
 	sudo -u apache ./bin/package_build.py RHEL_8_Package_List.json
 	```
+
 #### Update Supported Distros list
 
 The `src/config/supported_distros.py` must now be updated to reflect the new json files that have been brought in order for them to be reflected in the UI. We started with a sample file back in Step 2, so that's a good starting place. For more details about the formatting and expectations of this file, follow steps mentioned in Step 2 of [Adding_new_distros](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Adding_new_distros.md#step-2-update-the-supported_distros-variable-in-configuration-file-sdt_basesrcconfigconfigpy)
 
+
 ### Step 6: Install and populate the SQL database
-* For Ubuntu (18.04, 20.04, 22.04):
 
 #### Install dependencies and complete the secure installation. Remember the root password you set, you will need this in the future.
 
@@ -161,24 +119,25 @@ The `src/config/supported_distros.py` must now be updated to reflect the new jso
 
 #### Log in to MariaDB with the root account you set and create the read-only user (with a password, changed below) and database.
 
-	# Log in to MariaDB with the root account you set.
-	mariadb -u root -p
+        # Log in to MariaDB with the root account you set.
+        mariadb -u root -p
 
-	# Create the read-only user
-	MariaDB> CREATE USER 'sdtreaduser'@'localhost' IDENTIFIED BY 'SDTUSERPWD';  # Replace 'SDTUSERPWD' with the desired password. 
+        # Create the read-only user
+        MariaDB> CREATE USER 'sdtreaduser'@'localhost' IDENTIFIED BY 'SDTUSERPWD';  # Replace 'SDTUSERPWD' with the desired password. 
 
- 	# Grant permissions.
-	MariaDB> GRANT SELECT ON sdtDB.* TO 'sdtreaduser'@'localhost';
- 
- 	# Apply changes and exit.
-        MariaDB> flush privileges;
-        MariaDB> quit
-_**NOTE:**_
-* For enhanced security, it's recommended to grant the software-discovery-tool user (sdtreaduser) only read (SELECT) permissions on the required database. This adheres to the principle of least privilege and minimizes the impact if the user credentials are compromised.
-* When working with SDT, two separate users with distinct permission sets are used:
-![Diagram](../src/static/images/diagram.svg)
-	* [User for Read-only Database Access](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Installation.md#set-appropriate-folder-and-file-permission-on-optsoftware-discovery-tool-folder-for-apache) (Read-Only Permissions): This user is granted strictly read-only permissions over the entire project, including the database, for use when a user searches the database through the tool.
-   	* [User for Build Database Step](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Installation.md#run-the-script-to-populate-the-database-when-prompted-by-the-script-for-a-user-and-password-use-the-root-account-and-password-you-set-above) (All Privileges): This user is granted all privileges over the database for the 	`database_build` step below, allowing them to create new tables and drop old ones. This user's credentials should never be stored in a `.env` file, and customers must remember the password or set up a local system to manage it securely.
+        # Grant permissions.
+        MariaDB> GRANT SELECT ON sdtDB.* TO 'sdtreaduser'@'localhost';
+
+        # Apply changes and exit.
+            MariaDB> flush privileges;
+            MariaDB> quit
+
+***NOTE:***
+- For enhanced security, it's recommended to grant the software-discovery-tool user (sdtreaduser) only read (SELECT) permissions on the required database. This adheres to the principle of least privilege and minimizes the impact if the user credentials are compromised.
+- When working with SDT, two separate users with distinct permission sets are used: Diagram
+        - [User for Read-only Database Access](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Installation.md#set-appropriate-folder-and-file-permission-on-optsoftware-discovery-tool-folder-for-apache) (Read-Only Permissions): This user is granted strictly read-only permissions over the entire project, including the database, for use when a user searches the database through the tool.
+        - [User for Build Database Step (All Privileges)](https://github.com/openmainframeproject/software-discovery-tool/blob/master/docs/Installation.md#run-the-script-to-populate-the-database-when-prompted-by-the-script-for-a-user-and-password-use-the-root-account-and-password-you-set-above): This user is granted all privileges over the database for the `database_build` step below, allowing them to create new tables and drop old ones. This user's credentials should never be stored in a `.env` file, and customers must remember the password or set up a local system to manage it securely.
+![Diagram](./static/diagram.svg)
 
 #### Create a .env file in the root of the project with credentials set above (see .env.example)
 
@@ -190,7 +149,6 @@ See `.env.example` and create a `.env` file in `/opt/software-discovery-tool/`, 
         ./database_build.py
 
 ###  Step 7: Verify that the software-discovery-tool server is up and running
-* For Ubuntu (18.04, 20.04, 22.04):
  We now run the following commands to properly enable the config files of the software-discovery-tool server and then restart the apache server. 
 
         sudo a2ensite z-000-default.conf
@@ -212,8 +170,7 @@ If you run `pytest` as your logged user, it may give errors/warnings since you h
 
 _**NOTE:**_ 
 
-* For SLES (11 SP4, 12) by default the port_number will be 5000
-* For SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (18.04, 20.04, 22.04)  by default the port_number will be 80
+* By default the port_number will be 80
 
 ###  Step 8: (Optional) Custom configuration
 Following configuration settings can be managed in `/opt/software-discovery-tool/src/config/config.py`:
@@ -251,15 +208,50 @@ _**NOTE:**_
 
 In case any of the parameters are updated, the server has to be restarted:
 
-* SLES (12 SP1, 12 SP2, 12 SP3) and Ubuntu (18.04, 20.04, 22.04):
-
-    #### Start/Restart Apache service
+#### Start/Restart Apache service
 
         sudo apachectl restart
 
-* SLES (11 SP4, 12):
+###  Step 9: Start React (frontend) server
 
-    #### Start the Flask server as below
+#### Ensure Node.js and npm are installed
 
-        sudo service software-discovery-tool start
+	sudo apt install npm
+ 
 
+#### Change to the react-frontend directory
+
+	cd react-frontend
+
+#### Install the required npm packages
+
+	sudo npm i
+
+#### Setting up the Environment Variables
+
+To configure the Flask server URL for your React application, follow these steps:
+
+1. **Locate the `.env.example` file:**
+
+    Inside the root directory of the project, you will find a file named `.env.example`. This file contains example environment variables required to run the application.
+
+    ```plaintext
+    REACT_APP_API_URL='http://localhost:80/sdt'
+    ```
+
+2. **Create a `.env` file:**
+
+    - Copy the `.env.example` file and rename it to `.env`.
+    - Open the newly created `.env` file and ensure it contains the following line:<br><br>
+
+    ```plaintext
+    REACT_APP_API_URL='http://localhost:80/sdt'
+    ```
+
+3. **Use the Environment Variable:**
+
+    The `REACT_APP_API_URL` variable is now set and will be used by your React application to communicate with the Flask server running at the specified URL.
+
+#### Start the react frontend application
+
+	sudo npm run start
