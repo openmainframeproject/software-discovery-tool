@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template, json, Response, make_response
+from flask_cors import CORS
 import logging
 
 from config import server_host, server_port
@@ -7,6 +8,7 @@ from classes import PackageSearch
 
 
 app = Flask(__name__)
+CORS(app)
 # Ensure that the required JSON data file are pre-loaded in memory at the time of server start.
 package_search = PackageSearch.load()
 
@@ -63,4 +65,3 @@ if __name__ == '__main__':
         app.debug = True
 
     app.run(host=server_host, port=server_port)
-
