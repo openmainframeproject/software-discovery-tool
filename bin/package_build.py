@@ -17,8 +17,8 @@ def purify(dirty):
 
 def debian():
     global DATA, DATA_FILE_LOCATION
-    q = ['Debian_Bullseye_List.json', 'Debian_Bookworm_List.json']
-    urls = ['http://ftp.debian.org/debian/dists/bullseye/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/bookworm/main/binary-s390x/Packages.gz']
+    q = ['Debian_Bookworm_List.json', 'Debian_Trixie_List.json']
+    urls = ['http://ftp.debian.org/debian/dists/bookworm/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/trixie/main/binary-s390x/Packages.gz']
     file_name = [f'{DATA_FILE_LOCATION}/{x}' for x in q]
     for i in range(len(q)):
         try:
@@ -49,10 +49,10 @@ def debian():
             print(f"Saved!\nfilename: {q[i]}")
 
 def opensuse():
-    source_data = [[f"https://download.opensuse.org/ports/zsystems/tumbleweed/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']], 
-        [f"https://download.opensuse.org/distribution/leap/15.5/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']],
-        [f"https://download.opensuse.org/distribution/leap/15.6/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']]]
-    q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_5.json', 'OpenSUSE_Leap_15_6.json']
+    source_data = [[f"https://download.opensuse.org/ports/zsystems/tumbleweed/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']],
+       [f"https://download.opensuse.org/distribution/leap/15.6/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']],
+       [f"https://download.opensuse.org/distribution/leap/16.0/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']]]
+    q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_6.json', 'OpenSUSE_Leap_16_0.json']
     regex_pattern = r"-(.*?)-"
     for i in range(len(source_data)):
         opensuse_list= []
@@ -114,7 +114,7 @@ def clefos():
 
 def fedora():
     global DATA,DATA_FILE_LOCATION
-    sources = [38, 39, 40]
+    sources = [42, 43]
     pkg_reg = r'<a href="(.*)\.rpm"'
     dirs = '0123456789abcdefghijklmnopqrstuvwxyz'
     for i in range(len(sources)):
@@ -157,7 +157,7 @@ def fedora():
 
 def almaLinux():
     global DATA,DATA_FILE_LOCATION
-    sources = [9]
+    sources = [9, 10]
     pkg_reg = r'<a href="(.*)\.rpm"'
     for i in range(len(sources)):
         results = []
@@ -187,7 +187,7 @@ def almaLinux():
 
 def rockylinux():
     global DATA,DATA_FILE_LOCATION
-    sources = [9]
+    sources = [9, 10]
     pkg_reg = r'<a href="(.*)\.rpm"'
     dirs = 'abcdefghijklmnopqrstuvwxyz'
     for i in range(len(sources)):
@@ -274,15 +274,6 @@ def getIBMValidatedOpenSourceList(oskey):
         data_json = json.loads(data)
         oskey_match = False
 
-        if oskey == 'SLES_12' or oskey == 'all':
-            oskey_match = True
-            opensuse12_list = getIBMValidatedSoftwareList(data=data_json, oskey='SLES 12.x')
-            q = 'IBM_Validated_OSS_List_SLES_12.json'
-            file_name = f'{DATA_FILE_LOCATION}/{q}'
-            with open(file_name, 'w') as file:
-                json.dump(opensuse12_list, file, indent=2)
-                print(f"Saved!\nfilename: {q}")
-
         if oskey == 'SLES_15' or oskey == 'all':
             oskey_match = True
             opensuse15_list = getIBMValidatedSoftwareList(data=data_json, oskey='SLES 15.x')
@@ -290,15 +281,6 @@ def getIBMValidatedOpenSourceList(oskey):
             file_name = f'{DATA_FILE_LOCATION}/{q}'
             with open(file_name, 'w') as file:
                 json.dump(opensuse15_list, file, indent=2)
-                print(f"Saved!\nfilename: {q}")
-
-        if oskey == 'Ubuntu_20.04' or oskey == 'all':
-            oskey_match = True
-            ubuntu2004_list = getIBMValidatedSoftwareList(data=data_json, oskey='Ubuntu 20.x')
-            q = 'IBM_Validated_OSS_List_Ubuntu_2004.json'
-            file_name = f'{DATA_FILE_LOCATION}/{q}'
-            with open(file_name, 'w') as file:
-                json.dump(ubuntu2004_list, file, indent=2)
                 print(f"Saved!\nfilename: {q}")
 
         if oskey == 'Ubuntu_22.04' or oskey == 'all':
@@ -310,6 +292,15 @@ def getIBMValidatedOpenSourceList(oskey):
                 json.dump(ubuntu2204_list, file, indent=2)
                 print(f"Saved!\nfilename: {q}")
 
+        if oskey == 'Ubuntu_24.04' or oskey == 'all':
+            oskey_match = True
+            ubuntu2404_list = getIBMValidatedSoftwareList(data=data_json, oskey='Ubuntu 24.x')
+            q = 'IBM_Validated_OSS_List_Ubuntu_2404.json'
+            file_name = f'{DATA_FILE_LOCATION}/{q}'
+            with open(file_name, 'w') as file:
+                json.dump(ubuntu2404_list, file, indent=2)
+                print(f"Saved!\nfilename: {q}")
+
         if oskey == 'RHEL_9' or oskey == 'all':
             oskey_match = True
             rhel9_list = getIBMValidatedSoftwareList(data=data_json, oskey='RHEL 9.x')
@@ -319,23 +310,12 @@ def getIBMValidatedOpenSourceList(oskey):
                 json.dump(rhel9_list, file, indent=2)
                 print(f"Saved!\nfilename: {q}")
 
-        if oskey == 'RHEL_8' or oskey == 'all':
-            oskey_match = True
-            rhel8_list = getIBMValidatedSoftwareList(data=data_json, oskey='RHEL 8.x/7.x')
-            q = 'IBM_Validated_OSS_List_RHEL_8.json'
-            file_name = f'{DATA_FILE_LOCATION}/{q}'
-            with open(file_name, 'w') as file:
-                json.dump(rhel8_list, file, indent=2)
-                print(f"Saved!\nfilename: {q}")
-
         if not oskey_match:
-            os_versions = ['SLES 12.x', 'SLES 15.x', 'Ubuntu 20.x', 'Ubuntu 22.x', 'RHEL 8.x/7.x', 'RHEL 9.x']
+            os_versions = ['SLES 15.x', 'Ubuntu 22.x', 'Ubuntu 24.x', 'RHEL 9.x']
             os_versions_dict = {
-                'SLES 12.x': 'SLES_12',
                 'SLES 15.x': 'SLES_15',
-                'Ubuntu 20.x': 'Ubuntu_2004',
                 'Ubuntu 22.x': 'Ubuntu_2204',
-                'RHEL 8.x/7.x': 'RHEL_8',
+                'Ubuntu 24.x': 'Ubuntu_2404',
                 'RHEL 9.x': 'RHEL_9'
             }
 
