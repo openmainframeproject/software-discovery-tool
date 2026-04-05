@@ -262,7 +262,7 @@ def getIBMValidatedSoftwareList(data,oskey):
     return swlist
 
 def getIBMValidatedOpenSourceList(oskey):
-    src_url = "https://community.ibm.com/zsystems/api/oss/json"
+    src_url = "https://community.ibm.com/zsystems/api/beamz-core/oss/json"
     try:
         req = requests.get(src_url)
         data = req.content
