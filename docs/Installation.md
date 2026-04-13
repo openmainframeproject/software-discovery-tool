@@ -132,7 +132,10 @@ For more details about the formatting and expectations of this file, follow step
 sudo apt install mariadb-server python3-pymysql
 sudo mysql_secure_installation
 ```
-
+- On newer versions of MariaDB (10.5+) and Ubuntu (24.04+), `mysql_secure_installation` may not be available. Use `mariadb-secure-installation` instead:
+  ```bash
+  sudo mariadb-secure-installation
+  ```
 During this process, you will set a root password to be used later, otherwise the defaults are fine.
 
 ***NOTE:***
@@ -145,10 +148,7 @@ During this process, you will set a root password to be used later, otherwise th
   ```bash
   sudo service mariadb start
   ```
-- On newer versions of MariaDB (10.5+) and Ubuntu (24.04+), `mysql_secure_installation` may not be available. Use `mariadb-secure-installation` instead:
-  ```bash
-  sudo mariadb-secure-installation
-  ```
+
 #### Log in to MariaDB with the root account you set and create the read-only user (with a password, changed below) and database.
 ```bash
 # Log in to MariaDB with the root account you set.
