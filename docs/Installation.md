@@ -14,13 +14,7 @@ System prerequisites
 ```bash
 sudo apt update
 sudo apt dist-upgrade
-sudo apt install python3 gcc git python3-dev libssl-dev libffi-dev cron python3-lxml apache2
-```
-
-Python dependencies
-
-```bash
-sudo apt install libapache2-mod-wsgi-py3 python3-cffi python3-cryptography python3-flask python3-launchpadlib python3-simplejson python3-requests python3-pytest python3-flask-cors python3-dotenv
+sudo apt install nodejs npm git mariadb-server
 ```
 
 ###  Step 2: Checkout the source code, into /opt/ folder
@@ -36,29 +30,22 @@ cd /opt/software-discovery-tool
 sudo git pull origin master
 ```
 
-###  Step 3: Set Environment variables
-```bash
-sudo sh -c "echo 'export PYTHONPATH=/opt/software-discovery-tool/src/classes:/opt/software-discovery-tool/src/config:$PYTHONPATH' > /etc/profile.d/software-discovery-tool.sh"
-```
-        
-### Step 4: Install and configure software-discovery-tool
+### Step 3: Configure the Node.js Backend
 
-#### Copy the Apache configuration file from `/opt/software-discovery-tool/src/config/sdt.conf` into respective Apache configuration folder as below
+Change to the backend directory and install dependencies:
 ```bash
-sudo cp -f /opt/software-discovery-tool/src/config/sdt.conf /etc/apache2/sites-available/sdt.conf
-sudo mv /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/z-000-default.conf
-```
-        
-
-#### Set appropriate folder and file permission on /opt/software-discovery-tool/ folder for the Apache user on Ubuntu: www-data
-```bash
-sudo chown -R www-data:www-data /opt/software-discovery-tool/
+cd /opt/software-discovery-tool/backend
+sudo npm install
 ```
 
-#### Start/Restart Apache service
+#### Set up Environment Variables
+Create a `.env` file from the example:
 ```bash
-sudo apachectl restart
+sudo cp .env.example .env
 ```
+Edit the `.env` file with your database credentials.
+
+### Step 4: Install and populate the SQL database
 
 ### Step 5: Cloning Data Directory (Only First Time)
  openmainframeproject/software-discovery-tool-data contains all OMP created json files. To add the data files, we will use `git submodule`
@@ -196,68 +183,25 @@ cd /opt/software-discovery-tool/bin/
   MariaDB> ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD('password'); # Replace the 'password' with the root password you set while installing mariadb.
   ```
 ###  Step 7: Verify that the software-discovery-tool server is up and running
- We now run the following commands to properly enable the config files of the software-discovery-tool server and then restart the Apache server. 
+
+Start the Node.js backend:
 ```bash
-sudo a2ensite z-000-default.conf
-sudo a2ensite sdt.conf
-sudo systemctl reload apache2
-sudo apachectl restart
+cd /opt/software-discovery-tool/backend
+npm start
 ```
-We can check if the server is up and running by going to following URL :
 
-```http://server_ip_or_fully_qualified_domain_name:port_number/sdt``` <br />
-
-(Alternatively, you can check with unittesting) <br />
-```cd software-discovery-tool/src/tests``` <br />
-
-If you run `pytest` as your logged user, it may give errors/warnings since you have given user `www-data` ownership.
-```bash
-sudo -u www-data pytest
-```
-_**NOTE:**_ 
-
-* By default the port_number will be 80
+The backend should now be running on port 5000 (or the port specified in your `.env` file).
 
 ###  Step 8: (Optional) Custom configuration
-Following configuration settings can be managed in `/opt/software-discovery-tool/src/config/config.py`:
+Following configuration settings can be managed in `/opt/software-discovery-tool/backend/config.js` or the `.env` file:
 
-        <software-discovery-tool_BASE> - Base location where software-discovery-tool is Installed/Cloned. Defaults to `/opt/software-discovery-tool/`
+        <PORT> - Port on which the backend application will be accessible.
 
-        <DATA_FILE_LOCATION> - Location of folder containing all distribution specific JSON data
-        
-        <LOG_FILE_LOCATION> - Location of folder containing software-discovery-tool logs
-        
-        <enable_proxy_authentication> - Flag enabling/disabling proxy based network access
-        
-        <proxy_user> - Proxy server user name
-        
-        <proxy_password> - Proxy server password
-        
-        <proxy_server> - Proxy server IP/fully qualified domain name
-        
-        <proxy_port> - Proxy port number
-        
-        <DEBUG_LEVEL> - Set Debug levels for the application to log
-        
-        <server_host> - IP/fully qualified domain name of server where software-discovery-tool application will be deployed
-        
-        <server_port> - software-discovery-tool port on which application will be accessible to end users
+        <DB_HOST>, <DB_USER>, <DB_PASSWORD>, <DB_NAME> - Database connection details.
 
         <SUPPORTED_DISTROS> - Mapping of all the supported distros, new distros added need to be mapped here.
 
-        <MAX_RECORDS_TO_SEND> = Max number of records returned to the client. Defaults to 100
-
-        <CACHE_SIZE> - Number of searches to be cached. Default to 10
-
-_**NOTE:**_
-* In order to add new distribution support refer [here](Adding_new_distros.md)
-
-In case any of the parameters are updated, the server has to be restarted:
-
-#### Start/Restart Apache service
-```bash
-sudo apachectl restart
-```
+        <MAX_RECORDS_TO_SEND> - Max number of records returned to the client. Defaults to 100
 ###  Step 9: Start React (frontend) server
 
 #### Install npm
@@ -282,14 +226,14 @@ sudo -u www-data npm install
 ```
 #### Setting up the Environment Variables
 
-To configure the Flask server URL for your React application, follow these steps:
+To configure the Node.js server URL for your React application, follow these steps:
 
 1. **Locate the `.env.example` file:**
 
-    Inside the root directory of the project, you will find a file named `.env.example`. This file contains example environment variables required to run the application.
+    Inside the `react-frontend` directory of the project, you will find a file named `.env.example`. This file contains example environment variables required to run the application.
 
     ```plaintext
-    REACT_APP_API_URL='http://localhost:80/sdt'
+    REACT_APP_API_URL='http://localhost:5000'
     ```
 
 2. **Create a `.env` file:**
@@ -303,12 +247,12 @@ sudo -u www-data cp .env.example .env
     - Open the newly created `.env` file and ensure it contains the following line:<br><br>
 
     ```plaintext
-    REACT_APP_API_URL='http://server_ip_or_fully_qualified_domain_name:80/sdt'
+    REACT_APP_API_URL='http://server_ip_or_fully_qualified_domain_name:5000'
     ```
 
 3. **Use the Environment Variable:**
 
-    The `REACT_APP_API_URL` variable is now set and will be used by your React application to communicate with the Flask server running at the specified URL.
+    The `REACT_APP_API_URL` variable is now set and will be used by your React application to communicate with the Node.js server running at the specified URL.
 
 #### Start the react frontend application
 ```bash
