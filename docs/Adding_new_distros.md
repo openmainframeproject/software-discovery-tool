@@ -66,7 +66,7 @@ Software Discovery Tool uses an automatic script `config_build.py` to scan the d
 which is `<DistroName>_<DistroVersion>.json`. This is helpful for the script to parse through the file name and update the object with the correct distro version and name.
 To use the script, just follow:
 ```
-sudo -u apache ./bin/config_build.py
+sudo -u www-data ./bin/config_build.py
 ```
 With this, it also tries to update all data files taken from PDS to keep them working as the latest versions.
 
@@ -126,7 +126,7 @@ In case the `PackageNameX` is available in in `Ubuntu 20.04` and `Ubuntu 20.10` 
 
 Cache file has to be regenerated whenever there is a change in `supported_distros.py` file. Fortunately, `bin/config_build.py` does that for you. Incase, it does not find any cached_data.json file, it says so. With this, it also attempts to update all the PDS data sources, if found any in the directory, to the latest version as available on their repository.
 ```
-sudo -u apache ./bin/config_build.py
+sudo -u www-data ./bin/config_build.py
 Scanning distro_data directory...
 Found file: xUbuntu_21_04_Package_List.json
 Attempting to update PDS data sources...
