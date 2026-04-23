@@ -51,16 +51,16 @@ function SearchBar({ onSearchPerformed }) {
   };
 
   const generateSearchBitFlag = () => {
-    let searchBitFlag = 0;
+    let searchBitFlag = 0n;
     Object.entries(selectedOS).forEach(([os, selected]) => {
       if (selected) {
         const osVersions = osList[os];
         Object.values(osVersions).forEach(bitValue => {
-          searchBitFlag |= bitValue;
+          searchBitFlag |= BigInt(bitValue);
         });
       }
     });
-    return searchBitFlag;
+    return searchBitFlag.toString();
   };
 
   const fetchData = (value, exact) => {
@@ -78,10 +78,10 @@ function SearchBar({ onSearchPerformed }) {
       .then((response) => response.json())
       .then((data) => {
         const transformedResults = data.packages.map(pkg => ({
-          packageName: pkg[0],
-          description: pkg[1] || 'No description available',
-          version: pkg[2] || 'No version information',
-          ostag: pkg[3] || 'No OSTag information'
+          packageName: pkg.packageName,
+          description: pkg.description || 'No description available',
+          version: pkg.version || 'No version information',
+          ostag: pkg.osName || 'No OSTag information'
         }));
         setResults(transformedResults);
         setTotalResultsCount(data.total_packages || transformedResults.length);
