@@ -20,7 +20,7 @@ const pool = mysql.createPool({
 
 // Calculate DISTRO_BIT_MAP
 const DISTRO_BIT_MAP = {};
-let bitFlag = 1;
+let bitFlag = 1n;
 for (const distroName of Object.keys(SUPPORTED_DISTROS)) {
   const versions = Object.keys(SUPPORTED_DISTROS[distroName]).sort();
   for (const version of versions) {
@@ -28,7 +28,7 @@ for (const distroName of Object.keys(SUPPORTED_DISTROS)) {
       DISTRO_BIT_MAP[distroName] = {};
     }
     DISTRO_BIT_MAP[distroName][version] = bitFlag;
-    bitFlag *= 2;
+    bitFlag *= 2n;
   }
 }
 
@@ -38,7 +38,7 @@ const getTables = (searchBit) => {
     const versions = Object.keys(SUPPORTED_DISTROS[distroName]).sort();
     for (const version of versions) {
       const b = DISTRO_BIT_MAP[distroName][version];
-      if ((BigInt(b) & BigInt(searchBit)) > 0n) {
+      if ((b & BigInt(searchBit)) > 0n) {
         ans.push(SUPPORTED_DISTROS[distroName][version]);
       }
     }
@@ -46,19 +46,26 @@ const getTables = (searchBit) => {
   return ans;
 };
 
+// Helper function to stringify BigInts in an object
+const stringifyBigInts = (obj) => {
+  return JSON.parse(JSON.stringify(obj, (key, value) =>
+    typeof value === 'bigint' ? value.toString() : value
+  ));
+};
+
 // Replicate routes
 app.get('/getSupportedDistros', (req, res) => {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.setHeader('Pragma', 'no-cache');
   res.setHeader('Expires', '0');
-  res.json(DISTRO_BIT_MAP);
+  res.json(stringifyBigInts(DISTRO_BIT_MAP));
 });
 
 app.get('/sdt/getSupportedDistros', (req, res) => {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.setHeader('Pragma', 'no-cache');
   res.setHeader('Expires', '0');
-  res.json(DISTRO_BIT_MAP);
+  res.json(stringifyBigInts(DISTRO_BIT_MAP));
 });
 
 app.get(['/searchPackages', '/sdt/searchPackages'], async (req, res) => {
@@ -79,41 +86,36 @@ app.get(['/searchPackages', '/sdt/searchPackages'], async (req, res) => {
 
   try {
     const tables = getTables(searchBitFlag);
-
-    let allRows = [];
-    for (const table of tables) {
-      let query;
-      let params;
-      if (exactMatch) {
-        query = `SELECT packageName, description, version, osName FROM ${table} WHERE packageName = ?`;
-        params = [searchTerm];
-      } else {
-        query = `SELECT packageName, description, version, osName FROM ${table} WHERE packageName REGEXP ?`;
-        params = [searchTerm];
-      }
-      const [rows] = await pool.query(query, params);
-      allRows = allRows.concat(rows);
+    if (tables.length === 0) {
+      return res.json({
+        total_packages: 0,
+        current_page: pageNumber,
+        last_page: 0,
+        more_available: false,
+        packages: []
+      });
     }
 
-    const totalLength = allRows.length;
-    let results = [];
-    let lastPage = Math.ceil(totalLength / MAX_RECORDS_TO_SEND);
+    const subQuery = exactMatch
+      ? 'SELECT packageName, description, version, osName FROM ?? WHERE packageName = ?'
+      : 'SELECT packageName, description, version, osName FROM ?? WHERE packageName REGEXP ?';
 
-    if (totalLength <= MAX_RECORDS_TO_SEND) {
-      results = allRows;
-    } else {
-      const startIdx = pageNumber * MAX_RECORDS_TO_SEND;
-      let endIdx;
-      if (pageNumber === 0) {
-        endIdx = MAX_RECORDS_TO_SEND;
-        lastPage = 1; // Replicating the weird Python logic where last_page is 1 if page_number is 0?
-        // Actually the Python code says: last_page = 1 #math.ceil(totalLength/MAX_RECORDS_TO_SEND)
-      } else {
-        endIdx = totalLength;
-        lastPage = 1;
-      }
-      results = allRows.slice(startIdx, endIdx);
-    }
+    const unionQuery = tables.map(() => `(${subQuery})`).join(' UNION ALL ');
+    const countQuery = `SELECT COUNT(*) as total FROM (${unionQuery}) AS combined`;
+    
+    const countParams = [];
+    tables.forEach(table => {
+      countParams.push(table, searchTerm);
+    });
+
+    const [countResult] = await pool.query(countQuery, countParams);
+    const totalLength = countResult[0].total;
+
+    const dataQuery = `${unionQuery} LIMIT ? OFFSET ?`;
+    const dataParams = [...countParams, MAX_RECORDS_TO_SEND, pageNumber * MAX_RECORDS_TO_SEND];
+
+    const [results] = await pool.query(dataQuery, dataParams);
+    const lastPage = Math.ceil(totalLength / MAX_RECORDS_TO_SEND);
 
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');
@@ -122,7 +124,7 @@ app.get(['/searchPackages', '/sdt/searchPackages'], async (req, res) => {
       total_packages: totalLength,
       current_page: pageNumber,
       last_page: lastPage,
-      more_available: totalLength !== results.length,
+      more_available: (pageNumber + 1) * MAX_RECORDS_TO_SEND < totalLength,
       packages: results
     });
   } catch (err) {

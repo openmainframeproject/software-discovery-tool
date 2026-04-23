@@ -3,9 +3,9 @@ import re
 import os
 import subprocess
 
-SDT_BASE = '/opt/software-discovery-tool'
-DATA_FILE_LOCATION = '%s/distro_data/data_files' % SDT_BASE
-SUPPORTED_DISTRO_FILE = '%s/src/config/supported_distros.py' % SDT_BASE
+SDT_BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+DATA_FILE_LOCATION = os.path.join(SDT_BASE, 'distro_data', 'data_files')
+SUPPORTED_DISTRO_FILE = os.path.join(SDT_BASE, 'src', 'config', 'supported_distros.py')
 
 SLES_reg = r'((x?Suse_Linux_Enterprise_Server)|(x?SUSE_Package_Hub)_SLES)_(\d{2})(_(SP\d))?_?.*\.json'
 RHEL_reg = r'(x?RHEL)_(\d{1,2})_(\d{1,2}).*\.json'
