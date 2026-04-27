@@ -71,6 +71,7 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed, 
     });
   };
 
+  
   const handleDistributionChange = (e) => {
     setSelectedDistribution(e.target.value);
     setCurrentPage(0); // Reset to first page when changing distribution
