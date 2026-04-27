@@ -5,9 +5,11 @@ import sys
 import gzip
 import json
 
+import os
+
 DATA = ""
-SDT_BASE = '/opt/software-discovery-tool'
-DATA_FILE_LOCATION = '%s/distro_data/data_files' % SDT_BASE
+SDT_BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+DATA_FILE_LOCATION = os.path.join(SDT_BASE, 'distro_data', 'data_files')
 
 def purify(dirty):
     dirty_encode = dirty.encode("ascii", "ignore")

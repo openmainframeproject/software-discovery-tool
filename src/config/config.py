@@ -2,14 +2,15 @@ import urllib.request, urllib.error, urllib.parse
 import logging
 from config import supported_distros
 
-SDT_BASE = '/opt/software-discovery-tool'
-DATA_FILE_LOCATION = '%s/distro_data/data_files' % SDT_BASE
-LOG_FILE_LOCATION = '%s/log/sdt.log' % SDT_BASE
+import os
+SDT_BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+DATA_FILE_LOCATION = os.path.join(SDT_BASE, 'distro_data', 'data_files')
+LOG_FILE_LOCATION = os.path.join(SDT_BASE, 'log', 'sdt.log')
 MIN_DATA_FILE_SIZE = 50000
 MAX_RECORDS_TO_CONCAT = 5000
 MAX_RECORDS_TO_SEND = 100
 CACHE_SIZE = 10
-STATS_FILE_LOCATION = '/opt/software-discovery-tool/stats'
+STATS_FILE_LOCATION = os.path.join(SDT_BASE, 'stats')
 proxy_user = 'proxy_user'
 proxy_password = 'proxy_password'
 proxy_server = 'proxy_server'
