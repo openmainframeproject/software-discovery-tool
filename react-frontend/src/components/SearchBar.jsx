@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import omfLogo from "../images/openmainframe-logo.png";
-import SearchResults from './SearchResults';
+import SearchResults from './SearchResults.jsx';
 import '../App.css';
 
 function SearchBar({ onSearchPerformed }) {
@@ -36,7 +36,7 @@ function SearchBar({ onSearchPerformed }) {
 
   useEffect(() => {
     if (searchPerformed) {
-      setNoDistributionMessage(isNoDistributionSelected());
+      setNoDistributionMessage(!Object.values(selectedOS).some(selected => selected));
     }
   }, [selectedOS, searchPerformed]);
 
@@ -143,10 +143,6 @@ function SearchBar({ onSearchPerformed }) {
       setSelectedParentDistributions(newSelectAll ? Object.keys(osList) : []);
       return newSelectAll;
     });
-  };
-
-  const isNoDistributionSelected = () => {
-    return !Object.values(selectedOS).some(selected => selected);
   };
 
   return (

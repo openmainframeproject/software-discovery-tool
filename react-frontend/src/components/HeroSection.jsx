@@ -1,5 +1,4 @@
 import heroPic from "../images/hero-theme-pic.png";
-import openMainFrameLogo from "../images/openmainframeproject-color-1.png";
 
 function HeroSection() {
   return (

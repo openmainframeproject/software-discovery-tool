@@ -11,23 +11,35 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed, 
   const [availableDistributions, setAvailableDistributions] = useState(['All']);
 
   useEffect(() => {
-    updateAvailableDistributions();
-  }, [selectedParentDistributions, osList]);
-
-  useEffect(() => {
-    updatePaginatedResults();
-  }, [currentPage, itemsPerPage, refinePackageName, results, selectedDistribution]);
-
-  const updateAvailableDistributions = () => {
-    const childDistributions = selectedParentDistributions.flatMap(parent => 
+    const childDistributions = selectedParentDistributions.flatMap(parent =>
       Object.keys(osList[parent] || {})
     );
     setAvailableDistributions(['All', ...new Set(childDistributions)]);
-    
+
     if (!childDistributions.includes(selectedDistribution) && selectedDistribution !== 'All') {
       setSelectedDistribution('All');
     }
-  };
+  }, [selectedParentDistributions, osList, selectedDistribution]);
+
+  useEffect(() => {
+    if (!Array.isArray(results)) {
+      setPaginatedResults([]);
+      return;
+    }
+    const filteredByName = results.filter((result) => {
+      const nameMatch = result.packageName.toLowerCase().includes(refinePackageName.toLowerCase());
+      const versionMatch = result.version.toLowerCase().includes(refinePackageName.toLowerCase());
+      return nameMatch || versionMatch;
+    });
+    const filteredResults = selectedDistribution === 'All'
+      ? filteredByName
+      : filteredByName.filter(result =>
+          result.ostag.split(',').map(tag => tag.trim()).includes(selectedDistribution)
+        );
+    const start = currentPage * itemsPerPage;
+    const end = start + itemsPerPage;
+    setPaginatedResults(filteredResults.slice(start, end));
+  }, [currentPage, itemsPerPage, refinePackageName, results, selectedDistribution]);
 
   const filterResults = () => {
     if (!Array.isArray(results)) return [];
@@ -47,14 +59,7 @@ function SearchResults({ results = [], showDesc, itemsPerPage, searchPerformed, 
       });
     }
   };
-
-  const updatePaginatedResults = () => {
-    const filteredResults = filterResults();
-    const start = currentPage * itemsPerPage;
-    const end = start + itemsPerPage;
-    setPaginatedResults(filteredResults.slice(start, end));
-  };
-
+  
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
   };
