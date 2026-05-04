@@ -48,5 +48,12 @@
   },
   "devDependencies": {
     "tailwindcss": "^3.4.4"
+  },
+  "overrides": {
+    "nth-check": "^3.0.1",
+    "postcss": "^8.5.13",
+    "serialize-javascript": "^7.0.5",
+    "@tootallnate/once": "^3.0.1",
+    "underscore": "^1.13.8"
   }
 }
