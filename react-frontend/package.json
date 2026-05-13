@@ -48,5 +48,8 @@
   },
   "devDependencies": {
     "tailwindcss": "^3.4.4"
+  },
+  "overrides": {
+    "serialize-javascript": "6.0.2"
   }
 }
