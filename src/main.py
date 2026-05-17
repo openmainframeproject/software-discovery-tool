@@ -44,7 +44,7 @@ def searchPackages():
     try:
         search_term = str(request.args.get('search_term', ''))
         search_term = search_term.lstrip().rstrip()
-        exact_match = request.args.get('exact_match', False)
+        exact_match = request.args.get('exact_match', 'false').lower() == 'true'
         search_bit_flag = int(request.args.get('search_bit_flag', '0'))
         page_number = int(request.args.get('page_number', '0'))
         

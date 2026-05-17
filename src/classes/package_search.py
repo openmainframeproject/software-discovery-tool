@@ -159,7 +159,7 @@ class PackageSearch:
         rows = ()
         LOGGER.debug(f"We have {len(tables)} tables")
         for table in tables:
-            if exact_match==True:
+            if exact_match:
                 LOGGER.debug("Exact Match")
                 query = f"SELECT packageName,description,version,osName FROM {table} where packageName = %s"
             else:
