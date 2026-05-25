@@ -1,13 +1,23 @@
-import React, { useState, useEffect } from "react";
+/* global BigInt */
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import omfLogo from "../images/openmainframe-logo.png";
 import SearchResults from './SearchResults.jsx';
 import '../App.css';
+
+const DEFAULT_API_BASE_URL = 'http://localhost:5000';
+
+const normalizeApiBaseUrl = (rawUrl) => {
+  const trimmedUrl = (rawUrl || '').trim();
+  if (!trimmedUrl || trimmedUrl === 'undefined' || trimmedUrl === 'null') {
+    return DEFAULT_API_BASE_URL;
+  }
+  return trimmedUrl.replace(/\/+$/, '');
+};
 
 function SearchBar({ onSearchPerformed }) {
   const [input, setInput] = useState("");
   const [searchDescription, setSearchDescription] = useState(true);
   const [results, setResults] = useState([]);
-  const [resultsCount, setResultsCount] = useState(0);
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [osList, setOsList] = useState({});
@@ -15,12 +25,32 @@ function SearchBar({ onSearchPerformed }) {
   const [selectAll, setSelectAll] = useState(false);
   const [loading, setLoading] = useState(false);
   const [totalResultsCount, setTotalResultsCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [selectedParentDistributions, setSelectedParentDistributions] = useState([]);
   const [noDistributionMessage, setNoDistributionMessage] = useState(false);
+  const [searchError, setSearchError] = useState("");
+  const [lastSearchParams, setLastSearchParams] = useState(null);
+
+  const BASE_URL = useMemo(
+    () => normalizeApiBaseUrl(process.env.REACT_APP_API_URL),
+    []
+  );
+
+  const fetchOSList = useCallback(() => {
+    fetch(`${BASE_URL}/getSupportedDistros`)
+      .then((response) => response.json())
+      .then((data) => {
+        setOsList(data);
+      })
+      .catch((error) => {
+        console.error('Error fetching supported distros:', error);
+      });
+  }, [BASE_URL]);
 
   useEffect(() => {
     fetchOSList();
-  }, []);
+  }, [fetchOSList]);
 
   useEffect(() => {
     const updatedSelectedOS = Object.keys(osList).reduce((acc, os) => {
@@ -36,61 +66,57 @@ function SearchBar({ onSearchPerformed }) {
 
   useEffect(() => {
     if (searchPerformed) {
-      setNoDistributionMessage(!Object.values(selectedOS).some(selected => selected));
+      setNoDistributionMessage(!Object.values(selectedOS).some(Boolean));
     }
   }, [selectedOS, searchPerformed]);
 
-  const fetchOSList = () => {
-    console.log(`${process.env.REACT_APP_API_URL}/getSupportedDistros`)
-    fetch(`${process.env.REACT_APP_API_URL}/getSupportedDistros`)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setOsList(data);
-      });
-  };
-
   const generateSearchBitFlag = () => {
-    let searchBitFlag = 0;
+    let searchBitFlag = 0n;
     Object.entries(selectedOS).forEach(([os, selected]) => {
       if (selected) {
         const osVersions = osList[os];
         Object.values(osVersions).forEach(bitValue => {
-          searchBitFlag |= bitValue;
+          searchBitFlag |= BigInt(bitValue);
         });
       }
     });
-    return searchBitFlag;
+    return searchBitFlag.toString();
   };
 
-  const fetchData = (value, exact) => {
-    const selectedOSList = Object.keys(selectedOS).filter(key => selectedOS[key]);
-    const osFilters = selectedOSList.length ? `&os_filters=${selectedOSList.join(',')}` : '';
+  const fetchData = (value, exact, page = 0, limit = itemsPerPage, params = null) => {
+    const searchBitFlag = params ? params.searchBitFlag : generateSearchBitFlag();
+    const isExact = params ? params.exact : exact;
+    const isSearchDescription = params ? params.searchDescription : searchDescription;
+    const searchTerm = params ? params.value : value;
 
-    const searchBitFlag = generateSearchBitFlag();
-
-    const apiUrl = `${process.env.REACT_APP_API_URL}/searchPackages?search_term=${value}&exact_match=${exact}&search_bit_flag=${searchBitFlag}${osFilters}`;
-    
-    console.log("Fetch URL:", apiUrl);
+    const encodedSearchTerm = encodeURIComponent(searchTerm);
+    const apiUrl = `${BASE_URL}/searchPackages?search_term=${encodedSearchTerm}&exact_match=${isExact}&search_bit_flag=${searchBitFlag}&page_number=${page}&search_description=${isSearchDescription}&limit=${limit}`;
     setLoading(true);
+    setSearchError("");
 
     fetch(apiUrl)
       .then((response) => response.json())
       .then((data) => {
+        if (data.error) {
+          throw new Error(data.error);
+        }
         const transformedResults = data.packages.map(pkg => ({
-          packageName: pkg[0],
-          description: pkg[1] || 'No description available',
-          version: pkg[2] || 'No version information',
-          ostag: pkg[3] || 'No OSTag information'
+          packageName: pkg.packageName,
+          description: pkg.description || 'No description available',
+          version: pkg.version || 'No version information',
+          ostag: pkg.osName || 'No OSTag information'
         }));
         setResults(transformedResults);
-        setTotalResultsCount(data.total_packages || transformedResults.length);
-        setResultsCount(transformedResults.length);
+        setTotalResultsCount(data.total_packages || 0);
+        setTotalPages(data.last_page || 0);
+        setCurrentPage(page);
         setSearchPerformed(true);
         setLoading(false);
+        setLastSearchParams({ value: searchTerm, exact: isExact, searchDescription: isSearchDescription, searchBitFlag });
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
+        setSearchError("Failed to fetch results. Please try again.");
         setSearchPerformed(true);
         setLoading(false);
       });
@@ -100,23 +126,31 @@ function SearchBar({ onSearchPerformed }) {
     setInput(value);
   };
 
+  const validateInput = (value, exact) => {
+    const trimmed = value.trim();
+    if (!trimmed) return false;
+    if (!exact && trimmed.length < 3 && !trimmed.includes('*')) {
+      setSearchError("Please enter at least three characters for a pattern search.");
+      return false;
+    }
+    return true;
+  };
+
   const handleSearch = () => {
-    if (input.trim()) {
-      fetchData(input, false);
-    } else {
-      setResults([]);
-      setResultsCount(0);
-      setSearchPerformed(false);
+    if (validateInput(input, false)) {
+      fetchData(input, false, 0);
     }
   };
 
   const handleSearchExact = () => {
-    if (input.trim()) {
-      fetchData(input, true);
-    } else {
-      setResults([]);
-      setResultsCount(0);
-      setSearchPerformed(false);
+    if (validateInput(input, true)) {
+      fetchData(input, true, 0);
+    }
+  };
+
+  const handlePageChange = (newPage) => {
+    if (lastSearchParams) {
+      fetchData(null, null, newPage, itemsPerPage, lastSearchParams);
     }
   };
 
@@ -125,7 +159,11 @@ function SearchBar({ onSearchPerformed }) {
   };
 
   const handleItemsPerPageChange = (e) => {
-    setItemsPerPage(Number(e.target.value));
+    const newLimit = Number(e.target.value);
+    setItemsPerPage(newLimit);
+    if (lastSearchParams) {
+      fetchData(null, null, 0, newLimit, lastSearchParams);
+    }
   };
 
   const handleOSCheckboxChange = (os) => {
@@ -228,6 +266,12 @@ function SearchBar({ onSearchPerformed }) {
         Enter the name of the package or at least three characters to enable pattern search. Wildcard ('*') can be used either before or after the search keywords.
       </div>
 
+      {searchError && (
+        <div className="text-center mt-2 text-red-600 font-semibold">
+          {searchError}
+        </div>
+      )}
+
       <div className="results-count text-center sm:text-left">
         {searchPerformed ? (
           totalResultsCount > 0 ? (
@@ -240,7 +284,7 @@ function SearchBar({ onSearchPerformed }) {
         )}
       </div>
 
-      {resultsCount >= 5 && (
+      {totalResultsCount > 5 && (
         <div className="records-per-page mt-2 flex justify-center sm:justify-start items-center">
           <label className="text-sm">
             Records per page:
@@ -250,7 +294,7 @@ function SearchBar({ onSearchPerformed }) {
               className="ml-2 p-1 border rounded text-sm"
             >
               {[5, 10, 20, 30, 40, 50]
-                .filter((count) => count <= resultsCount)
+                .filter((count) => count <= totalResultsCount || count === 5)
                 .map((count) => (
                   <option key={count} value={count}>
                     {count}
@@ -272,6 +316,9 @@ function SearchBar({ onSearchPerformed }) {
           totalResultsCount={totalResultsCount}
           selectedParentDistributions={selectedParentDistributions}
           osList={osList}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
         />
       )}
     </div>
