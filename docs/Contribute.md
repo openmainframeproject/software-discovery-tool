@@ -36,6 +36,21 @@ git push origin Software-Discovery-Tool-feature_name
 
 For more information on creating a pull request, refer to the [GitHub Help documentation](https://help.github.com/articles/creating-a-pull-request/).
 
+
+## Security Policy for React Frontend
+
+All pull requests that modify files under `react-frontend/` are subject
+to an automated security audit via GitHub Actions. The CI pipeline runs
+`npm audit --audit-level=high` and will block merging if any high or
+critical severity vulnerabilities are introduced.
+
+If your PR fails this check:
+1. Run `npm audit` locally inside `react-frontend/` to see the issues.
+2. Run `npm audit fix` to auto-fix what's safe.
+3. For issues that can't be auto-fixed, update the affected dependency
+   manually or open a separate issue.
+
+   
 ## Note
 
 Please note that not all pull requests may be accepted. The project maintainers will review your changes and determine their suitability for merging into the main branch. If your contribution is not accepted, the reviewer will provide feedback and explain the reason.
