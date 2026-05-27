@@ -57,8 +57,12 @@ def jsontosql(db,table,file,os,user,password):
         data.remove({})
     except ValueError:
         pass
-    if len(keyset)==2:
+    has_description = 'description' in keyset
+    has_repo = 'repo' in keyset
+    if not has_description:
         query = f"INSERT INTO {table} (packageName, version, osName) VALUES (%(packageName)s, %(version)s, %(osName)s)"
+    elif has_repo:
+        query = f"INSERT INTO {table} (packageName, version, description, repo, osName) VALUES (%(packageName)s, %(version)s, %(description)s, %(repo)s, %(osName)s)"
     else:
         query = f"INSERT INTO {table} (packageName, version, description, osName) VALUES (%(packageName)s, %(version)s, %(description)s, %(osName)s)"
     if len(final_data) == 0 : 
@@ -76,6 +80,7 @@ def createTable(db,tblname,username,password):
 			"packageName VARCHAR(100) NOT NULL,"\
 			"version VARCHAR(500) NOT NULL,"\
 			"description VARCHAR(500), "\
+			"repo VARCHAR(500), "\
 			"osName VARCHAR(100) NOT NULL, "\
 			"PRIMARY KEY (pkgId)"\
 			")"
