@@ -61,6 +61,12 @@ Example of extracting the RHEL_8_Package_List.json from PDS repo:
 python3 ./bin/package_build.py RHEL_8_Package_List.json
 ```
 
+_**NOTE:**_
+After adding new `.json` files, you must update `config/distros.json` to include them. You can do this manually or by running:
+```bash
+python3 ./bin/config_build.py
+```
+
 ### Step 5: Install and populate the SQL database
 
 #### Install MariaDB and complete the secure installation.
@@ -68,6 +74,25 @@ python3 ./bin/package_build.py RHEL_8_Package_List.json
 sudo apt install mariadb-server
 sudo mariadb-secure-installation
 ```
+
+#### Log in to MariaDB with the root account you set and create the read-only user (with a password, changed below) and database.
+```bash
+# Log in to MariaDB with the root account you set.
+mariadb -u root -p
+
+# Create the read-only user
+MariaDB> CREATE USER 'sdtreaduser'@'localhost' IDENTIFIED BY 'SDTUSERPWD';  # Replace 'SDTUSERPWD' with the desired password. 
+
+# Grant permissions.
+MariaDB> GRANT SELECT ON sdtDB.* TO 'sdtreaduser'@'localhost';
+
+# Apply changes and exit.
+MariaDB> flush privileges;
+MariaDB> quit
+```
+
+_**NOTE:**_
+For enhanced security, we've granted the software-discovery-tool user (sdtreaduser) only read (SELECT) permissions on the required database. This adheres to the principle of least privilege and minimizes the impact if the user credentials are compromised.
 
 #### Populate the database
 The database build script uses the configuration from `backend/.env`.

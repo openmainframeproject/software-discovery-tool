@@ -1,6 +1,7 @@
 {
   "name": "software-discovery-tool",
   "version": "1.0.0",
+  "type": "module",
   "description": "Open Mainframe Project Software Discovery Tool",
   "private": true,
   "scripts": {
