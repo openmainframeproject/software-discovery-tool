@@ -32,6 +32,7 @@ async function createTable(connection, tblname) {
     packageName VARCHAR(100) NOT NULL,
     version VARCHAR(500) NOT NULL,
     description VARCHAR(500),
+    repo VARCHAR(500),
     osName VARCHAR(100) NOT NULL,
     PRIMARY KEY (pkgId)
   )`;
@@ -53,6 +54,7 @@ async function jsonToSql(connection, table, file, osName) {
       item.packageName,
       item.version,
       item.description || null,
+      item.repo || null,
       osName
     ]);
 
@@ -61,7 +63,7 @@ async function jsonToSql(connection, table, file, osName) {
     return;
   }
 
-  const query = `INSERT INTO \`${table}\` (packageName, version, description, osName) VALUES ?`;
+  const query = `INSERT INTO \`${table}\` (packageName, version, description, repo, osName) VALUES ?`;
   await connection.query(query, [finalData]);
   console.log(`${table} : Entries filled`);
 }
