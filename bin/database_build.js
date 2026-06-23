@@ -54,7 +54,7 @@ async function jsonToSql(connection, table, file, osName) {
       item.packageName,
       item.version,
       item.description || null,
-      item.repo || null,
+      item.repo ? [...new Set(item.repo.split(','))].join(',') : null,
       osName
     ]);
 
