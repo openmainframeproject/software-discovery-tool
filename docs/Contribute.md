@@ -40,9 +40,9 @@ For more information on creating a pull request, refer to the [GitHub Help docum
 ## Security Policy for React Frontend
 
 All pull requests that modify files under `react-frontend/` are subject
-to an automated security audit via GitHub Actions. The CI pipeline runs
-`npm audit --audit-level=high` and will block merging if any high or
-critical severity vulnerabilities are introduced.
+to an automated security audit via GitHub Actions. The CI pipeline runs `npm audit --audit-level=high` and will fail CI if any high or
+critical severity vulnerabilities are introduced, which may block merging
+when required checks are enforced.
 
 If your PR fails this check:
 1. Run `npm audit` locally inside `react-frontend/` to see the issues.
@@ -50,7 +50,6 @@ If your PR fails this check:
 3. For issues that can't be auto-fixed, update the affected dependency
    manually or open a separate issue.
 
-   
 ## Note
 
 Please note that not all pull requests may be accepted. The project maintainers will review your changes and determine their suitability for merging into the main branch. If your contribution is not accepted, the reviewer will provide feedback and explain the reason.

@@ -1,3 +1,8 @@
 *.pyc
 .env
 src/config/supported_distros.py
+.DS_Store
+node_modules/
+react-frontend/node_modules/
+react-frontend/build/
+log/
