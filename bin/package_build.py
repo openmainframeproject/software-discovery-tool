@@ -11,16 +11,19 @@ DATA = ""
 SDT_BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 DATA_FILE_LOCATION = os.path.join(SDT_BASE, 'distro_data', 'data_files')
 
+
 def purify(dirty):
     dirty_encode = dirty.encode("ascii", "ignore")
     clean = dirty_encode.decode()
     cleaner = clean.replace('"', '')
     return cleaner
 
+
 def debian():
-    global DATA, DATA_FILE_LOCATION
+    global DATA
     q = ['Debian_Bookworm_List.json', 'Debian_Trixie_List.json']
-    urls = ['http://ftp.debian.org/debian/dists/bookworm/main/binary-s390x/Packages.gz', 'http://ftp.debian.org/debian/dists/trixie/main/binary-s390x/Packages.gz']
+    urls = ['http://ftp.debian.org/debian/dists/bookworm/main/binary-s390x/Packages.gz',
+            'http://ftp.debian.org/debian/dists/trixie/main/binary-s390x/Packages.gz']
     file_name = [f'{DATA_FILE_LOCATION}/{x}' for x in q]
     for i in range(len(q)):
         try:
@@ -29,43 +32,47 @@ def debian():
             if req.status_code == 404:
                 raise Exception("404 File not found")
         except Exception as e:
-            print("Couldn't pull. Error: ",str(e))
+            print("Couldn't pull. Error: ", str(e))
         else:
-            capure_reg = r'^.+\n'
             data_d = gzip.decompress(data)
             data_d_str = str(data_d, 'utf-8')
-            data_d_raw = data_d_str.encode
             data_list = re.findall(r'(^((?:Package)|(?:Version)|(?:Description))+: .*)', data_d_str, re.MULTILINE)
             DATA = open(file_name[i], 'w')
             DATA.write('[')
             for each in data_list:
                 if each[1] == 'Package':
-                    DATA.write('{\n\t'+each[0].replace('Package: ', '"packageName": "')+'",\n')
+                    DATA.write('{\n\t' + each[0].replace('Package: ', '"packageName": "') + '",\n')
                 if each[1] == 'Description':
                     ref_data = purify(each[0])
-                    DATA.write('\t'+ref_data.replace('Description: ', '"description": "')+'"\n},\n')
+                    DATA.write('\t' + ref_data.replace('Description: ', '"description": "') + '"\n},\n')
                 if each[1] == 'Version':
-                    DATA.write('\t'+each[0].replace('Version: ', '"version": "')+'",\n')
+                    DATA.write('\t' + each[0].replace('Version: ', '"version": "') + '",\n')
             DATA.write('{}]')
             DATA.close()
             print(f"Saved!\nfilename: {q[i]}")
 
+
 def opensuse():
-    source_data = [[f"https://download.opensuse.org/ports/zsystems/tumbleweed/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']],
-       [f"https://download.opensuse.org/distribution/leap/15.6/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']],
-       [f"https://download.opensuse.org/distribution/leap/16.0/repo/oss/{x}/?jsontable" for x in ['s390x', 'noarch']]]
+    base_tumbleweed = "https://download.opensuse.org/ports/zsystems/tumbleweed/repo/oss"
+    base_leap_156 = "https://download.opensuse.org/distribution/leap/15.6/repo/oss"
+    base_leap_160 = "https://download.opensuse.org/distribution/leap/16.0/repo/oss"
+    source_data = [
+        [f"{base_tumbleweed}/{x}/?jsontable" for x in ['s390x', 'noarch']],
+        [f"{base_leap_156}/{x}/?jsontable" for x in ['s390x', 'noarch']],
+        [f"{base_leap_160}/{x}/?jsontable" for x in ['s390x', 'noarch']],
+    ]
     q = ['OpenSUSE_Tumbleweed.json', 'OpenSUSE_Leap_15_6.json', 'OpenSUSE_Leap_16_0.json']
     regex_pattern = r"-(.*?)-"
     for i in range(len(source_data)):
-        opensuse_list= []
+        opensuse_list = []
         for src_url in source_data[i]:
             try:
                 req = requests.get(src_url)
                 data_source = req.content
                 if req.status_code == 404:
-                    raise Exception(f"404 Directory for Opensuse list not found")
+                    raise Exception("404 Directory for Opensuse list not found")
             except Exception as e:
-                print("Couldn't pull. Error: ",str(e))
+                print("Couldn't pull. Error: ", str(e))
             else:
                 data = json.loads(data_source)
                 for d in data['data']:
@@ -74,9 +81,9 @@ def opensuse():
                     if reg_match:
                         package_name = name[reg_match.end():][::-1]
                         version = reg_match[0][1:-1][::-1]
-                        if package_name == None or version == None:
+                        if package_name is None or version is None:
                             continue
-                        data_dict = {"packageName": package_name, "description": "","version" :version}
+                        data_dict = {"packageName": package_name, "description": "", "version": version}
                         if data_dict not in opensuse_list:
                             opensuse_list.append(data_dict)
         file_name = q[i]
@@ -85,12 +92,13 @@ def opensuse():
             json.dump(opensuse_list, file, indent=2)
             print(f"Saved!\nfilename: {file_name}")
 
+
 def clefos():
-    global DATA, DATA_FILE_LOCATION
+    global DATA
     results = []
     q = 'ClefOS_7_List.json'
     file_name = f'{DATA_FILE_LOCATION}/{q}'
-    source = [f"https://download.sinenomine.net/clefos/7/base/{x}/" for x in ['s390x','noarch']]
+    source = [f"https://download.sinenomine.net/clefos/7/base/{x}/" for x in ['s390x', 'noarch']]
     for each in source:
         try:
             req = requests.get(each)
@@ -98,24 +106,25 @@ def clefos():
             if req.status_code == 404:
                 raise Exception("404 File not found")
         except Exception as e:
-            print("Couldn't pull. Error: ",str(e))
+            print("Couldn't pull. Error: ", str(e))
         else:
             ref_data = re.findall(r"<a href=\"(.*\.rpm)\">.*<\/a>", data)
             results.extend(ref_data)
     DATA = open(file_name, 'w')
     DATA.write('[')
     for result in results:
-        result = re.sub(r'\.el.*','', result)
+        result = re.sub(r'\.el.*', '', result)
         pkg = re.search(r'([\w+\-]+)-([\w\-\.]+)', result)
         each_pkg = f'"packageName": "{pkg.group(1)}","version": "{pkg.group(2)}"'
-        each_pkg = '{'+each_pkg+'},'
-        DATA.write(each_pkg+'\n')
+        each_pkg = '{' + each_pkg + '},'
+        DATA.write(each_pkg + '\n')
     DATA.write('{}]')
     DATA.close()
     print(f"Saved!\nfilename: {q}")
 
+
 def fedora():
-    global DATA,DATA_FILE_LOCATION
+    global DATA
     sources = [42, 43]
     pkg_reg = r'<a href="(.*)\.rpm"'
     dirs = '0123456789abcdefghijklmnopqrstuvwxyz'
@@ -123,8 +132,9 @@ def fedora():
         results = []
         q = f'Fedora_{sources[i]}_List.json'
         file_name = f'{DATA_FILE_LOCATION}/{q}'
-        current_link = f'https://dl.fedoraproject.org/pub/fedora-secondary/releases/{sources[i]}/Everything/s390x/os/Packages/'
-        archived_link = f'https://archives.fedoraproject.org/pub/archive/fedora-secondary/releases/{sources[i]}/Everything/s390x/os/Packages/'
+        fedora_rel = f"releases/{sources[i]}/Everything/s390x/os/Packages/"
+        current_link = f"https://dl.fedoraproject.org/pub/fedora-secondary/{fedora_rel}"
+        archived_link = f"https://archives.fedoraproject.org/pub/archive/fedora-secondary/{fedora_rel}"
         try:
             req = requests.get(current_link)
             if req.status_code == 404:
@@ -132,10 +142,10 @@ def fedora():
                 req = requests.get(current_link)
                 if req.status_code == 404:
                     raise Exception(f"For Fedora {sources[i]}: Current link and Archive link both are down")
-                else: 
+                else:
                     print(f'Fedora {sources[i]} has been moved to archive')
         except Exception as e:
-            print("Couldn't pull. Error: ",str(e))
+            print("Couldn't pull. Error: ", str(e))
         else:
             for each in range(len(dirs)):
                 link = f"{current_link}{dirs[each]}/"
@@ -152,13 +162,14 @@ def fedora():
             each = each.replace('.s390x', '').replace('.noarch', '')
             each = re.sub(r'\.fc\d\d', '', each)
             pkg = re.search(r'([\w+\-]+)-([\w\-\.]+)', each)
-            DATA.write('{"packageName": "'+pkg.group(1)+'","version": "'+pkg.group(2)+'"},\n')
+            DATA.write('{"packageName": "' + pkg.group(1) + '","version": "' + pkg.group(2) + '"},\n')
         DATA.write('{}\n]')
         DATA.close()
         print(f"Saved!\nfilename: {q}")
 
+
 def almaLinux():
-    global DATA,DATA_FILE_LOCATION
+    global DATA
     sources = [9, 10]
     pkg_reg = r'<a href="(.*)\.rpm"'
     for i in range(len(sources)):
@@ -170,30 +181,31 @@ def almaLinux():
             req = requests.get(link)
             data = req.text
             if req.status_code == 404:
-                raise Exception(f"404 File not found")
+                raise Exception("404 File not found")
         except Exception as e:
-            print("Couldn't pull. Error: ",str(e))
+            print("Couldn't pull. Error: ", str(e))
         else:
-            ref_data = re.findall(pkg_reg,data)
+            ref_data = re.findall(pkg_reg, data)
             results.extend(ref_data)
-        DATA = open(file_name,'w')
+        DATA = open(file_name, 'w')
         DATA.write('[\n')
         for each in results:
-            each = each.replace('.s390x','').replace('.noarch','')
+            each = each.replace('.s390x', '').replace('.noarch', '')
             each = re.sub(r'\.fc\d\d', '', each)
             pkg = re.search(r'([\w+\-]+)-([\w\-\.]+)', each)
-            DATA.write('{"packageName": "'+pkg.group(1)+'","version": "'+pkg.group(2)+'"},\n')
+            DATA.write('{"packageName": "' + pkg.group(1) + '","version": "' + pkg.group(2) + '"},\n')
         DATA.write('{}\n]')
         DATA.close()
         print(f"Saved!\nfilename: {q}")
 
+
 def rockylinux():
-    global DATA,DATA_FILE_LOCATION
+    global DATA
     sources = [9, 10]
     pkg_reg = r'<a href="(.*)\.rpm"'
     dirs = 'abcdefghijklmnopqrstuvwxyz'
     for i in range(len(sources)):
-        results=[]
+        results = []
         q = f'RockyLinux_{sources[i]}_List.json'
         file_name = f'{DATA_FILE_LOCATION}/{q}'
         for each in range(len(dirs)):
@@ -204,64 +216,70 @@ def rockylinux():
                 if req.status_code == 404:
                     raise Exception(f"404 Directory {dirs[each]} not found")
             except Exception as e:
-                print("Couldn't pull. Error: ",str(e))
+                print("Couldn't pull. Error: ", str(e))
             else:
-                ref_data = re.findall(pkg_reg,data)
+                ref_data = re.findall(pkg_reg, data)
                 results.extend(ref_data)
         DATA = open(file_name, 'w')
         DATA.write('[\n')
         for each in results:
-            each = each.replace('.s390x','').replace('.noarch','')
-            each = re.sub(r'.\fc\d\d','',each)
+            each = each.replace('.s390x', '').replace('.noarch', '')
+            each = re.sub(r'.\fc\d\d', '', each)
             pkg = re.search(r'([\w+\-]+)-([\w\-\.]+)', each)
-            DATA.write('{"packageName": "'+pkg.group(1)+'","version": "'+pkg.group(2)+'"},\n')
+            DATA.write('{"packageName": "' + pkg.group(1) + '","version": "' + pkg.group(2) + '"},\n')
         DATA.write('{}\n]')
         DATA.close()
         print(f"Saved!\nfilename: {q}")
 
-def getIBMValidatedSoftwareName(data,key):
+
+def getIBMValidatedSoftwareName(data, key):
     return data[key]['name']
 
-def getIBMValidatedSoftwareDescription(data,key,oskey):
+
+def getIBMValidatedSoftwareDescription(data, key, oskey):
     L = data[key]['os_versions']
-    for l in L:
-        if oskey==l['os']:
-            for i in l['versions']:
+    for os_ver in L:
+        if oskey == os_ver['os']:
+            for i in os_ver['versions']:
                 if i['name'] != 'Distro':
                     return i['url']
     return None
 
-def getIBMValidatedSoftwareVersion(data,key,oskey,distroNeeded = False):
+
+def getIBMValidatedSoftwareVersion(data, key, oskey, distroNeeded=False):
     L = data[key]['os_versions']
-    for l in L:
-        if l['os']==oskey:
-            if len(l['versions'])==2 and distroNeeded==True:
+    for os_ver in L:
+        if os_ver['os'] == oskey:
+            if len(os_ver['versions']) == 2 and distroNeeded:
                 return "Distro"
             else:
-                for i in l['versions']:
-                    if i['name']!='Distro':
+                for i in os_ver['versions']:
+                    if i['name'] != 'Distro':
                         return i['name']
     return None
 
-def createIBMValidatedSoftwareDict(name,description,version):
-    obj = {"packageName":name,
-            "description":description,
-            "version":version
-        }
+
+def createIBMValidatedSoftwareDict(name, description, version):
+    obj = {"packageName": name,
+           "description": description,
+           "version": version
+           }
     return obj
 
-def getIBMValidatedSoftwareList(data,oskey):
+
+def getIBMValidatedSoftwareList(data, oskey):
     softwares = data.keys()
-    swlist=[]
+    swlist = []
     for software in softwares:
-        name = getIBMValidatedSoftwareName(data=data,key=software)
-        desc = getIBMValidatedSoftwareDescription(data=data,key=software,oskey=oskey)
-        ver = getIBMValidatedSoftwareVersion(data=data,key=software,oskey=oskey)
-        if desc == None and ver == None:
+        name = getIBMValidatedSoftwareName(data=data, key=software)
+        desc = getIBMValidatedSoftwareDescription(data=data, key=software, oskey=oskey)
+        ver = getIBMValidatedSoftwareVersion(data=data, key=software, oskey=oskey)
+        if desc is None and ver is None:
             continue
-        obj = createIBMValidatedSoftwareDict(name=name,description=desc,version=ver)
+        obj = createIBMValidatedSoftwareDict(name=name, description=desc, version=ver)
         swlist.append(obj)
     return swlist
+
 
 def getIBMValidatedOpenSourceList(oskey):
     src_url = "https://community.ibm.com/zsystems/api/beamz-core/oss/json"
@@ -269,7 +287,7 @@ def getIBMValidatedOpenSourceList(oskey):
         req = requests.get(src_url)
         data = req.content
         if req.status_code == 404:
-            raise Exception(f"404 Directory for IBM-z validated open source list not found")
+            raise Exception("404 Directory for IBM-z validated open source list not found")
     except Exception as e:
         print("Couldn't pull. Error: ", str(e))
     else:
@@ -334,8 +352,9 @@ def getIBMValidatedOpenSourceList(oskey):
                     json.dump(opensource_list, file, indent=2)
                     print(f"Saved!\nfilename: {q}")
 
+
 def pds(q):
-    global DATA,DATA_FILE_LOCATION
+    global DATA
     file_name = f'{DATA_FILE_LOCATION}/{q}'
     try:
         req = requests.get(f"https://raw.githubusercontent.com/linux-on-ibm-z/PDS/master/distro_data/{q}")
@@ -343,21 +362,22 @@ def pds(q):
         if req.status_code == 404:
             raise Exception("404 File not found")
     except Exception as e:
-        print("Couldn't pull. Error: ",str(e))
+        print("Couldn't pull. Error: ", str(e))
     else:
         DATA = open(file_name, 'w')
         DATA.write(data)
         DATA.close()
         print(f"Saved!\nfilename: {q}")
 
+
 if __name__ == "__main__":
-    
+
     try:
         file = sys.argv[1]
         oskey = ''
-        if len(sys.argv)>=3:
+        if len(sys.argv) >= 3:
             oskey = sys.argv[2]
-    except:
+    except BaseException:
         file = ''
         oskey = ''
     if re.match(r'.*\.json', file):
@@ -396,5 +416,5 @@ if __name__ == "__main__":
             "\n./package_build.py ibm-validated\n\t\t\t[if data is from IBM Validated Open Source List]"
             "\n./package_build.py\n\t\t\t[for displaying this help]\n"
             "Example:\n./package_build.py RHEL_8_Package_List.json\n./package_build.py debian")
-    
+
     print("Thanks for using SDT!")

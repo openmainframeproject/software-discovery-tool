@@ -1,0 +1,11 @@
+[flake8]
+max-line-length = 120
+exclude =
+    config/supported_distros.py,
+    distro_data/,
+    react-frontend/,
+    .claude/,
+    __pycache__,
+    *.pyc
+per-file-ignores =
+    bin/config_build.py:E501
