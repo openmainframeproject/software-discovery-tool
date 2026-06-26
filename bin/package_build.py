@@ -105,8 +105,10 @@ def clefos():
     DATA = open(file_name, 'w')
     DATA.write('[')
     for result in results:
-        result = re.sub(r'\.el.*','', result)
-        pkg = re.search(r'([\w+\-]+)-([\w\-\.]+)', result)
+        result = re.sub(r'\.el.*', '', result)
+        pkg = re.match(r'^(.*?)-(\d.+)$', result)
+        if not pkg:
+            continue
         each_pkg = f'"packageName": "{pkg.group(1)}","version": "{pkg.group(2)}"'
         each_pkg = '{'+each_pkg+'},'
         DATA.write(each_pkg+'\n')
@@ -150,8 +152,10 @@ def fedora():
         DATA.write('[\n')
         for each in results:
             each = each.replace('.s390x', '').replace('.noarch', '')
-            each = re.sub(r'\.fc\d\d', '', each)
-            pkg = re.search(r'([\w+\-]+)-([\w\-\.]+)', each)
+            each = re.sub(r'\.(fc|el)\d+', '', each)
+            pkg = re.match(r'^(.*?)-(\d.+)$', each)
+            if not pkg:
+                continue
             DATA.write('{"packageName": "'+pkg.group(1)+'","version": "'+pkg.group(2)+'"},\n')
         DATA.write('{}\n]')
         DATA.close()
@@ -179,9 +183,11 @@ def almaLinux():
         DATA = open(file_name,'w')
         DATA.write('[\n')
         for each in results:
-            each = each.replace('.s390x','').replace('.noarch','')
-            each = re.sub(r'\.fc\d\d', '', each)
-            pkg = re.search(r'([\w+\-]+)-([\w\-\.]+)', each)
+            each = each.replace('.s390x', '').replace('.noarch', '')
+            each = re.sub(r'\.(fc|el)\d+', '', each)
+            pkg = re.match(r'^(.*?)-(\d.+)$', each)
+            if not pkg:
+                continue
             DATA.write('{"packageName": "'+pkg.group(1)+'","version": "'+pkg.group(2)+'"},\n')
         DATA.write('{}\n]')
         DATA.close()
@@ -211,9 +217,11 @@ def rockylinux():
         DATA = open(file_name, 'w')
         DATA.write('[\n')
         for each in results:
-            each = each.replace('.s390x','').replace('.noarch','')
-            each = re.sub(r'.\fc\d\d','',each)
-            pkg = re.search(r'([\w+\-]+)-([\w\-\.]+)', each)
+            each = each.replace('.s390x', '').replace('.noarch', '')
+            each = re.sub(r'\.(fc|el)\d+', '', each)
+            pkg = re.match(r'^(.*?)-(\d.+)$', each)
+            if not pkg:
+                continue
             DATA.write('{"packageName": "'+pkg.group(1)+'","version": "'+pkg.group(2)+'"},\n')
         DATA.write('{}\n]')
         DATA.close()
