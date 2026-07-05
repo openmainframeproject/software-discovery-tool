@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template, json, Response, make_response
+from flask_cors import CORS
 import logging
 
 from config import server_host, server_port
@@ -7,6 +8,7 @@ from classes import PackageSearch
 
 
 app = Flask(__name__)
+CORS(app)
 # Ensure that the required JSON data file are pre-loaded in memory at the time of server start.
 package_search = PackageSearch.load()
 
@@ -46,8 +48,8 @@ def searchPackages():
         search_bit_flag = int(request.args.get('search_bit_flag', '0'))
         page_number = int(request.args.get('page_number', '0'))
         
-        json_data = package_search.searchSQLPackages(search_term,exact_match,search_bit_flag,page_number)
-        resp = Response(json_data,mimetype="application/json")
+        sql_data = package_search.searchSQLPackages(search_term,exact_match,search_bit_flag,page_number)
+        resp = Response(sql_data,mimetype="application/json")
         resp.headers.set('Cache-Control','no-cache, no-store, must-revalidate')
         resp.headers.set('Pragma','no-cache')
         resp.headers.set('Expires','0')
@@ -63,4 +65,3 @@ if __name__ == '__main__':
         app.debug = True
 
     app.run(host=server_host, port=server_port)
-

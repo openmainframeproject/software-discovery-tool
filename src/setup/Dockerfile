@@ -46,6 +46,7 @@ RUN apt-get update && apt-get install -y \
 &&  pip3 install 'cffi==1.11.5' \
     'cryptography==1.4' \
     Flask \
+    flask-cors \
     launchpadlib \
     simplejson \
     requests \

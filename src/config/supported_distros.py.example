@@ -1,9 +1,9 @@
 SUPPORTED_DISTROS = {
 'IBM z/OS ™': {
-	'z/OS Miscellaneous Software': 'ZOS_Software_List'
-	'z/OS Rocket Software': 'ZOS_Rocket_Software.json',
-	'z/OS Open Mainframe Project': 'ZOS_OMP.json',
-	'z/OS from IBM-Z-zOS': 'IBM_Z_zOS.json'
+	'z/OS Miscellaneous Software': 'ZOS_Software_List',
+	'z/OS Rocket Software': 'ZOS_Rocket_Software',
+	'z/OS Open Mainframe Project': 'ZOS_OMP',
+	'z/OS from IBM-Z-zOS': 'IBM_Z_zOS'
 },
 'IBM Z and LinuxONE Container Registry': {
 	'Container Images for IBM Z and LinuxONE': 'IBMZ_container_registry'
@@ -17,7 +17,8 @@ SUPPORTED_DISTROS = {
 },
 'openSUSE': {
 	'Tumbleweed': 'OpenSUSE_Tumbleweed',
-	'Leap 15.5': 'OpenSUSE_Leap_15_5'
+	'Leap 15.5': 'OpenSUSE_Leap_15_5',
+	'Leap 15.6': 'OpenSUSE_Leap_15_6'
 },
 'Fedora': {
 	'Fedora 38': 'Fedora_38_List',

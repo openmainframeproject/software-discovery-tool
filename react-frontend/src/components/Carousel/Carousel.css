@@ -1,0 +1,30 @@
+.os-logos .slick-slide {
+  margin: 0 5px; /* Adjust margin to bring logos closer */
+}
+
+.slick-list {
+  overflow: hidden;
+}
+
+.slick-track {
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 1024px) {
+  .os-logos .slick-slide {
+    margin: 0 4px; 
+  }
+}
+
+@media (max-width: 768px) {
+  .os-logos .slick-slide {
+    margin: 0 3px; 
+  }
+}
+
+@media (max-width: 480px) {
+  .os-logos .slick-slide {
+    margin: 0 2px;
+  }
+}
