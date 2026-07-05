@@ -11,6 +11,18 @@ DATA = ""
 SDT_BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 DATA_FILE_LOCATION = os.path.join(SDT_BASE, 'distro_data', 'data_files')
 
+def parse_rpm_filename(filename):
+    arch_idx = filename.rfind('.')
+    rel_idx = filename[:arch_idx].rfind('-')
+    rel = filename[rel_idx + 1:arch_idx].split('.')[0]
+    ver_idx = filename[:rel_idx].rfind('-')
+    ver = filename[ver_idx + 1:rel_idx]
+    epoch_idx = filename.find(':')
+    if epoch_idx == -1:
+        return filename[:ver_idx], ver + '-' + rel
+    else:
+        return filename[epoch_idx + 1:ver_idx], ver + '-' + rel + ':' + filename[:epoch_idx]
+
 def purify(dirty):
     dirty_encode = dirty.encode("ascii", "ignore")
     clean = dirty_encode.decode()
@@ -102,18 +114,12 @@ def clefos():
         else:
             ref_data = re.findall(r"<a href=\"(.*\.rpm)\">.*<\/a>", data)
             results.extend(ref_data)
-    DATA = open(file_name, 'w')
-    DATA.write('[')
-    for result in results:
-        result = re.sub(r'\.el.*', '', result)
-        pkg = re.match(r'^(.*?)-(\d.+)$', result)
-        if not pkg:
-            continue
-        each_pkg = f'"packageName": "{pkg.group(1)}","version": "{pkg.group(2)}"'
-        each_pkg = '{'+each_pkg+'},'
-        DATA.write(each_pkg+'\n')
-    DATA.write('{}]')
-    DATA.close()
+    with open(file_name, 'w') as DATA:
+        DATA.write('[')
+        for result in results:
+            name, version = parse_rpm_filename(result)
+            DATA.write(f'{{"packageName": "{name}","version": "{version}"}},\n')
+        DATA.write('{}]')
     print(f"Saved!\nfilename: {q}")
 
 def fedora():
@@ -148,17 +154,12 @@ def fedora():
                     continue
                 ref_data = re.findall(pkg_reg, data)
                 results.extend(ref_data)
-        DATA = open(file_name, 'w')
-        DATA.write('[\n')
-        for each in results:
-            each = each.replace('.s390x', '').replace('.noarch', '')
-            each = re.sub(r'\.(fc|el)\d+', '', each)
-            pkg = re.match(r'^(.*?)-(\d.+)$', each)
-            if not pkg:
-                continue
-            DATA.write('{"packageName": "'+pkg.group(1)+'","version": "'+pkg.group(2)+'"},\n')
-        DATA.write('{}\n]')
-        DATA.close()
+        with open(file_name, 'w') as DATA:
+            DATA.write('[\n')
+            for each in results:
+                name, version = parse_rpm_filename(each)
+                DATA.write(f'{{"packageName": "{name}","version": "{version}"}},\n')
+            DATA.write('{}\n]')
         print(f"Saved!\nfilename: {q}")
 
 def almaLinux():
@@ -180,17 +181,12 @@ def almaLinux():
         else:
             ref_data = re.findall(pkg_reg,data)
             results.extend(ref_data)
-        DATA = open(file_name,'w')
-        DATA.write('[\n')
-        for each in results:
-            each = each.replace('.s390x', '').replace('.noarch', '')
-            each = re.sub(r'\.(fc|el)\d+', '', each)
-            pkg = re.match(r'^(.*?)-(\d.+)$', each)
-            if not pkg:
-                continue
-            DATA.write('{"packageName": "'+pkg.group(1)+'","version": "'+pkg.group(2)+'"},\n')
-        DATA.write('{}\n]')
-        DATA.close()
+        with open(file_name, 'w') as DATA:
+            DATA.write('[\n')
+            for each in results:
+                name, version = parse_rpm_filename(each)
+                DATA.write(f'{{"packageName": "{name}","version": "{version}"}},\n')
+            DATA.write('{}\n]')
         print(f"Saved!\nfilename: {q}")
 
 def rockylinux():
@@ -214,17 +210,12 @@ def rockylinux():
             else:
                 ref_data = re.findall(pkg_reg,data)
                 results.extend(ref_data)
-        DATA = open(file_name, 'w')
-        DATA.write('[\n')
-        for each in results:
-            each = each.replace('.s390x', '').replace('.noarch', '')
-            each = re.sub(r'\.(fc|el)\d+', '', each)
-            pkg = re.match(r'^(.*?)-(\d.+)$', each)
-            if not pkg:
-                continue
-            DATA.write('{"packageName": "'+pkg.group(1)+'","version": "'+pkg.group(2)+'"},\n')
-        DATA.write('{}\n]')
-        DATA.close()
+        with open(file_name, 'w') as DATA:
+            DATA.write('[\n')
+            for each in results:
+                name, version = parse_rpm_filename(each)
+                DATA.write(f'{{"packageName": "{name}","version": "{version}"}},\n')
+            DATA.write('{}\n]')
         print(f"Saved!\nfilename: {q}")
 
 def getIBMValidatedSoftwareName(data,key):
