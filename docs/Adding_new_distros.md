@@ -58,85 +58,26 @@ The Content of the distribution data JSON file has to be in the following format
 }]
 ```
 
-### Step 2. Update the SUPPORTED_DISTROS variable in file `/<SDT_BASE>/src/config/supported_ditros.py`
-Software Discovery application requires a mapping between each JSON file and relevant Distro Version.  This is done using SUPPORTED_DISTROS object in supported_distros file.
-SUPPORTED_DISTROS is a dictionary object having the "Distro Name" as the keys.  And each distro name has another dictionary having "Distro Version" has its key and "JSON file as its value"
+### Step 2. Update the distribution mapping in `config/distros.json`
+Software Discovery application requires a mapping between each JSON file and relevant Distro Version. This is done using the `config/distros.json` file, which is the single source of truth for both the backend and the database build script.
 
-Software Discovery Tool uses an automatic script `config_build.py` to scan the directory and update the SUPPORTED_DISTROS object accordingly. It is highly crucial to follow the naming file scheme,
-which is `<DistroName>_<DistroVersion>.json`. This is helpful for the script to parse through the file name and update the object with the correct distro version and name.
-To use the script, just follow:
-```
-sudo -u www-data ./bin/config_build.py
-```
-With this, it also tries to update all data files taken from PDS to keep them working as the latest versions.
+1.  Open `config/distros.json`.
+2.  Add your new distribution and its version mapping. The key should be the display name of the distribution, and the value should be another object mapping versions to their corresponding JSON filenames (without the `.json` extension).
 
-Software Discovery Tool also uses the "Distro Name" and "Distro Version" keys to create "Display Names" of check-boxes on the Software Discovery Tool main page.  Ensure that there are no duplicate
-"Distro Name" or "Distro Version" entries.
-
-SUPPORTED_DISTROS must have following structure
-```
-SUPPORTED_DISTROS = {
-    '<Distro Name1>': {
-        '<Distro Version 1': '<DistroName1>_<DistroVersion1>.json',
-        '<Distro Version 2': '<DistroName1>_<DistroVersion2>.json',
-        '<Distro Version 3': '<DistroName1>_<DistroVersion3>.json'
-    },
-    '<Distro Name2>': {
-        '<Distro Version XX': '<DistroName2>_<DistroVersionXX>.json',
-        '<Distro Version YY': '<DistroName2>_<DistroVersionYY>.json',
-        '<Distro Version ZZ': '<DistroName2>_<DistroVersionZZ>.json'
-    }
-}
+Example:
+```json
+  "Ubuntu": {
+    "24.04": "Ubuntu_24.04"
+  }
 ```
 
-**Here's an example:**
+### Step 3. Rebuild the Database
+After updating the configuration, you must rebuild the SQL database to include the new distribution data:
+```bash
+# Run the database build script
+node bin/database_build.js
 ```
-SUPPORTED_DISTROS = {
-    'Ubuntu': {
-        'Ubuntu 18.04': 'Ubuntu_18_04.json',
-        'Ubuntu 19.04': 'Ubuntu_19_04.json',
-        'Ubuntu 20.04': 'Ubuntu_20_04.json'
-    }, 
-    'SUSE Linux Enterprise Server': {
-        'SUSE Linux Enterprise Server 11 SP4': 'Suse_Linux_Enterprise_Server_11_SP4.json',
-        'SUSE Linux Enterprise Server 12 SP1': 'Suse_Linux_Enterprise_Server_12_SP1.json',
-        'SUSE Linux Enterprise Server 12 SP2': 'Suse_Linux_Enterprise_Server_12_SP2.json'
-    }
-}
-```
+This script will create the necessary SQL tables and populate them from your JSON files, using the database configuration from `backend/.env`.
 
-### Step 3. Delete the cached data file `<DATA_FILE_LOCATION>/cached_data.json`
-In order to search efficiently, the Software Discovery Tool caches the data from all JSON files into a single file called as 'cached_data.json'
-
-Cache file maintains the array of following JSON structure...
-
-`{P:<Package Name>, S:<Uppercase variant of P>, V:<Package Version>, B: <Search Flag indicating availability of P in various distro versions>}`
-
-NOTE About `B` search flag field in cache:  Software Discovery Tool assigns a binary flag to each distro version when the SUPPORTED_DISTROS is loaded for the first time.  For e.g. referring to the SUPPORTED_DISTROS example given above,
-Software Discovery Tool may assign following flags to the distros...
-```
-'Ubuntu_20_04.json' = 1
-'Ubuntu_19_04.json' = 2
-'Ubuntu_18_04.json' = 4
-'Suse_Linux_Enterprise_Server_11_SP4.json' = 8
-'Suse_Linux_Enterprise_Server_12_SP1.json' = 16
-'Suse_Linux_Enterprise_Server_12_SP2.json' = 32
-```
-In case the `PackageNameX` is available in in `Ubuntu 20.04` and `Ubuntu 20.10` then the `B` will be set to `6`
-
-Cache file has to be regenerated whenever there is a change in `supported_distros.py` file. Fortunately, `bin/config_build.py` does that for you. Incase, it does not find any cached_data.json file, it says so. With this, it also attempts to update all the PDS data sources, if found any in the directory, to the latest version as available on their repository.
-```
-sudo -u www-data ./bin/config_build.py
-Scanning distro_data directory...
-Found file: xUbuntu_21_04_Package_List.json
-Attempting to update PDS data sources...
-Updating xUbuntu_21_04_Package_List.json...
-Extracting xUbuntu_21_04_Package_List.json from PDS data ...
-Saved!
-filename: xUbuntu_21_04_Package_List.json
-Thanks for using SDT!
-Attempting to delete cached_data.json...
-File not found in directory.
-Done.
-```
-### Step 4. Restart the server by referring to the steps mentioned in [Installation](Installation.md) document.
+### Step 4. Restart the backend and frontend
+Refer to the [Installation](Installation.md) document to restart the Node.js backend and React frontend.

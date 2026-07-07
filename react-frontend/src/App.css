@@ -19,8 +19,9 @@
 * {
   box-sizing: border-box;
 }
+
 body {
-  overflow-x: hidden; 
+  overflow-x: hidden;
 }
 
 body::-webkit-scrollbar {
@@ -46,6 +47,7 @@ body::-webkit-scrollbar {
   position: relative;
   max-width: 100%;
 }
+
 .hero-section {
   align-items: center;
   display: flex;
@@ -53,7 +55,7 @@ body::-webkit-scrollbar {
   justify-content: center;
   padding: 0;
   position: relative;
-  max-width: 100%; 
+  max-width: 100%;
 }
 
 .hero-image {
@@ -104,21 +106,21 @@ body::-webkit-scrollbar {
 
 @media (max-width: 1024px) {
   .medium-length-display {
-    font-size: 3rem; 
+    font-size: 3rem;
     line-height: 1.2;
   }
 }
 
 @media (max-width: 768px) {
   .medium-length-display {
-    font-size: 2.5rem; 
+    font-size: 2.5rem;
     line-height: 1.1;
   }
 }
 
 @media (max-width: 480px) {
   .medium-length-display {
-    font-size: 2rem; 
+    font-size: 2rem;
     line-height: 1;
   }
 }
@@ -139,13 +141,13 @@ body::-webkit-scrollbar {
 
 @media (max-width: 768px) {
   .outfit-bold-black-68px {
-    font-size: 2rem; 
+    font-size: 2rem;
   }
 }
 
 @media (max-width: 480px) {
   .outfit-bold-black-68px {
-    font-size: 1.75rem; 
+    font-size: 1.75rem;
   }
 }
 
@@ -171,13 +173,13 @@ body::-webkit-scrollbar {
 
 @media (max-width: 768px) {
   .discover-open-source {
-    font-size: 1rem; 
+    font-size: 1rem;
   }
 }
 
 @media (max-width: 480px) {
   .discover-open-source {
-    font-size: 0.875rem; 
+    font-size: 0.875rem;
   }
 }
 
@@ -190,7 +192,8 @@ body::-webkit-scrollbar {
   position: relative;
   width: 100%;
   max-width: 100%;
-  padding: 0 1rem; /* Add some padding for smaller screens */
+  padding: 0 1rem;
+  /* Add some padding for smaller screens */
 }
 
 .search-button-container {
@@ -263,24 +266,25 @@ input:focus {
   }
 
   .search-button-container {
-    width: 100%; 
+    width: 100%;
     justify-content: center;
   }
 
   .search-button-container-item {
-    width: 100%; 
+    width: 100%;
     height: 50px;
   }
 
   .searchbox {
-    width: 100%; 
+    width: 100%;
     padding: 8px;
   }
 
   .searchbox-input {
-    font-size: 14px; 
+    font-size: 14px;
   }
 }
+
 .image-11 {
   height: 96px;
   object-fit: cover;
@@ -315,8 +319,8 @@ input:focus {
 }
 
 .support-section {
-  height: auto; 
-  padding: 20px 0; 
+  height: auto;
+  padding: 20px 0;
   box-sizing: border-box;
   align-items: center;
   display: flex;
@@ -346,24 +350,24 @@ input:focus {
   margin-top: 20px;
   margin-bottom: 10px;
   position: relative;
-  width: 100%; 
+  width: 100%;
 }
 
 @media (max-width: 1024px) {
   .supported-text {
-    font-size: calc(var(--font-size-xs) - 2px); 
+    font-size: calc(var(--font-size-xs) - 2px);
   }
 }
 
 @media (max-width: 768px) {
   .supported-text {
-    font-size: calc(var(--font-size-xs) - 4px); 
+    font-size: calc(var(--font-size-xs) - 4px);
   }
 }
 
 @media (max-width: 480px) {
   .supported-text {
-    font-size: calc(var(--font-size-xs) - 6px); 
+    font-size: calc(var(--font-size-xs) - 6px);
   }
 }
 
@@ -532,10 +536,11 @@ input:focus {
 .content {
   margin-top: 10px;
 }
+
 .pagination-and-scroll-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
 }
 
 @media (min-width: 640px) {
@@ -568,17 +573,17 @@ input:focus {
   align-items: center;
   justify-content: center;
   padding: 8px;
-  background-color:#0056b3; 
+  background-color: #0056b3;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  height: 38px; 
+  height: 38px;
   margin-left: 5px;
 }
 
 .scroll-to-top:hover {
-  background-color: #007bff ; 
+  background-color: #007bff;
 }
 
 @media (min-width: 640px) {
@@ -635,7 +640,7 @@ input:focus {
 }
 
 .content {
-  padding-right: 120px; 
+  padding-right: 120px;
 }
 
 .name {
@@ -649,6 +654,7 @@ input:focus {
   font-size: 14px;
   margin: 0;
 }
+
 .results-count {
   color: #333;
   font-size: 28px;
@@ -656,6 +662,7 @@ input:focus {
   margin-bottom: 2px;
   text-align: left;
 }
+
 .pagination {
   display: flex;
   justify-content: center;
@@ -689,6 +696,7 @@ input:focus {
   width: 100%;
   padding: 20px;
 }
+
 .search-list-container {
   display: flex;
   flex-direction: column;
@@ -704,7 +712,7 @@ input:focus {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  min-height: 60px; 
+  min-height: 60px;
 }
 
 .version-tags {
@@ -713,10 +721,19 @@ input:focus {
   right: 10px;
   display: flex;
   flex-wrap: wrap;
-  gap: 5px; 
+  gap: 5px;
 }
+
 .version-tag {
   background-color: #044fc0;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.distro-tag {
+  background-color: #2e7d32;
   color: white;
   padding: 5px 10px;
   border-radius: 4px;
@@ -727,8 +744,10 @@ input:focus {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  max-width: 100%; /* Allow full width usage */
-  word-wrap: break-word; /* Ensure long text wraps */
+  max-width: 100%;
+  /* Allow full width usage */
+  word-wrap: break-word;
+  /* Ensure long text wraps */
 }
 
 .name {
@@ -740,7 +759,7 @@ input:focus {
 
 .description {
   font-size: 0.875rem;
-  color: #666; 
+  color: #666;
   word-wrap: break-word;
 }
 
@@ -754,7 +773,7 @@ input:focus {
   }
 
   .description {
-    font-size: 1rem; 
+    font-size: 1rem;
   }
 }
 
@@ -790,7 +809,7 @@ input:focus {
 
 .page-item.previous,
 .page-item.next {
-  display: none; 
+  display: none;
 }
 
 
@@ -820,7 +839,8 @@ input:focus {
   margin-top: 10px;
   box-sizing: border-box;
   margin-left: 10px;
-  border-radius: 15px; /* Adjust the value as needed */
+  border-radius: 15px;
+  /* Adjust the value as needed */
 }
 
 
@@ -832,4 +852,3 @@ input:focus {
 .refine-filters label:not(:last-child) {
   margin-bottom: 15px;
 }
-

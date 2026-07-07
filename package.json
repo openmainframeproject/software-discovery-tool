@@ -1,0 +1,14 @@
+{
+  "name": "software-discovery-tool",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Open Mainframe Project Software Discovery Tool",
+  "private": true,
+  "scripts": {
+    "db:build": "node bin/database_build.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "mysql2": "^3.22.1"
+  }
+}
