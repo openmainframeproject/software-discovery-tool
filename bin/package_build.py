@@ -325,20 +325,30 @@ def getIBMValidatedOpenSourceList(oskey):
 
         if oskey == 'RHEL_9' or oskey == 'all':
             oskey_match = True
-            rhel9_list = getIBMValidatedSoftwareList(data=data_json, oskey='RHEL 9.x')
+            rhel9_list = getIBMValidatedSoftwareList(data=data_json, oskey='RHEL 9.x/8.x')
             q = 'IBM_Validated_OSS_List_RHEL_9.json'
             file_name = f'{DATA_FILE_LOCATION}/{q}'
             with open(file_name, 'w') as file:
                 json.dump(rhel9_list, file, indent=2)
                 print(f"Saved!\nfilename: {q}")
 
+        if oskey == 'RHEL_10' or oskey == 'all':
+            oskey_match = True
+            rhel10_list = getIBMValidatedSoftwareList(data=data_json, oskey='RHEL 10.x')
+            q = 'IBM_Validated_OSS_List_RHEL_10.json'
+            file_name = f'{DATA_FILE_LOCATION}/{q}'
+            with open(file_name, 'w') as file:
+                json.dump(rhel10_list, file, indent=2)
+                print(f"Saved!\nfilename: {q}")
+
         if not oskey_match:
-            os_versions = ['SLES 15.x', 'Ubuntu 22.x', 'Ubuntu 24.x', 'RHEL 9.x']
+            os_versions = ['SLES 15.x', 'Ubuntu 22.x', 'Ubuntu 24.x', 'RHEL 9.x/8.x', 'RHEL 10.x']
             os_versions_dict = {
                 'SLES 15.x': 'SLES_15',
                 'Ubuntu 22.x': 'Ubuntu_2204',
                 'Ubuntu 24.x': 'Ubuntu_2404',
-                'RHEL 9.x': 'RHEL_9'
+                'RHEL 9.x/8.x': 'RHEL_9',
+                'RHEL 10.x': 'RHEL_10'
             }
 
             for os_version in os_versions:
