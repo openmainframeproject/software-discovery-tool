@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discussion / Question
+    url: https://lists.openmainframeproject.org/g/software-discovery-tool-discussion
+    about: For questions, use the mailing list
