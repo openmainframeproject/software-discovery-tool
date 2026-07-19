@@ -23,11 +23,13 @@
     "vite": "^8.0.14",
     "web-vitals": "^2.1.4"
   },
+  
   "scripts": {
     "dev": "vite",
+    "start": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "eject": "react-scripts eject"
+    "test": "vitest"
   },
   "eslintConfig": {
     "extends": [
@@ -49,10 +51,17 @@
   },
   "devDependencies": {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
 =======
     "autoprefixer": "^10.5.0",
 >>>>>>> 0784f61 (Migrate React frontend from Create React App to Vite)
     "tailwindcss": "^3.4.4"
+=======
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "autoprefixer": "^10.5.0",
+    "tailwindcss": "^3.4.4",
+    "vitest": "^4.1.9"
+>>>>>>> 8843195 (Address review feedback: add test runner, restore FAQ data, fix duplicate code, update env vars, fix proxy config, update docs)
   }
 }

@@ -32,11 +32,16 @@ function SearchBar({ onSearchPerformed }) {
   const [searchError, setSearchError] = useState("");
   const [lastSearchParams, setLastSearchParams] = useState(null);
 
-  const BASE_URL = useMemo(
-    () => normalizeApiBaseUrl(process.env.REACT_APP_API_URL),
+//  // const BASE_URL = useMemo(
+//     () => normalizeApiBaseUrl(process.env.REACT_APP_API_URL),
+//     []
+//   );
+
+const BASE_URL = useMemo(
+    () => normalizeApiBaseUrl(import.meta.env.VITE_REACT_APP_API_URL),
     []
   );
-
+  
   const fetchOSList = useCallback(() => {
     fetch(`${BASE_URL}/getSupportedDistros`)
       .then((response) => response.json())
@@ -71,6 +76,7 @@ function SearchBar({ onSearchPerformed }) {
   }, [selectedOS, searchPerformed]);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   const fetchOSList = () => {
     console.log(`${import.meta.env.VITE_REACT_APP_API_URL}/getSupportedDistros`)
@@ -81,6 +87,18 @@ function SearchBar({ onSearchPerformed }) {
         setOsList(data);
       });
   };
+=======
+
+  // const fetchOSList = () => {
+  //   console.log(`${import.meta.env.VITE_REACT_APP_API_URL}/getSupportedDistros`)
+  //   fetch(`${import.meta.env.VITE_REACT_APP_API_URL}/getSupportedDistros`)
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log(data);
+  //       setOsList(data);
+  //     });
+  // };
+>>>>>>> 8843195 (Address review feedback: add test runner, restore FAQ data, fix duplicate code, update env vars, fix proxy config, update docs)
 
 >>>>>>> 0784f61 (Migrate React frontend from Create React App to Vite)
   const generateSearchBitFlag = () => {
@@ -108,10 +126,20 @@ function SearchBar({ onSearchPerformed }) {
 =======
     const searchBitFlag = generateSearchBitFlag();
 
-    const apiUrl = `${import.meta.env.VITE_REACT_APP_API_URL}/searchPackages?search_term=${value}&exact_match=${exact}&search_bit_flag=${searchBitFlag}${osFilters}`;
+    // const apiUrl = `${import.meta.env.VITE_REACT_APP_API_URL}/searchPackages?search_term=${value}&exact_match=${exact}&search_bit_flag=${searchBitFlag}${osFilters}`;
     
+    // console.log("Fetch URL:", apiUrl);
+
+    
+<<<<<<< HEAD
     console.log("Fetch URL:", apiUrl);
 >>>>>>> 0784f61 (Migrate React frontend from Create React App to Vite)
+=======
+
+    const encodedSearchTerm = encodeURIComponent(searchTerm);
+    const apiUrl = `${BASE_URL}/searchPackages?search_term=${encodedSearchTerm}&exact_match=${isExact}&search_bit_flag=${searchBitFlag}&page_number=${page}&search_description=${isSearchDescription}&limit=${limit}`;
+
+>>>>>>> 8843195 (Address review feedback: add test runner, restore FAQ data, fix duplicate code, update env vars, fix proxy config, update docs)
     setLoading(true);
     setSearchError("");
 
