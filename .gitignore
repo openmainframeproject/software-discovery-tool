@@ -1,7 +1,9 @@
-@"
 node_modules/
-venv/
 .env
 build/
 dist/
-"@ | Out-File -FilePath .gitignore -Encoding utf8
+*.pyc
+__pycache__/
+src/config/supported_distros.py
+.DS_Store
+*.log
