@@ -70,6 +70,19 @@ function SearchBar({ onSearchPerformed }) {
     }
   }, [selectedOS, searchPerformed]);
 
+<<<<<<< HEAD
+=======
+  const fetchOSList = () => {
+    console.log(`${import.meta.env.VITE_REACT_APP_API_URL}/getSupportedDistros`)
+    fetch(`${import.meta.env.VITE_REACT_APP_API_URL}/getSupportedDistros`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setOsList(data);
+      });
+  };
+
+>>>>>>> 0784f61 (Migrate React frontend from Create React App to Vite)
   const generateSearchBitFlag = () => {
     let searchBitFlag = 0n;
     Object.entries(selectedOS).forEach(([os, selected]) => {
@@ -89,8 +102,16 @@ function SearchBar({ onSearchPerformed }) {
     const isSearchDescription = params ? params.searchDescription : searchDescription;
     const searchTerm = params ? params.value : value;
 
+<<<<<<< HEAD
     const encodedSearchTerm = encodeURIComponent(searchTerm);
     const apiUrl = `${BASE_URL}/searchPackages?search_term=${encodedSearchTerm}&exact_match=${isExact}&search_bit_flag=${searchBitFlag}&page_number=${page}&search_description=${isSearchDescription}&limit=${limit}`;
+=======
+    const searchBitFlag = generateSearchBitFlag();
+
+    const apiUrl = `${import.meta.env.VITE_REACT_APP_API_URL}/searchPackages?search_term=${value}&exact_match=${exact}&search_bit_flag=${searchBitFlag}${osFilters}`;
+    
+    console.log("Fetch URL:", apiUrl);
+>>>>>>> 0784f61 (Migrate React frontend from Create React App to Vite)
     setLoading(true);
     setSearchError("");
 

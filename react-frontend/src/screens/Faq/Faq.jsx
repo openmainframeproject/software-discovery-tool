@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { questions } from './faq_data'
 import "./faq.css"
-import Accordion from '../../components/FaqAccordion/Accordion'
+import Accordion from '../../components/FaqAccordion/Accordion.jsx';
 
 const Faq = () => {
   const [data] = useState(questions);
