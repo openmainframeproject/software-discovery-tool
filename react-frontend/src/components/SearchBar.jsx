@@ -71,9 +71,7 @@ function SearchBar({ onSearchPerformed }) {
     }
   }, [selectedOS, searchPerformed]);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
+
   const fetchOSList = () => {
     console.log(`${import.meta.env.VITE_REACT_APP_API_URL}/getSupportedDistros`)
     fetch(`${import.meta.env.VITE_REACT_APP_API_URL}/getSupportedDistros`)
@@ -83,9 +81,9 @@ function SearchBar({ onSearchPerformed }) {
         setOsList(data);
       });
   };
-=======
 
-<<<<<<< HEAD
+
+
   // const fetchOSList = () => {
   //   console.log(`${import.meta.env.VITE_REACT_APP_API_URL}/getSupportedDistros`)
   //   fetch(`${import.meta.env.VITE_REACT_APP_API_URL}/getSupportedDistros`)
@@ -95,13 +93,7 @@ function SearchBar({ onSearchPerformed }) {
   //       setOsList(data);
   //     });
   // };
->>>>>>> 8843195 (Address review feedback: add test runner, restore FAQ data, fix duplicate code, update env vars, fix proxy config, update docs)
 
->>>>>>> 0784f61 (Migrate React frontend from Create React App to Vite)
-=======
-
-
->>>>>>> bd933fc (chore: clean up dead code and fix index.html metadata per review)
   const generateSearchBitFlag = () => {
     let searchBitFlag = 0n;
     Object.entries(selectedOS).forEach(([os, selected]) => {
@@ -121,26 +113,23 @@ function SearchBar({ onSearchPerformed }) {
     const isSearchDescription = params ? params.searchDescription : searchDescription;
     const searchTerm = params ? params.value : value;
 
-<<<<<<< HEAD
+
     const encodedSearchTerm = encodeURIComponent(searchTerm);
     const apiUrl = `${BASE_URL}/searchPackages?search_term=${encodedSearchTerm}&exact_match=${isExact}&search_bit_flag=${searchBitFlag}&page_number=${page}&search_description=${isSearchDescription}&limit=${limit}`;
-=======
+
     const searchBitFlag = generateSearchBitFlag();
 
 
-<<<<<<< HEAD
+
     
-<<<<<<< HEAD
+
     console.log("Fetch URL:", apiUrl);
->>>>>>> 0784f61 (Migrate React frontend from Create React App to Vite)
-=======
-=======
->>>>>>> bd933fc (chore: clean up dead code and fix index.html metadata per review)
+
 
     const encodedSearchTerm = encodeURIComponent(searchTerm);
     const apiUrl = `${BASE_URL}/searchPackages?search_term=${encodedSearchTerm}&exact_match=${isExact}&search_bit_flag=${searchBitFlag}&page_number=${page}&search_description=${isSearchDescription}&limit=${limit}`;
 
->>>>>>> 8843195 (Address review feedback: add test runner, restore FAQ data, fix duplicate code, update env vars, fix proxy config, update docs)
+
     setLoading(true);
     setSearchError("");
 
