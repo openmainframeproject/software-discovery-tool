@@ -74,6 +74,16 @@ function SearchResults({
                   {result.ostag}
                 </div>
               )}
+              {result.repo && (
+                
+                 <a href={result.repo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="repo-tag"
+                >
+                  Validated
+                </a>
+              )}
             </div>
             <div className="content">
               <div className="name">{result.packageName}</div>
