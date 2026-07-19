@@ -71,30 +71,7 @@ function SearchBar({ onSearchPerformed }) {
     }
   }, [selectedOS, searchPerformed]);
 
-
-  const fetchOSList = () => {
-    console.log(`${import.meta.env.VITE_REACT_APP_API_URL}/getSupportedDistros`)
-    fetch(`${import.meta.env.VITE_REACT_APP_API_URL}/getSupportedDistros`)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setOsList(data);
-      });
-  };
-
-
-
-  // const fetchOSList = () => {
-  //   console.log(`${import.meta.env.VITE_REACT_APP_API_URL}/getSupportedDistros`)
-  //   fetch(`${import.meta.env.VITE_REACT_APP_API_URL}/getSupportedDistros`)
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log(data);
-  //       setOsList(data);
-  //     });
-  // };
-
-  const generateSearchBitFlag = () => {
+   const generateSearchBitFlag = () => {
     let searchBitFlag = 0n;
     Object.entries(selectedOS).forEach(([os, selected]) => {
       if (selected) {
@@ -112,20 +89,7 @@ function SearchBar({ onSearchPerformed }) {
     const isExact = params ? params.exact : exact;
     const isSearchDescription = params ? params.searchDescription : searchDescription;
     const searchTerm = params ? params.value : value;
-
-
-    const encodedSearchTerm = encodeURIComponent(searchTerm);
-    const apiUrl = `${BASE_URL}/searchPackages?search_term=${encodedSearchTerm}&exact_match=${isExact}&search_bit_flag=${searchBitFlag}&page_number=${page}&search_description=${isSearchDescription}&limit=${limit}`;
-
-    const searchBitFlag = generateSearchBitFlag();
-
-
-
     
-
-    console.log("Fetch URL:", apiUrl);
-
-
     const encodedSearchTerm = encodeURIComponent(searchTerm);
     const apiUrl = `${BASE_URL}/searchPackages?search_term=${encodedSearchTerm}&exact_match=${isExact}&search_bit_flag=${searchBitFlag}&page_number=${page}&search_description=${isSearchDescription}&limit=${limit}`;
 
