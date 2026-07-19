@@ -33,7 +33,7 @@ function SearchBar({ onSearchPerformed }) {
   const [lastSearchParams, setLastSearchParams] = useState(null);
 
 
-const BASE_URL = useMemo(
+  const BASE_URL = useMemo(
     () => normalizeApiBaseUrl(import.meta.env.VITE_REACT_APP_API_URL),
     []
   );
