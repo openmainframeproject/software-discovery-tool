@@ -1,5 +1,5 @@
 {
-  "name": "sdt-veryfinal",
+  "name": "software-discovery-tool",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -31,12 +31,7 @@
     "preview": "vite preview",
     "test": "vitest"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
+
   "browserslist": {
     "production": [
       ">0.2%",

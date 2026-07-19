@@ -134,7 +134,6 @@ npm install
 ```bash
 cp .env.example .env
 ```
-<!-- Ensure `REACT_APP_API_URL` points to your backend URL (e.g., `http://localhost:5000`). -->
 Ensure `VITE_REACT_APP_API_URL` points to your backend URL (e.g., `http://localhost:5000`).
 #### Start the react frontend application
 ```bash
