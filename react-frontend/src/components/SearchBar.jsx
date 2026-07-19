@@ -104,7 +104,8 @@ function SearchBar({ onSearchPerformed }) {
           packageName: pkg.packageName,
           description: pkg.description || 'No description available',
           version: pkg.version || 'No version information',
-          ostag: pkg.osName || 'No OSTag information'
+          ostag: pkg.osName || 'No OSTag information',
+          repo: pkg.repo || null
         }));
         setResults(transformedResults);
         setTotalResultsCount(data.total_packages || 0);
