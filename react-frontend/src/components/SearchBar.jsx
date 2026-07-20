@@ -32,11 +32,12 @@ function SearchBar({ onSearchPerformed }) {
   const [searchError, setSearchError] = useState("");
   const [lastSearchParams, setLastSearchParams] = useState(null);
 
+
   const BASE_URL = useMemo(
-    () => normalizeApiBaseUrl(process.env.REACT_APP_API_URL),
+    () => normalizeApiBaseUrl(import.meta.env.VITE_REACT_APP_API_URL),
     []
   );
-
+  
   const fetchOSList = useCallback(() => {
     fetch(`${BASE_URL}/getSupportedDistros`)
       .then((response) => response.json())
@@ -70,7 +71,7 @@ function SearchBar({ onSearchPerformed }) {
     }
   }, [selectedOS, searchPerformed]);
 
-  const generateSearchBitFlag = () => {
+   const generateSearchBitFlag = () => {
     let searchBitFlag = 0n;
     Object.entries(selectedOS).forEach(([os, selected]) => {
       if (selected) {
@@ -88,9 +89,11 @@ function SearchBar({ onSearchPerformed }) {
     const isExact = params ? params.exact : exact;
     const isSearchDescription = params ? params.searchDescription : searchDescription;
     const searchTerm = params ? params.value : value;
-
+    
     const encodedSearchTerm = encodeURIComponent(searchTerm);
     const apiUrl = `${BASE_URL}/searchPackages?search_term=${encodedSearchTerm}&exact_match=${isExact}&search_bit_flag=${searchBitFlag}&page_number=${page}&search_description=${isSearchDescription}&limit=${limit}`;
+
+
     setLoading(true);
     setSearchError("");
 

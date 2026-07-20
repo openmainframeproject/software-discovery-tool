@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
 const Accordion = ({ que, ans }) => {
-  const [show, setShow] = useState(false)
+  const [show, setShow] = useState(false);
 
   return (
     <>
@@ -11,7 +11,7 @@ const Accordion = ({ que, ans }) => {
       </div>
       {show && <div className='answers'>{ans}</div>}
     </>
-  )
-}
+  );
+};
 
-export default Accordion
+export default Accordion;

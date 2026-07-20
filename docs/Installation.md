@@ -134,11 +134,11 @@ npm install
 ```bash
 cp .env.example .env
 ```
-Ensure `REACT_APP_API_URL` points to your backend URL (e.g., `http://localhost:5000`).
+Ensure `VITE_REACT_APP_API_URL` is set to `/sdt` so that API requests are routed through the Vite dev server proxy to your backend (configured in `vite.config.js`).
 
 #### Start the react frontend application
 ```bash
-npm start
+npm run dev
 ```
 
 You can now navigate to the frontend via port 3000 in your web browser.
