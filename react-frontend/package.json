@@ -20,7 +20,7 @@
     "react-router-dom": "^6.30.3",
     "react-slick": "^0.30.2",
     "styled-components": "^6.1.11",
-    "vite": "^8.0.14",
+    "vite": "^8.1.5",
     "web-vitals": "^2.1.4"
   },
   
