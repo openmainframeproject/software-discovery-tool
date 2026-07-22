@@ -25,6 +25,35 @@ const rl = readline.createInterface({
 
 const question = (query) => new Promise((resolve) => rl.question(query, resolve));
 
+const questionHidden = (query) => new Promise((resolve) => {
+  process.stdout.write(query);
+  const stdin = process.stdin;
+  if (!stdin.isTTY) {
+    resolve(question(''));
+    return;
+  }
+  stdin.removeAllListeners('keypress');
+  stdin.setRawMode(true);
+  stdin.resume();
+  stdin.setEncoding('utf8');
+  let password = '';
+  stdin.on('data', function handler(char) {
+    if (char === '\n' || char === '\r' || char === '\u0004') {
+      stdin.setRawMode(false);
+      stdin.pause();
+      stdin.removeListener('data', handler);
+      process.stdout.write('\n');
+      resolve(password);
+    } else if (char === '\u0003') {
+      process.exit();
+    } else if (char === '\u007f') {
+      password = password.slice(0, -1);
+    } else {
+      password += char;
+    }
+  });
+});
+
 async function createTable(connection, tblname) {
   const queryDrop = `DROP TABLE IF EXISTS \`${tblname}\``;
   const queryCreate = `CREATE TABLE \`${tblname}\` (
@@ -70,7 +99,7 @@ async function jsonToSql(connection, table, file, osName) {
 
 async function dbInit() {
   const username = await question("Enter privileged username to create/update SQL tables: ");
-  const password = await question("Enter password for privileged username: ");
+  const password = await questionHidden("Enter password for privileged username: ");
   
   let connection;
   try {
