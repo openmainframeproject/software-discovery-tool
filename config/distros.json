@@ -41,5 +41,8 @@
     "IBM Z Validated SLES 15": "IBM_Validated_OSS_List_SLES_15",
     "IBM Z Validated Ubuntu 22.04": "IBM_Validated_OSS_List_Ubuntu_2204",
     "IBM Z Validated Ubuntu 24.04": "IBM_Validated_OSS_List_Ubuntu_2404"
+  },
+  "Mainframe Software Hub for Linux": {
+    "Mainframe Software Hub for Linux": "linuxonzapps"
   }
 }

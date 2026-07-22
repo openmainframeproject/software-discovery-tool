@@ -382,6 +382,88 @@ def pds(q):
         print(f"Saved!\nfilename: {q}")
 
 
+def linuxonzapps():
+    """
+    Fetches all repositories from the linuxonzapps GitHub organisation,
+    retrieves every release tag for each repo, and writes the results to
+    linuxonzapps.json in the data_files directory.
+
+    Each release becomes a separate JSON object:
+        { "packageName": <repo>, "description": <repo_url>, "version": <tag> }
+
+    Set the GITHUB_TOKEN environment variable to avoid GitHub API rate limits
+    (60 req/hr unauthenticated vs 5000 req/hr authenticated).
+    """
+    org = "linuxonzapps"
+    api_base = "https://api.github.com"
+    q = "linuxonzapps.json"
+    file_path = f"{DATA_FILE_LOCATION}/{q}"
+    results = []
+
+    headers = {"Accept": "application/vnd.github+json"}
+    token = os.environ.get("GITHUB_TOKEN")
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+
+    # Paginate through all repos in the org
+    repo_page = 1
+    while True:
+        url = f"{api_base}/orgs/{org}/repos?per_page=100&page={repo_page}&type=public"
+        try:
+            resp = requests.get(url, headers=headers)
+            if resp.status_code == 404:
+                raise Exception(f"404 Organisation '{org}' not found")
+            if resp.status_code != 200:
+                raise Exception(f"GitHub API error {resp.status_code}: {resp.text}")
+            repos = resp.json()
+        except Exception as e:
+            print(f"Couldn't fetch repos (page {repo_page}). Error: {e}")
+            break
+
+        if not repos:
+            break
+
+        for repo in repos:
+            repo_name = repo["name"]
+            repo_url = repo["html_url"]
+
+            # Paginate through all releases for this repo
+            rel_page = 1
+            while True:
+                rel_url = f"{api_base}/repos/{org}/{repo_name}/releases?per_page=100&page={rel_page}"
+                try:
+                    rel_resp = requests.get(rel_url, headers=headers)
+                    if rel_resp.status_code != 200:
+                        print(f"  Skipping {repo_name} releases (HTTP {rel_resp.status_code})")
+                        break
+                    releases = rel_resp.json()
+                except Exception as e:
+                    print(f"  Couldn't fetch releases for {repo_name}. Error: {e}")
+                    break
+
+                if not releases:
+                    break
+
+                for release in releases:
+                    tag = release.get("tag_name", "")
+                    # Strip leading 'v' for consistency (e.g. v9.2.4 -> 9.2.4)
+                    version = tag.lstrip("v") if tag else ""
+                    if version:
+                        results.append({
+                            "packageName": repo_name,
+                            "description": repo_url,
+                            "version": version
+                        })
+
+                rel_page += 1
+
+        repo_page += 1
+
+    with open(file_path, "w") as f:
+        json.dump(results, f, indent=2)
+    print(f"Saved!\nfilename: {q}")
+
+
 if __name__ == "__main__":
 
     try:
@@ -416,6 +498,9 @@ if __name__ == "__main__":
     elif file == 'IBM-Validated' or file == 'ibm-validated':
         print(f"Extracting {file} data ... ")
         getIBMValidatedOpenSourceList(oskey)
+    elif file == 'linuxonzapps':
+        print(f"Extracting {file} data ... ")
+        linuxonzapps()
     else:
         print(
             "Usage:\n./package_build <exact_file_name.json>\n\t\t\t[if data is from PDS]"
@@ -426,6 +511,7 @@ if __name__ == "__main__":
             "\n./package_build.py almalinux\n\t\t\t[if data is from AlmaLinux]"
             "\n./package_build.py rockylinux\n\t\t\t[if data is from RockyLinux]"
             "\n./package_build.py ibm-validated\n\t\t\t[if data is from IBM Validated Open Source List]"
+            "\n./package_build.py linuxonzapps\n\t\t\t[if data is from Mainframe Software Hub for Linux]"
             "\n./package_build.py\n\t\t\t[for displaying this help]\n"
             "Example:\n./package_build.py RHEL_8_Package_List.json\n./package_build.py debian")
 
