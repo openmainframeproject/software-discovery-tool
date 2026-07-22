@@ -2,19 +2,33 @@
 
 ## Steps for setting up software-discovery-tool application on server
 
-The instructions provided below specify the steps for Ubuntu 20.04/22.04/24.04:
+The instructions provided below specify the steps for Ubuntu 24.04:
 
 _**NOTE:**_
 * make sure you are logged in as user with sudo permissions
 
 ### Step 1: Install prerequisites
 
-System prerequisites
+#### Install Node.js 22 via NodeSource
+
+Ubuntu 24.04's default apt package provides Node.js 18, which is too old for Vite 8 (requires Node 20.19+ or 22). Install Node.js 22 LTS from NodeSource:
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+
+Verify:
+```bash
+node --version   # Should print v22.x.x
+```
+
+#### Install remaining system dependencies
 
 ```bash
 sudo apt update
 sudo apt dist-upgrade
-sudo apt install nodejs npm git mariadb-server
+sudo apt install git mariadb-server
 # Python is only required if you plan to use bin/package_build.py
 sudo apt install python3 python3-requests
 ```
