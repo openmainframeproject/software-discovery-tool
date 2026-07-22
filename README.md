@@ -82,7 +82,7 @@ To run the Software Discovery Tool locally for development:
    Ensure `REACT_APP_API_URL` points to your backend (default `http://localhost:5000`).
 4. Start the frontend:
    ```bash
-   npm start
+   npm run dev
    ```
 
 The application will be available at `http://localhost:3000`.
