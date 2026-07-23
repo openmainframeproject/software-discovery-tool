@@ -6,6 +6,7 @@ import '../App.css';
 function SearchResults({
   results = [],
   showDesc,
+  showRepo,
   itemsPerPage,
   searchPerformed,
   totalResultsCount,
@@ -74,15 +75,11 @@ function SearchResults({
                   {result.ostag}
                 </div>
               )}
-              {result.repo && (
-                
-                 <a href={result.repo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="repo-tag"
-                >
-                  Validated
-                </a>
+              
+            {result.repo && showRepo && (
+                <span className="repo-tag" title={result.repo}>
+                  {result.repo}
+                </span>
               )}
             </div>
             <div className="content">
