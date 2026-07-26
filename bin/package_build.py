@@ -382,6 +382,81 @@ def pds(q):
         print(f"Saved!\nfilename: {q}")
 
 
+def linuxonzapps():
+    """
+    Iterates over every repository in the linuxonzapps GitHub org
+    (https://github.com/linuxonzapps), pulls each repo's releases,
+    and writes one JSON object per released version to linuxonzapps.json.
+    """
+    q = 'linuxonzapps.json'
+    file_name = f'{DATA_FILE_LOCATION}/{q}'
+    results = []
+
+    # Optional: set a GITHUB_TOKEN env var locally to raise the API rate
+    # limit from 60/hr (unauthenticated) to 5000/hr while testing.
+    headers = {}
+    token = os.environ.get('GITHUB_TOKEN')
+    if token:
+        headers['Authorization'] = f'token {token}'
+
+    org_repos = []
+    page = 1
+    try:
+        while True:
+            req = requests.get(
+                "https://api.github.com/orgs/linuxonzapps/repos",
+                params={"per_page": 100, "page": page},
+                headers=headers
+            )
+            if req.status_code == 404:
+                raise Exception("404 linuxonzapps org not found")
+            req.raise_for_status()
+            page_data = req.json()
+            if not page_data:
+                break
+            org_repos.extend(page_data)
+            page += 1
+    except Exception as e:
+        print("Couldn't pull linuxonzapps repo list. Error: ", str(e))
+        return
+
+    for repo in org_repos:
+        repo_name = repo.get('name')
+        if not repo_name:
+            continue
+        try:
+            rel_req = requests.get(
+                f"https://api.github.com/repos/linuxonzapps/{repo_name}/releases",
+                params={"per_page": 100},
+                headers=headers
+            )
+            if rel_req.status_code == 404:
+                print(f"No releases endpoint for {repo_name}, skipping")
+                continue
+            rel_req.raise_for_status()
+            releases = rel_req.json()
+        except Exception as e:
+            print(f"Couldn't pull releases for {repo_name}. Error: ", str(e))
+            continue
+
+        for release in releases:
+            if release.get('draft'):
+                continue
+            tag = release.get('tag_name', '') or ''
+            version = tag.lstrip('vV')
+            if not version:
+                continue
+            results.append({
+                "packageName": repo_name.capitalize(),
+                "description": f"https://github.com/linuxonzapps/{repo_name}",
+                "version": version
+            })
+
+    with open(file_name, 'w') as file:
+        json.dump(results, file, indent=2)
+        print(f"Saved!\nfilename: {q}")
+
+
 if __name__ == "__main__":
 
     try:
@@ -416,6 +491,9 @@ if __name__ == "__main__":
     elif file == 'IBM-Validated' or file == 'ibm-validated':
         print(f"Extracting {file} data ... ")
         getIBMValidatedOpenSourceList(oskey)
+    elif file == 'LinuxOnZapps' or file == 'linuxonzapps':
+        print(f"Extracting {file} data ... ")
+        linuxonzapps()
     else:
         print(
             "Usage:\n./package_build <exact_file_name.json>\n\t\t\t[if data is from PDS]"
@@ -426,6 +504,7 @@ if __name__ == "__main__":
             "\n./package_build.py almalinux\n\t\t\t[if data is from AlmaLinux]"
             "\n./package_build.py rockylinux\n\t\t\t[if data is from RockyLinux]"
             "\n./package_build.py ibm-validated\n\t\t\t[if data is from IBM Validated Open Source List]"
+            "\n./package_build.py linuxonzapps\n\t\t\t[if data is from Mainframe Software Hub for Linux]"
             "\n./package_build.py\n\t\t\t[for displaying this help]\n"
             "Example:\n./package_build.py RHEL_8_Package_List.json\n./package_build.py debian")
 
