@@ -4,9 +4,13 @@ FROM node:22-slim AS builder
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci
+RUN npm install --legacy-peer-deps
 
 COPY . .
+
+ARG VITE_REACT_APP_API_URL=/sdt
+ENV VITE_REACT_APP_API_URL=$VITE_REACT_APP_API_URL
+
 RUN npm run build
 
 # Stage 2: serve with nginx
