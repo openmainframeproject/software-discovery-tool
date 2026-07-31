@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import ReactPaginate from 'react-paginate';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import '../App.css';
@@ -13,10 +13,9 @@ function SearchResults({
   osList,
   currentPage,
   totalPages,
-  onPageChange
+  onPageChange,
+  refinePackageName
 }) {
-  const [refinePackageName, setRefinePackageName] = useState('');
-
   const filteredResults = useMemo(() => {
     if (!Array.isArray(results)) return [];
     if (!refinePackageName.trim()) return results;
@@ -43,23 +42,6 @@ function SearchResults({
 
   return (
     <div className="search-results-container">
-      {searchPerformed && results.length > 0 && (
-        <div className="refine-filters-container">
-          <div className="refine-filters">
-            <label>
-              Refine results on this page:
-              <input
-                type="text"
-                value={refinePackageName}
-                onChange={(e) => setRefinePackageName(e.target.value)}
-                placeholder="Search within page..."
-                className="ml-2 p-1 border rounded"
-              />
-            </label>
-          </div>
-        </div>
-      )}
-
       <div className="search-list-container">
         {filteredResults.map((result, index) => (
           <div key={index} className="search-list">
