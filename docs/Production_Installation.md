@@ -100,16 +100,18 @@ ALLOWED_ORIGINS=http://YOUR_SERVER_IP_OR_DOMAIN
 
 ### Load package data (optional)
 
-The `distro_data/` submodule pulled in Step 3 already includes data for all supported distributions. If you wish to import additional distro data from [PDS](https://github.com/linux-on-ibm-z/PDS/tree/master/distro_data), use `bin/package_build.py`:
+The `distro_data/` submodule pulled in Step 3 already includes data for all supported distributions.
+
+Use `bin/package_build.py` to import any [distro data from PDS](https://github.com/linux-on-ibm-z/PDS/tree/master/distro_data) you wish to include:
 
 ```bash
 python3 bin/package_build.py RHEL_9_Package_List.json
 # Repeat for each additional source you want to include
 ```
 
-The `bin/package_build.py --help` option shows all available options and sources.
+The `bin/package_build.py` can also be used to update sources you pulled in via the `distro_data` submodule if you want newer versions than included in that repository, see `--help` in the tool for more.
 
-After adding new source files, edit `config/distros.json` to include them.
+Edit `config/distros.json` to add the new source files you just pulled in.
 
 ### Run the database build script
 
