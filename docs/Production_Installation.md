@@ -8,6 +8,8 @@ The production deployment has two components:
 - **Node.js backend** — runs as a systemd service on port 5000
 - **React frontend** — compiled to static files and served by Apache2
 
+> **Note on building the frontend:** Step 6 (building the React frontend) can be done either directly on your production server (since Node.js 22 is installed in Step 1) or on a local development machine. If you build locally, use `scp` to copy the resulting `react-frontend/dist/` directory to your server before proceeding to Step 7.
+
 ## Prerequisites
 
 - Ubuntu 24.04 server with sudo access
@@ -96,6 +98,19 @@ PORT=5000
 ALLOWED_ORIGINS=http://YOUR_SERVER_IP_OR_DOMAIN
 ```
 
+### Load package data (optional)
+
+The `distro_data/` submodule pulled in Step 3 already includes data for all supported distributions. If you wish to import additional distro data from [PDS](https://github.com/linux-on-ibm-z/PDS/tree/master/distro_data), use `bin/package_build.py`:
+
+```bash
+python3 bin/package_build.py RHEL_9_Package_List.json
+# Repeat for each additional source you want to include
+```
+
+The `bin/package_build.py --help` option shows all available options and sources.
+
+After adding new source files, edit `config/distros.json` to include them.
+
 ### Run the database build script
 
 From the repo root:
@@ -107,27 +122,9 @@ node bin/database_build.js
 
 When prompted, enter a privileged MariaDB account (e.g. root) to create the tables.
 
-### Load package data
-
-Use `bin/package_build.py` to import distro data from the `distro_data/` submodule:
-
-```bash
-python3 bin/package_build.py RHEL_9_Package_List.json
-python3 bin/package_build.py Ubuntu_2404_Package_List.json
-# Repeat for each distro you want to include
-```
-
-After adding data files, regenerate the distro config:
-
-```bash
-python3 bin/config_build.py
-```
-
 ---
 
 ## Step 6: Build the React frontend
-
-On your **development machine** (or the server if Node 22 is available):
 
 ```bash
 cd react-frontend
@@ -148,6 +145,12 @@ npm run build
 ```
 
 This generates compiled static files in `react-frontend/dist/`.
+
+If you built on a local machine, copy the `dist/` directory to your server:
+
+```bash
+scp -r react-frontend/dist/ youruser@YOUR_SERVER_IP:/path/to/software-discovery-tool/react-frontend/
+```
 
 ---
 
@@ -173,9 +176,9 @@ Paste the following (replace `YOUR_DOMAIN_OR_IP`):
     ServerName YOUR_DOMAIN_OR_IP
 
     # Serve React static files
-    DocumentRoot /opt/software-discovery-tool/react-frontend/dist
+    DocumentRoot /srv/www/software-discovery-tool/react-frontend/dist
 
-    <Directory /opt/software-discovery-tool/react-frontend/dist>
+    <Directory /srv/www/software-discovery-tool/react-frontend/dist>
         Options -Indexes
         AllowOverride All
         Require all granted
@@ -200,9 +203,8 @@ Paste the following (replace `YOUR_DOMAIN_OR_IP`):
 ### Deploy the built files
 
 ```bash
-sudo mkdir -p /opt/software-discovery-tool/react-frontend
-sudo cp -r react-frontend/dist /opt/software-discovery-tool/react-frontend/dist
-sudo chown -R www-data:www-data /opt/software-discovery-tool/react-frontend/dist
+sudo mkdir -p /srv/www/software-discovery-tool/react-frontend
+sudo cp -r react-frontend/dist /srv/www/software-discovery-tool/react-frontend/.
 ```
 
 ### Enable the site
@@ -217,11 +219,26 @@ sudo systemctl reload apache2
 
 ## Step 8: Run the backend as a systemd service
 
+### Create a dedicated system user
+
+```bash
+sudo adduser --system --no-create-home sdt
+```
+
+### Copy backend and config to /opt
+
+```bash
+sudo mkdir -p /opt/software-discovery-tool
+sudo cp -r backend /opt/software-discovery-tool/
+sudo cp -r config /opt/software-discovery-tool/
+sudo chown -R sdt /opt/software-discovery-tool/
+```
+
 ### Install backend dependencies
 
 ```bash
-cd /path/to/software-discovery-tool/backend
-npm install --omit=dev
+cd /opt/software-discovery-tool/backend
+sudo -u sdt npm install --omit=dev
 ```
 
 ### Create the systemd service
@@ -237,7 +254,7 @@ After=network.target mariadb.service
 
 [Service]
 Type=simple
-User=www-data
+User=sdt
 WorkingDirectory=/opt/software-discovery-tool/backend
 ExecStart=/usr/bin/node index.js
 Restart=on-failure
@@ -248,13 +265,9 @@ EnvironmentFile=/opt/software-discovery-tool/backend/.env
 WantedBy=multi-user.target
 ```
 
-### Copy backend to /opt and start the service
+### Start the service
 
 ```bash
-sudo cp -r backend /opt/software-discovery-tool/backend
-sudo cp backend/.env /opt/software-discovery-tool/backend/.env
-sudo chown -R www-data:www-data /opt/software-discovery-tool/backend
-
 sudo systemctl daemon-reload
 sudo systemctl enable sdt-backend
 sudo systemctl start sdt-backend
@@ -290,8 +303,10 @@ sudo journalctl -u sdt-backend -f
 cd /path/to/software-discovery-tool
 git pull
 git submodule update --recursive --remote
-cd backend && npm install --omit=dev
 sudo cp -r backend /opt/software-discovery-tool/
+sudo cp -r config /opt/software-discovery-tool/
+sudo chown -R sdt /opt/software-discovery-tool/
+cd /opt/software-discovery-tool/backend && sudo -u sdt npm install --omit=dev
 sudo systemctl restart sdt-backend
 ```
 
@@ -301,7 +316,6 @@ sudo systemctl restart sdt-backend
 cd react-frontend
 npm install
 npm run build
-sudo cp -r dist /opt/software-discovery-tool/react-frontend/dist
-sudo chown -R www-data:www-data /opt/software-discovery-tool/react-frontend/dist
+sudo cp -r dist /srv/www/software-discovery-tool/react-frontend/.
 sudo systemctl reload apache2
 ```
