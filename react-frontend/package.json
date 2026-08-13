@@ -19,18 +19,16 @@
     "react-paginate": "^8.2.0",
     "react-router-dom": "^6.30.3",
     "react-slick": "^0.30.2",
-    "styled-components": "^6.1.11",
+    "styled-components": "^6.5.2",
     "vite": "^8.0.14",
     "web-vitals": "^2.1.4"
   },
-  
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest"
   },
-
   "browserslist": {
     "production": [
       ">0.2%",
