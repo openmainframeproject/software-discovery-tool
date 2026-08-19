@@ -105,7 +105,7 @@ The `distro_data/` submodule pulled in Step 3 already includes data for all supp
 Use `bin/package_build.py` to import any [distro data from PDS](https://github.com/linux-on-ibm-z/PDS/tree/master/distro_data) you wish to include:
 
 ```bash
-python3 bin/package_build.py RHEL_9_Package_List.json
+python3 bin/package_build.py RHEL_9_0_Package_List.json
 # Repeat for each additional source you want to include
 ```
 
@@ -167,39 +167,13 @@ sudo systemctl restart apache2
 
 ### Create the virtual host configuration
 
+A ready-to-use config file is included at `docs/software-discovery-tool.conf`. Copy it into place and update `YOUR_DOMAIN_OR_IP`:
+
 ```bash
-sudo nano /etc/apache2/sites-available/software-discovery-tool.conf
-```
-
-Paste the following (replace `YOUR_DOMAIN_OR_IP`):
-
-```apache
-<VirtualHost *:80>
-    ServerName YOUR_DOMAIN_OR_IP
-
-    # Serve React static files
-    DocumentRoot /srv/www/software-discovery-tool/react-frontend/dist
-
-    <Directory /srv/www/software-discovery-tool/react-frontend/dist>
-        Options -Indexes
-        AllowOverride All
-        Require all granted
-
-        # Support React Router — send all non-file requests to index.html
-        RewriteEngine On
-        RewriteBase /
-        RewriteCond %{REQUEST_FILENAME} !-f
-        RewriteCond %{REQUEST_FILENAME} !-d
-        RewriteRule ^ index.html [L]
-    </Directory>
-
-    # Proxy /sdt/* to the Node.js backend
-    ProxyPass /sdt http://localhost:5000/sdt
-    ProxyPassReverse /sdt http://localhost:5000/sdt
-
-    ErrorLog ${APACHE_LOG_DIR}/sdt-error.log
-    CustomLog ${APACHE_LOG_DIR}/sdt-access.log combined
-</VirtualHost>
+sudo cp /path/to/software-discovery-tool/docs/software-discovery-tool.conf \
+    /etc/apache2/sites-available/software-discovery-tool.conf
+sudo sed -i 's/YOUR_DOMAIN_OR_IP/your.actual.domain/' \
+    /etc/apache2/sites-available/software-discovery-tool.conf
 ```
 
 ### Deploy the built files
@@ -240,31 +214,16 @@ sudo chown -R sdt /opt/software-discovery-tool/
 
 ```bash
 cd /opt/software-discovery-tool/backend
-sudo -u sdt npm install --omit=dev
+sudo -u sdt HOME=/tmp npm install --omit=dev
 ```
 
 ### Create the systemd service
 
+A ready-to-use service file is included at `docs/sdt-backend.service`. Copy it into place:
+
 ```bash
-sudo nano /etc/systemd/system/sdt-backend.service
-```
-
-```ini
-[Unit]
-Description=Software Discovery Tool Node.js Backend
-After=network.target mariadb.service
-
-[Service]
-Type=simple
-User=sdt
-WorkingDirectory=/opt/software-discovery-tool/backend
-ExecStart=/usr/bin/node index.js
-Restart=on-failure
-RestartSec=5
-EnvironmentFile=/opt/software-discovery-tool/backend/.env
-
-[Install]
-WantedBy=multi-user.target
+sudo cp /path/to/software-discovery-tool/docs/sdt-backend.service \
+    /etc/systemd/system/sdt-backend.service
 ```
 
 ### Start the service
@@ -308,7 +267,7 @@ git submodule update --recursive --remote
 sudo cp -r backend /opt/software-discovery-tool/
 sudo cp -r config /opt/software-discovery-tool/
 sudo chown -R sdt /opt/software-discovery-tool/
-cd /opt/software-discovery-tool/backend && sudo -u sdt npm install --omit=dev
+cd /opt/software-discovery-tool/backend && sudo -u sdt HOME=/tmp npm install --omit=dev
 sudo systemctl restart sdt-backend
 ```
 
