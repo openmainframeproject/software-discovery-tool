@@ -53,6 +53,14 @@ cd software-discovery-tool
 git submodule update --init --recursive
 ```
 
+Then pull the latest data from the submodule's remote (the pinned commit in the repo may be outdated):
+
+```bash
+cd distro_data/data_files
+git pull https://github.com/openmainframeproject/software-discovery-tool-data.git
+cd ../..
+```
+
 ---
 
 ## Step 4: Set up MariaDB

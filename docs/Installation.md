@@ -60,6 +60,13 @@ The Software Discovery Tool uses submodules for data. To initialize them:
 git submodule update --init --recursive
 ```
 
+Then pull the latest data from the submodule's remote (the pinned commit in the repo may be outdated):
+```bash
+cd distro_data/data_files
+git pull https://github.com/openmainframeproject/software-discovery-tool-data.git
+cd ../..
+```
+
 #### Updating Data Directory
 To update the data directory with the latest remote changes:
 ```bash
