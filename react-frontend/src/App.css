@@ -739,6 +739,15 @@ input:focus {
   border-radius: 4px;
   font-size: 12px;
 }
+.repo-tag {
+  background-color: #9333ea;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+}
 
 .content {
   display: flex;
