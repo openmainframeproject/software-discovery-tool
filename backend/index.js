@@ -74,6 +74,16 @@ const getTables = (searchBit) => {
   return ans;
 };
 
+const getExistingTables = async (tables) => {
+  if (tables.length === 0) return [];
+  const [rows] = await pool.query(
+    `SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME IN (?)`,
+    [tables]
+  );
+  const existing = new Set(rows.map(r => r.TABLE_NAME));
+  return tables.filter(t => existing.has(t));
+};
+
 // Helper function to stringify BigInts in an object
 const stringifyBigInts = (obj) => {
   return JSON.parse(JSON.stringify(obj, (key, value) =>
@@ -264,7 +274,7 @@ app.get(['/searchPackages', '/sdt/searchPackages'], async (req, res) => {
   }
 
   try {
-    const tables = getTables(searchBitFlag);
+    const tables = await getExistingTables(getTables(searchBitFlag));
     if (tables.length === 0) {
       return res.json({
         total_packages: 0,
