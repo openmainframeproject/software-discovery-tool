@@ -98,8 +98,8 @@ async function jsonToSql(connection, table, file, osName) {
 }
 
 async function dbInit() {
-  const username = await question("Enter privileged username to create/update SQL tables: ");
-  const password = await questionHidden("Enter password for privileged username: ");
+  const username = process.env.DB_ADMIN_USER ?? await question("Enter privileged username to create/update SQL tables: ");
+  const password = process.env.DB_ADMIN_PASSWORD ?? await questionHidden("Enter password for privileged username: ");
   
   let connection;
   try {

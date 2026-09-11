@@ -16,6 +16,50 @@ To get started with the Software Discovery Tool, let's take a quick tour of the 
 | [Software Discovery Tool Data](https://github.com/openmainframeproject/software-discovery-tool-data) | The Software Discovery Tool Data repository holds the necessary data for the software available in the tool. It contains information such as the names and versions of the software that you can discover using the Software Discovery Tool. This data is regularly updated to provide you with the most comprehensive and up-to-date software inventory. |
 | [Software Discovery Tool Deploy](https://github.com/openmainframeproject/software-discovery-tool-deploy) | The Software Discovery Tool Deploy repository serves as the deployed version of the main Software Discovery Tool repository. It utilizes the main repository as a submodule and integrates the data repository as a sub-submodule. This deployment repository enables you to quickly set up and run the Software Discovery Tool in your environment. Read more about it [here](https://gist.github.com/rachejazz/de39c09612788635d5d0f491dcf8571a). |
 
+## Running with Docker (Recommended)
+
+The quickest way to run the full stack locally is with Docker.
+
+### Prerequisites
+- [Docker Desktop](https://www.docker.com/products/docker-desktop) (Mac/Windows) or Docker Engine + Docker Compose plugin (Linux)
+
+### Steps
+
+1. **Clone the repository** (including the data submodule):
+   ```bash
+   git clone --recurse-submodules https://github.com/openmainframeproject/software-discovery-tool.git
+   cd software-discovery-tool
+   ```
+
+2. **Create the environment file**:
+   ```bash
+   cp .env.example .env
+   ```
+   Edit `.env` and set strong passwords for `DB_ROOT_PASSWORD` and `DB_PASSWORD`.
+
+3. **Build and start all containers**:
+   ```bash
+   docker compose up -d --build
+   ```
+   This starts MariaDB, the Node.js backend, and the nginx frontend. Wait ~30 seconds for the database to become healthy.
+
+4. **Populate the database** (first time only):
+   ```bash
+   docker compose exec -it backend node bin/database_build.js
+   ```
+   When prompted, enter `root` as the username and the value of `DB_ROOT_PASSWORD` from your `.env` as the password. This creates all tables and loads package data for all supported distributions.
+
+5. **Open the app** at [http://localhost](http://localhost).
+
+### Stopping and restarting
+
+```bash
+docker compose down      # stop containers (data is preserved)
+docker compose up -d     # restart (no need to re-run the database build)
+```
+
+---
+
 ## Local Development Setup
 
 To run the Software Discovery Tool locally for development:
