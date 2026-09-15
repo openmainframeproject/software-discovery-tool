@@ -46,6 +46,6 @@
     "autoprefixer": "^10.5.5",
     "jsdom": "^29.1.1",
     "tailwindcss": "^3.4.4",
-    "vitest": "^4.1.9"
+    "vitest": "^5.0.0"
   }
 }
