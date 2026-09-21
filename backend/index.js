@@ -75,13 +75,16 @@ const getTables = (searchBit) => {
 };
 
 const getExistingTables = async (tables) => {
-  if (tables.length === 0) return [];
+  if (tables.length === 0) return { existing: [], missing: [] };
   const [rows] = await pool.query(
     `SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME IN (?)`,
     [tables]
   );
   const existing = new Set(rows.map(r => r.TABLE_NAME));
-  return tables.filter(t => existing.has(t));
+  return {
+    existing: tables.filter(t => existing.has(t)),
+    missing: tables.filter(t => !existing.has(t))
+  };
 };
 
 // Helper function to stringify BigInts in an object
@@ -274,13 +277,14 @@ app.get(['/searchPackages', '/sdt/searchPackages'], async (req, res) => {
   }
 
   try {
-    const tables = await getExistingTables(getTables(searchBitFlag));
+    const { existing: tables, missing: missingTables } = await getExistingTables(getTables(searchBitFlag));
     if (tables.length === 0) {
       return res.json({
         total_packages: 0,
         current_page: pageNumber,
         last_page: 0,
         more_available: false,
+        missing_distros: missingTables,
         packages: []
       });
     }
@@ -328,6 +332,7 @@ app.get(['/searchPackages', '/sdt/searchPackages'], async (req, res) => {
       total_packages: totalLength,
       current_page: pageNumber,
       last_page: lastPage,
+      missing_distros: missingTables,
       more_available: (pageNumber + 1) * limit < totalLength,
       packages: results
     });
