@@ -852,3 +852,131 @@ input:focus {
 .refine-filters label:not(:last-child) {
   margin-bottom: 15px;
 }
+
+.results-layout {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  align-items: flex-start;
+  padding: 0 10px;
+}
+
+.filter-sidebar {
+  flex: 0 0 240px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  position: sticky;
+  top: 20px;
+}
+
+.filter-sidebar .refine-filters {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.filter-sidebar .refine-filters label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.filter-sidebar .refine-filters input {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 6px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.filter-sidebar .refine-filters input[type="text"]:focus {
+  border-color: #044fc0;
+  outline: none;
+}
+
+.filter-heading {
+  font-weight: 700;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.distro-group {
+  margin-bottom: 4px;
+}
+
+.distro-group-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 4px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  color: #333;
+  user-select: none;
+}
+
+.distro-group-header:hover {
+  color: #044fc0;
+}
+
+.distro-versions {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: 18px;
+}
+
+.version-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  padding: 4px 0;
+  cursor: pointer;
+  color: #444;
+}
+
+.version-checkbox-row input {
+  cursor: pointer;
+}
+
+.clear-filters-btn {
+  width: 100%;
+  margin-top: 16px;
+  padding: 8px;
+  background-color: #ffffff;
+  border: 1px solid #044fc0;
+  color: #044fc0;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.clear-filters-btn:hover {
+  background-color: #044fc0;
+  color: #ffffff;
+}
+
+.results-main {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .results-layout {
+    flex-direction: column;
+  }
+
+  .filter-sidebar {
+    flex: 1 1 auto;
+    width: 100%;
+    position: static;
+  }
+}
