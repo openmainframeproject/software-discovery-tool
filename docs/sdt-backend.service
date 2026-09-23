@@ -1,0 +1,15 @@
+[Unit]
+Description=Software Discovery Tool Node.js Backend
+After=network.target mariadb.service
+
+[Service]
+Type=simple
+User=sdt
+WorkingDirectory=/opt/software-discovery-tool/backend
+ExecStart=/usr/bin/node index.js
+Restart=on-failure
+RestartSec=5
+EnvironmentFile=/opt/software-discovery-tool/backend/.env
+
+[Install]
+WantedBy=multi-user.target
