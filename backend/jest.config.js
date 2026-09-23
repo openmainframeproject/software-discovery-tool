@@ -3,4 +3,6 @@ export default {
   testEnvironment: 'node',
   setupFiles: ['<rootDir>/tests/setup.js'],
   testMatch: ['**/tests/**/*.test.js'],
+  transform: {},
+  extensionsToTreatAsEsm: [],
 };

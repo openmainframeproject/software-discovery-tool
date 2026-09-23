@@ -58,9 +58,144 @@ export const createApp = (pool) => {
     res.json(stringifyBigInts(distroBitMap));
   };
 
+  /**
+   * @swagger
+   * /getSupportedDistros:
+   *   get:
+   *     summary: Returns a mapping of supported distributions and their versions with bitmask flags.
+   *     responses:
+   *       200:
+   *         description: A JSON object containing the distribution bit map.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   */
   app.get('/getSupportedDistros', getSupportedDistrosHandler);
+
+  /**
+   * @swagger
+   * /sdt/getSupportedDistros:
+   *   get:
+   *     summary: Returns a mapping of supported distributions and their versions with bitmask flags (legacy path).
+   *     responses:
+   *       200:
+   *         description: A JSON object containing the distribution bit map.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   */
   app.get('/sdt/getSupportedDistros', getSupportedDistrosHandler);
 
+  /**
+   * @swagger
+   * /searchPackages:
+   *   get:
+   *     summary: Search for software packages across multiple distributions.
+   *     parameters:
+   *       - in: query
+   *         name: search_term
+   *         schema:
+   *           type: string
+   *         required: true
+   *         description: The term to search for.
+   *       - in: query
+   *         name: exact_match
+   *         schema:
+   *           type: boolean
+   *         description: Whether to perform an exact match on the package name.
+   *       - in: query
+   *         name: search_bit_flag
+   *         schema:
+   *           type: string
+   *         description: A bitmask representing the selected distributions and versions.
+   *       - in: query
+   *         name: page_number
+   *         schema:
+   *           type: integer
+   *         description: The page number for pagination.
+   *       - in: query
+   *         name: search_description
+   *         schema:
+   *           type: boolean
+   *         description: Whether to search within package descriptions.
+   *       - in: query
+   *         name: limit
+   *         schema:
+   *           type: integer
+   *         description: Number of records to return per page.
+   *     responses:
+   *       200:
+   *         description: A paginated list of matching packages.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 total_packages:
+   *                   type: integer
+   *                 current_page:
+   *                   type: integer
+   *                 last_page:
+   *                   type: integer
+   *                 more_available:
+   *                   type: boolean
+   *                 packages:
+   *                   type: array
+   *                   items:
+   *                     type: object
+   *       500:
+   *         description: Server error.
+   */
+
+  /**
+   * @swagger
+   * /sdt/searchPackages:
+   *   get:
+   *     summary: Search for software packages across multiple distributions (legacy path).
+   *     parameters:
+   *       - in: query
+   *         name: search_term
+   *         schema:
+   *           type: string
+   *         required: true
+   *         description: The term to search for.
+   *       - in: query
+   *         name: exact_match
+   *         schema:
+   *           type: boolean
+   *         description: Whether to perform an exact match on the package name.
+   *       - in: query
+   *         name: search_bit_flag
+   *         schema:
+   *           type: string
+   *         description: A bitmask representing the selected distributions and versions.
+   *       - in: query
+   *         name: page_number
+   *         schema:
+   *           type: integer
+   *         description: The page number for pagination.
+   *       - in: query
+   *         name: search_description
+   *         schema:
+   *           type: boolean
+   *         description: Whether to search within package descriptions.
+   *       - in: query
+   *         name: limit
+   *         schema:
+   *           type: integer
+   *         description: Number of records to return per page.
+   *     responses:
+   *       200:
+   *         description: A paginated list of matching packages.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *       500:
+   *         description: Server error.
+   */
   app.get(['/searchPackages', '/sdt/searchPackages'], async (req, res) => {
     const searchTerm = (req.query.search_term || '').trim();
     const exactMatch = req.query.exact_match === 'true';
