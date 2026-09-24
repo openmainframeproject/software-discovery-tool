@@ -285,10 +285,10 @@ app.get(['/searchPackages', '/sdt/searchPackages'], async (req, res) => {
     }
 
     const subQuery = exactMatch
-      ? 'SELECT packageName, description, version, osName FROM ?? WHERE packageName = ?'
+      ? 'SELECT packageName, description, version, osName, repo FROM ?? WHERE packageName = ?'
       : (searchDescription 
-          ? 'SELECT packageName, description, version, osName FROM ?? WHERE (packageName LIKE ? OR description LIKE ?)'
-          : 'SELECT packageName, description, version, osName FROM ?? WHERE packageName LIKE ?');
+          ? 'SELECT packageName, description, version, osName, repo FROM ?? WHERE (packageName LIKE ? OR description LIKE ?)'
+          : 'SELECT packageName, description, version, osName, repo FROM ?? WHERE packageName LIKE ?');
 
     const unionQuery = tables.map(() => `(${subQuery})`).join(' UNION ALL ');
     const countQuery = `SELECT COUNT(*) as total FROM (${unionQuery}) AS combined`;
