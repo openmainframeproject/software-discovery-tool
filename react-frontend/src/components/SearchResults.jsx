@@ -6,6 +6,7 @@ import '../App.css';
 function SearchResults({
   results = [],
   showDesc,
+  showRepo,
   itemsPerPage,
   searchPerformed,
   totalResultsCount,
@@ -73,6 +74,12 @@ function SearchResults({
                 <div className="distro-tag">
                   {result.ostag}
                 </div>
+              )}
+              
+            {result.repo && showRepo && (
+                <span className="repo-tag" title={result.repo}>
+                  {result.repo}
+                </span>
               )}
             </div>
             <div className="content">
