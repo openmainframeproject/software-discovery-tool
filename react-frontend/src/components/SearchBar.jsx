@@ -30,6 +30,7 @@ function SearchBar({ onSearchPerformed }) {
   const [selectedParentDistributions, setSelectedParentDistributions] = useState([]);
   const [noDistributionMessage, setNoDistributionMessage] = useState(false);
   const [searchError, setSearchError] = useState("");
+  const [missingDistros, setMissingDistros] = useState([]);
   const [lastSearchParams, setLastSearchParams] = useState(null);
 
 
@@ -113,6 +114,7 @@ function SearchBar({ onSearchPerformed }) {
         setTotalResultsCount(data.total_packages || 0);
         setTotalPages(data.last_page || 0);
         setCurrentPage(page);
+        setMissingDistros(data.missing_distros || []);
         setSearchPerformed(true);
         setLoading(false);
         setLastSearchParams({ value: searchTerm, exact: isExact, searchDescription: isSearchDescription, searchBitFlag });
@@ -272,6 +274,12 @@ function SearchBar({ onSearchPerformed }) {
       {searchError && (
         <div className="text-center mt-2 text-red-600 font-semibold">
           {searchError}
+        </div>
+      )}
+
+      {missingDistros.length > 0 && (
+        <div className="text-center mt-2 text-yellow-600 font-semibold">
+          ⚠️ Results may be incomplete — the following distributions are temporarily unavailable: {missingDistros.join(', ')}
         </div>
       )}
 
