@@ -1,40 +1,6 @@
-import express from 'express';
 import mysql from 'mysql2/promise';
-import cors from 'cors';
 import 'dotenv/config';
-import swaggerJsdoc from 'swagger-jsdoc';
-import swaggerUi from 'swagger-ui-express';
-import { SUPPORTED_DISTROS, MAX_RECORDS_TO_SEND } from './config.js';
-
-const app = express();
-const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:3000'];
-app.use(cors({
-  origin: (origin, callback) => {
-    // allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  }
-}));
-app.use(express.json());
-
-const swaggerOptions = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'Software Discovery Tool API',
-      version: '1.0.0',
-      description: 'REST API for the Open Mainframe Software Discovery Tool. Replaces the Flask backend.',
-    },
-    servers: [{ url: `http://localhost:${process.env.PORT || 5000}` }],
-  },
-  apis: ['./index.js'],
-};
-const swaggerSpec = swaggerJsdoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+import { createApp } from './app.js';
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
@@ -45,6 +11,7 @@ const pool = mysql.createPool({
   connectionLimit: 10,
   queueLimit: 0
 });
+
 
 // Calculate DISTRO_BIT_MAP
 const DISTRO_BIT_MAP = {};
@@ -327,7 +294,11 @@ app.get(['/searchPackages', '/sdt/searchPackages'], async (req, res) => {
   }
 });
 
+
+const app = createApp(pool);
+
 export default app;
+
 const PORT = process.env.PORT || 5000;
 if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, () => {
