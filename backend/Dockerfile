@@ -1,13 +1,22 @@
-FROM node:20-slim
+FROM node:22-slim
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY backend/package*.json ./
+RUN npm install --omit=dev
 
-RUN npm install --production
+COPY backend/ ./
 
-COPY . .
+# config.js reads ../config/distros.json — keep at both paths
+COPY config/ /config/
+COPY config/ ./config/
+
+# database_build.js reads distro_data/data_files/ relative to repo root
+COPY distro_data/ ./distro_data/
+
+# bin/ scripts (database_build.js)
+COPY bin/ ./bin/
 
 EXPOSE 5000
 
-CMD ["npm", "start"]
+CMD ["node", "index.js"]
