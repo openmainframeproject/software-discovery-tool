@@ -21,7 +21,7 @@ To get started with the Software Discovery Tool, let's take a quick tour of the 
 The quickest way to run the full stack locally is with Docker.
 
 ### Prerequisites
-- [Docker Desktop](https://www.docker.com/products/docker-desktop) (Mac/Windows) or Docker Engine + Docker Compose plugin (Linux)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop) (Mac/Windows) or Docker Engine + Docker Compose plugin **version 2 or above** (Linux)
 
 ### Steps
 
@@ -29,6 +29,12 @@ The quickest way to run the full stack locally is with Docker.
    ```bash
    git clone --recurse-submodules https://github.com/openmainframeproject/software-discovery-tool.git
    cd software-discovery-tool
+   ```
+   Then pull the latest package data:
+   ```bash
+   cd distro_data/data_files
+   git pull https://github.com/openmainframeproject/software-discovery-tool-data.git
+   cd ../..
    ```
 
 2. **Create the environment file**:
