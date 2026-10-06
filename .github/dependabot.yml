@@ -1,0 +1,21 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/react-frontend"
+    schedule:
+      interval: "weekly"
+    groups:
+      frontend-patch:
+        update-types: ["patch"]
+      frontend-minor:
+        update-types: ["minor"]
+
+  - package-ecosystem: "npm"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+    groups:
+      backend-patch:
+        update-types: ["patch"]
+      backend-minor:
+        update-types: ["minor"]
