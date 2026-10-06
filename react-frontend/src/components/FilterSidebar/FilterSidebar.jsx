@@ -8,22 +8,25 @@ function FilterSidebar({
     onVersionToggle,
     refinePackageName,
     onRefineChange,
-    onClearFilters
+    onClearFilters,
+    searchPerformed
 }) {
     return (
         <div className="filter-sidebar">
-            <div className="refine-filters">
-                <label>
-                    Refine results on this page
-                    <input
-                        type="text"
-                        value={refinePackageName}
-                        onChange={(e) => onRefineChange(e.target.value)}
-                        placeholder="Search within page..."
-                        className="ml-2 p-1 border rounded"
-                    />
-                </label>
-            </div>
+            {searchPerformed && (
+                <div className="refine-filters">
+                    <label>
+                        Refine results on this page
+                        <input
+                            type="text"
+                            value={refinePackageName}
+                            onChange={(e) => onRefineChange(e.target.value)}
+                            placeholder="Search within page..."
+                            className="ml-2 p-1 border rounded"
+                        />
+                    </label>
+                </div>
+            )}
 
             <div className="filter-distribution">
                 <p className="filter-heading">Filter distribution</p>

@@ -858,7 +858,8 @@ input:focus {
   gap: 24px;
   width: 100%;
   align-items: flex-start;
-  padding: 0 10px;
+  padding: 0 1rem;
+  box-sizing: border-box;
 }
 
 .filter-sidebar {
