@@ -1,7 +1,9 @@
 /* global BigInt */
+import FilterSidebar from './FilterSidebar/FilterSidebar';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import omfLogo from "../images/openmainframe-logo.png";
 import SearchResults from './SearchResults.jsx';
+import HeroSection from './HeroSection';
 import '../App.css';
 
 const DEFAULT_API_BASE_URL = 'http://localhost:5000';
@@ -21,8 +23,9 @@ function SearchBar({ onSearchPerformed }) {
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [osList, setOsList] = useState({});
-  const [selectedOS, setSelectedOS] = useState({});
-  const [selectAll, setSelectAll] = useState(false);
+  const [selectedVersions, setSelectedVersions] = useState({});
+  const [expandedOS, setExpandedOS] = useState({});
+  const [refinePackageName, setRefinePackageName] = useState('');
   const [loading, setLoading] = useState(false);
   const [totalResultsCount, setTotalResultsCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
@@ -54,32 +57,26 @@ function SearchBar({ onSearchPerformed }) {
   }, [fetchOSList]);
 
   useEffect(() => {
-    const updatedSelectedOS = Object.keys(osList).reduce((acc, os) => {
-      acc[os] = selectAll;
-      return acc;
-    }, {});
-    setSelectedOS(updatedSelectedOS);
-  }, [selectAll, osList]);
-
-  useEffect(() => {
     onSearchPerformed(searchPerformed);
   }, [searchPerformed, onSearchPerformed]);
 
   useEffect(() => {
     if (searchPerformed) {
-      setNoDistributionMessage(!Object.values(selectedOS).some(Boolean));
+      const anySelected = Object.values(selectedVersions).some(versions =>
+        Object.values(versions).some(Boolean)
+      );
+      setNoDistributionMessage(!anySelected);
     }
-  }, [selectedOS, searchPerformed]);
+  }, [selectedVersions, searchPerformed]);
 
    const generateSearchBitFlag = () => {
     let searchBitFlag = 0n;
-    Object.entries(selectedOS).forEach(([os, selected]) => {
-      if (selected) {
-        const osVersions = osList[os];
-        Object.values(osVersions).forEach(bitValue => {
-          searchBitFlag |= BigInt(bitValue);
-        });
-      }
+    Object.entries(selectedVersions).forEach(([os, versions]) => {
+      Object.entries(versions).forEach(([version, isSelected]) => {
+        if (isSelected) {
+          searchBitFlag |= BigInt(osList[os][version]);
+        }
+      });
     });
     return searchBitFlag.toString();
   };
@@ -169,25 +166,46 @@ function SearchBar({ onSearchPerformed }) {
     }
   };
 
-  const handleOSCheckboxChange = (os) => {
-    setSelectedOS(prev => {
-      const updated = { ...prev, [os]: !prev[os] };
-      const selectedParents = Object.keys(updated).filter(key => updated[key]);
-      setSelectedParentDistributions(selectedParents);
-      return updated;
-    });
+  const toggleExpand = (os) => {
+    setExpandedOS(prev => ({ ...prev, [os]: !prev[os] }));
   };
 
-  const handleSelectAllChange = () => {
-    setSelectAll(prev => {
-      const newSelectAll = !prev;
-      setSelectedParentDistributions(newSelectAll ? Object.keys(osList) : []);
-      return newSelectAll;
+  const handleVersionToggle = (os, version) => {
+    const osVersions = { ...(selectedVersions[os] || {}) };
+    osVersions[version] = !osVersions[version];
+    const updated = { ...selectedVersions, [os]: osVersions };
+
+    const selectedParents = Object.keys(updated).filter(o =>
+      Object.values(updated[o]).some(Boolean)
+    );
+
+    let bitFlag = 0n;
+    Object.entries(updated).forEach(([o, versions]) => {
+      Object.entries(versions).forEach(([v, isSelected]) => {
+        if (isSelected && osList[o] && osList[o][v]) {
+          bitFlag |= BigInt(osList[o][v]);
+        }
+      });
     });
+
+    setSelectedVersions(updated);
+    setSelectedParentDistributions(selectedParents);
+
+    if (searchPerformed && lastSearchParams) {
+      fetchData(null, null, 0, itemsPerPage, {
+        ...lastSearchParams,
+        searchBitFlag: bitFlag.toString()
+      });
+    }
+  };
+
+  const handleClearFilters = () => {
+    setSelectedVersions({});
+    setSelectedParentDistributions([]);
   };
 
   return (
-    <div>
+    <div style={{ width: '100%' }}>
       <div className="search-bar-wrapper">
         <div className="omf-logo">
           <img className="image-11" src={omfLogo} alt="OMF Logo" />
@@ -220,33 +238,6 @@ function SearchBar({ onSearchPerformed }) {
         </div>
       </div>
 
-      <div className="flex flex-wrap justify-center os-checkbox-wrapper mt-4">
-        <div className="os-checkbox-container">
-          <label>
-            <input
-              type="checkbox"
-              checked={selectAll}
-              onChange={handleSelectAllChange}
-              className="mr-2"
-            />
-            All
-          </label>
-        </div>
-        {Object.keys(osList).map((os, index) => (
-          <div key={index} className="os-checkbox-container">
-            <label>
-              <input
-                type="checkbox"
-                checked={selectedOS[os] || false}
-                onChange={() => handleOSCheckboxChange(os)}
-                className="mr-2"
-              />
-              {os}
-            </label>
-          </div>
-        ))}
-      </div>
-
       {searchPerformed && noDistributionMessage && (
         <div className="text-center text-red-500 mt-2">
           No distribution selected
@@ -275,55 +266,70 @@ function SearchBar({ onSearchPerformed }) {
         </div>
       )}
 
-      <div className="results-count text-center sm:text-left">
-        {searchPerformed ? (
-          totalResultsCount > 0 ? (
-            `${totalResultsCount} package${totalResultsCount !== 1 ? 's' : ''} found`
-          ) : (
-            '0 packages found'
-          )
-        ) : (
-          ''
-        )}
-      </div>
-
-      {totalResultsCount > 5 && (
-        <div className="records-per-page mt-2 flex justify-center sm:justify-start items-center">
-          <label className="text-sm">
-            Records per page:
-            <select
-              value={itemsPerPage}
-              onChange={handleItemsPerPageChange}
-              className="ml-2 p-1 border rounded text-sm"
-            >
-              {[5, 10, 20, 30, 40, 50]
-                .filter((count) => count <= totalResultsCount || count === 5)
-                .map((count) => (
-                  <option key={count} value={count}>
-                    {count}
-                  </option>
-                ))}
-            </select>
-          </label>
-        </div>
-      )}
-
-      {loading ? (
-        <div className="text-center mt-4">Loading...</div>
-      ) : (
-        <SearchResults 
-          results={results} 
-          showDesc={searchDescription} 
-          itemsPerPage={itemsPerPage} 
-          searchPerformed={searchPerformed} 
-          totalResultsCount={totalResultsCount}
-          selectedParentDistributions={selectedParentDistributions}
+      <div className="results-layout">
+        <FilterSidebar
           osList={osList}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
+          expandedOS={expandedOS}
+          onToggleExpand={toggleExpand}
+          selectedVersions={selectedVersions}
+          onVersionToggle={handleVersionToggle}
+          refinePackageName={refinePackageName}
+          onRefineChange={setRefinePackageName}
+          onClearFilters={handleClearFilters}
+          searchPerformed={searchPerformed}
         />
-      )}
+        <div className="results-main">
+          {!searchPerformed && <HeroSection />}
+          {searchPerformed && (
+            <>
+              <div className="results-count text-center sm:text-left">
+                {totalResultsCount > 0
+                  ? `${totalResultsCount} package${totalResultsCount !== 1 ? 's' : ''} found`
+                  : '0 packages found'}
+              </div>
+
+              {totalResultsCount > 5 && (
+                <div className="records-per-page mt-2 flex justify-center sm:justify-start items-center">
+                  <label className="text-sm">
+                    Records per page:
+                    <select
+                      value={itemsPerPage}
+                      onChange={handleItemsPerPageChange}
+                      className="ml-2 p-1 border rounded text-sm"
+                    >
+                      {[5, 10, 20, 30, 40, 50]
+                        .filter((count) => count <= totalResultsCount || count === 5)
+                        .map((count) => (
+                          <option key={count} value={count}>
+                            {count}
+                          </option>
+                        ))}
+                    </select>
+                  </label>
+                </div>
+              )}
+
+              {loading ? (
+                <div className="text-center mt-4">Loading...</div>
+              ) : (
+                <SearchResults
+                  results={results}
+                  showDesc={searchDescription}
+                  itemsPerPage={itemsPerPage}
+                  searchPerformed={searchPerformed}
+                  totalResultsCount={totalResultsCount}
+                  selectedParentDistributions={selectedParentDistributions}
+                  osList={osList}
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                  refinePackageName={refinePackageName}
+                />
+              )}
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
