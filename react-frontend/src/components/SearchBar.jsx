@@ -17,6 +17,7 @@ const normalizeApiBaseUrl = (rawUrl) => {
 function SearchBar({ onSearchPerformed }) {
   const [input, setInput] = useState("");
   const [searchDescription, setSearchDescription] = useState(true);
+  const [showRepo, setShowRepo] = useState(false);
   const [results, setResults] = useState([]);
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -107,7 +108,8 @@ function SearchBar({ onSearchPerformed }) {
           packageName: pkg.packageName,
           description: pkg.description || 'No description available',
           version: pkg.version || 'No version information',
-          ostag: pkg.osName || 'No OSTag information'
+          ostag: pkg.osName || 'No OSTag information',
+          repo: pkg.repo || null
         }));
         setResults(transformedResults);
         setTotalResultsCount(data.total_packages || 0);
@@ -264,6 +266,17 @@ function SearchBar({ onSearchPerformed }) {
           Search Description
         </label>
       </div>
+      <div className="flex justify-center mt-2">
+        <label className="flex items-center">
+          <input
+            type="checkbox"
+            checked={showRepo}
+            onChange={() => setShowRepo(!showRepo)}
+            className="mr-2"
+          />
+          Show Repository
+        </label>
+      </div>
 
       <div className="text-center mt-2 font-bold">
         Enter the name of the package or at least three characters to enable pattern search. Wildcard ('*') can be used either before or after the search keywords.
@@ -313,7 +326,8 @@ function SearchBar({ onSearchPerformed }) {
       ) : (
         <SearchResults 
           results={results} 
-          showDesc={searchDescription} 
+          showDesc={searchDescription}
+          showRepo={showRepo} 
           itemsPerPage={itemsPerPage} 
           searchPerformed={searchPerformed} 
           totalResultsCount={totalResultsCount}
