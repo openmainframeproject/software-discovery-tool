@@ -19,6 +19,7 @@ const normalizeApiBaseUrl = (rawUrl) => {
 function SearchBar({ onSearchPerformed }) {
   const [input, setInput] = useState("");
   const [searchDescription, setSearchDescription] = useState(true);
+  const [showRepo, setShowRepo] = useState(false);
   const [results, setResults] = useState([]);
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -104,7 +105,8 @@ function SearchBar({ onSearchPerformed }) {
           packageName: pkg.packageName,
           description: pkg.description || 'No description available',
           version: pkg.version || 'No version information',
-          ostag: pkg.osName || 'No OSTag information'
+          ostag: pkg.osName || 'No OSTag information',
+          repo: pkg.repo || null
         }));
         setResults(transformedResults);
         setTotalResultsCount(data.total_packages || 0);
@@ -255,6 +257,17 @@ function SearchBar({ onSearchPerformed }) {
           Search Description
         </label>
       </div>
+      <div className="flex justify-center mt-2">
+        <label className="flex items-center">
+          <input
+            type="checkbox"
+            checked={showRepo}
+            onChange={() => setShowRepo(!showRepo)}
+            className="mr-2"
+          />
+          Show Repository
+        </label>
+      </div>
 
       <div className="text-center mt-2 font-bold">
         Enter the name of the package or at least three characters to enable pattern search. Wildcard ('*') can be used either before or after the search keywords.
@@ -266,8 +279,55 @@ function SearchBar({ onSearchPerformed }) {
         </div>
       )}
 
+
+      <div className="results-count text-center sm:text-left">
+        {searchPerformed ? (
+          totalResultsCount > 0 ? (
+            `${totalResultsCount} package${totalResultsCount !== 1 ? 's' : ''} found`
+          ) : (
+            '0 packages found'
+          )
+        ) : (
+          ''
+        )}
+      </div>
+
+      {totalResultsCount > 5 && (
+        <div className="records-per-page mt-2 flex justify-center sm:justify-start items-center">
+          <label className="text-sm">
+            Records per page:
+            <select
+              value={itemsPerPage}
+              onChange={handleItemsPerPageChange}
+              className="ml-2 p-1 border rounded text-sm"
+            >
+              {[5, 10, 20, 30, 40, 50]
+                .filter((count) => count <= totalResultsCount || count === 5)
+                .map((count) => (
+                  <option key={count} value={count}>
+                    {count}
+                  </option>
+                ))}
+            </select>
+          </label>
+        </div>
+      )}
+
+      {loading ? (
+        <div className="text-center mt-4">Loading...</div>
+      ) : (
+        <SearchResults 
+          results={results} 
+          showDesc={searchDescription}
+          showRepo={showRepo} 
+          itemsPerPage={itemsPerPage} 
+          searchPerformed={searchPerformed} 
+          totalResultsCount={totalResultsCount}
+          selectedParentDistributions={selectedParentDistributions}
+
       <div className="results-layout">
         <FilterSidebar
+
           osList={osList}
           expandedOS={expandedOS}
           onToggleExpand={toggleExpand}
